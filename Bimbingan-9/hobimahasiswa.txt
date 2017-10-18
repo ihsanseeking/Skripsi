@@ -1,0 +1,1 @@
+hobi:kodehobi,namahobi.mahasiswa:nim,nama,tempat_lahir,tanggal_lahir,kota,tanggal_masuk.mhshobi:nim,kodehobi

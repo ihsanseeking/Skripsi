@@ -1,0 +1,132 @@
+Tahapapan Tiap Proses
+
+0. Soal:
+
+Tampilkan Data mahasiswa yang memiliki namahobi.hobi Game dan memiliki tinggi_badan.mahasiswa di bawah 170 cm!
+
+1. Preprocesing
+
+	a. Cleaning syimbol
+		// Menghilangkan syimbol2 seperti , . ! ? 
+		p = Tampilkan Data mahasiswa yang memiliki namahobi hobi Game dan memiliki tinggi_badan mahasiswa di bawah 170 cm
+
+	b. tokonizing
+		// Dipisahan setiap kata dengan spasi
+		t :
+		1. Tampilkan
+		2. Data
+		3. mahasiswa 
+		4. yang 
+		5. memiliki
+		6. namahobi
+		7. hobi 
+		8. Game 
+		9. dan 
+		10. memiliki 
+		11. tinggi_badan 
+		12. mahasiswa
+		13. di 
+		14. bawah 
+		15. 170 
+		16. cm
+
+2. Identifikasi keyword
+
+	a. Fokus DML
+		// Penentuan Fokus SELECT, INSERT, UPDATE, DELETE
+		fokus = "SELECT" -> tampilkan => t[1] 
+
+	b. Keyword Nama Tabel
+		// Pengecekan berapa tabel yang terlibat
+		tabel[1] = mahasiswa -> t[3],t[12]
+		tabel[2] = hobi -> t[7]
+		
+		i. Fitur Multi Tabel 
+			// jika table lebih dari 2 maka ada fitur multi table
+			table > 1 (true)
+			+ Cari Relasi langsung
+				// cari keterkaitan antar 2 tabel tersebut berdasarkan relasi di database
+				tidak ditemukan relasi
+			+ Cari relasi tak Langsung
+				// cek tabel lain yang memiliki relasi ke tabel 1
+				table_temp[1] = mhshobi 
+				relasi[1] = nim
+				//dari list tabel_temp tersebut di cek lagi mana yg ada relasi dengan tabel ke 2
+				tabel_temp[1] = mhshobi
+				relasi[2] = kodehobi
+				//then
+				table[3] = table[2]
+				table[2] = table_temp[1]
+			//resume
+			tabel[1] = mahasiswa -> t[3],t[12]
+			tabel[2] = mhshobi
+			tabel[3] = hobi -> t[7]
+			relasi[1] = nim
+			relasi[2] = kodehobi
+
+	c. Keyword Fitur Kondisi
+		// cek kata kunci yg menandakan mengunakan Syarat Kondisi
+		kondisi[1] = yang -> t[4]
+		i. scan dari t[4] - abis
+			// jika table lebih dari 1 maka cari nama tabel dulu
+			tabel > 1 (true)
+			+ Fitur Multi Kondisi
+				// cari operator logika
+				operator_logika[1] = "AND" -> dan => t[9]
+			// scan nama tabel dari t[4] - abis
+				tabel_kondisi[1] = hobi -> t[7]
+				tabel_kondisi[2] = mahasiswa -> t[12]
+			// cari atribut sebelum token nama tabel
+			atribut_kondisi[1] = namahobi -> t[6]
+			atribut_kondisi[2] = tinggi_badan -> t[11]
+			//cari operator_banding tabel_kondisi[1] t[7] - t[9]
+				//jika selisih token hanya 1 maka otomatis "=" dan isi kondisi sama dengan token tersebut
+				operator_banding[1] = "="
+				isi_kondisi = "Game" -> t[8]
+			//cari operator_banding tabel_kondisi[2] t[12] - abis
+				//cek kata operator
+				operator_banding[2] = "<" -> bawah => t[14]
+				// isi kondisi 1 token setelah operator banding
+				isi_kondisi = "170"
+				
+	d. keyword atribut
+		// Cek yang ditampilkan atribut apa saja 
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

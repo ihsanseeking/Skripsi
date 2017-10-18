@@ -1,0 +1,221 @@
+Tahapapan Tiap Proses
+
+0. Soal:
+
+Tampilkan Data mahasiswa yang memiliki namahobi.hobi Game dan memiliki tinggi_badan.mahasiswa di bawah 170 cm!
+
+1. Preprocesing
+
+	a. Cleaning syimbol
+		// Menghilangkan syimbol2 seperti , . ! ? 
+		p = Tampilkan Data mahasiswa yang memiliki namahobi hobi Game dan memiliki tinggi_badan mahasiswa di bawah 170 cm
+
+	b. tokonizing
+		// Dipisahan setiap kata dengan spasi
+		t :
+		Token 1 : Tampilkan
+		Token 2 : Data
+		Token 3 : mahasiswa 
+		Token 4 : yang 
+		Token 5 : memiliki
+		Token 6 : namahobi
+		Token 7 : hobi 
+		Token 8 : Game 
+		Token 9 : dan 
+		Token 10 : memiliki 
+		Token 11 : tinggi_badan 
+		Token 12 : mahasiswa
+		Token 13 : di 
+		Token 14 : bawah 
+		Token 15 : 170 
+		Token 16 : cm
+
+2. Proses translator Kalimat
+
+	a. Identifikasi keyword Fokus DML
+		// Penentuan Fokus SELECT, INSERT, UPDATE, DELETE
+		fokus = "SELECT" -> tampilkan => t[1] 
+
+	b. Identifikasi Keyword Nama Tabel
+		// Pengecekan berapa tabel yang terlibat
+		tabel[1] = mahasiswa -> t[3],t[12]
+		tabel[2] = hobi -> t[7]
+		
+		i. Fitur Multi Tabel 
+			// jika table lebih dari 2 maka ada fitur multi table
+			table > 1 (true)
+			+ Cari Relasi langsung
+				// cari keterkaitan antar 2 tabel tersebut berdasarkan relasi di database
+				tidak ditemukan relasi
+			+ Cari relasi tak Langsung
+				// cek tabel lain yang memiliki relasi ke tabel 1
+				table_temp[1] = mhshobi 
+				relasi[1] = (nim)
+				//dari list tabel_temp tersebut di cek lagi mana yg ada relasi dengan tabel ke 2
+				tabel_temp[1] = mhshobi
+				relasi[2] = (kodehobi)
+				//then
+				table[3] = table[2]
+				table[2] = table_temp[1]
+			//resume
+			tabel[1] = mahasiswa -> t[3],t[12]
+			tabel[2] = mhshobi
+			tabel[3] = hobi -> t[7]
+			relasi[1] = nim
+			relasi[2] = kodehobi
+
+	c. Identifikasi Keyword Fitur Kondisi
+		i. cek kebradaan kondisi
+			// cek kata kunci yg menandakan mengunakan Syarat Kondisi
+			kondisi[1] = yang -> t[4]
+		
+		ii. scan dari t[4] - abis
+			// jika table lebih dari 1 maka cari nama tabel dulu
+			tabel > 1 (true)
+			
+				+ Fitur Multi Kondisi
+			
+					// cari operator logika
+					operator_logika[1] = "AND" -> dan => t[9]
+				
+				+ Cari nama tabel
+					// scan nama tabel dari t[4] - abis
+					tabel_kondisi[1] = hobi -> t[7]
+					tabel_kondisi[2] = mahasiswa -> t[12]
+				
+				+ Cari atribut banding
+					// cari atribut sebelum token nama tabel
+					atribut_kondisi[1] = namahobi -> t[6]
+					atribut_kondisi[2] = tinggi_badan -> t[11]
+			
+				+ cari operator banding dan isinya
+					//cari operator_banding tabel_kondisi[1] t[7] - t[9]
+					
+					//jika selisih token hanya 1 maka otomatis "=" dan isi kondisi sama dengan token tersebut
+					operator_banding[1] = "="
+					isi_kondisi = "Game" -> t[8]
+					
+				+ cari operator banding dan isinya
+					//cari operator_banding tabel_kondisi[2] t[12] - abis
+					//cek kata operator
+					operator_banding[2] = "<" -> bawah => t[14]
+				
+					// isi kondisi 1 token setelah operator banding
+					isi_kondisi = "170"
+				
+	d. Identifikasi keyword atribut
+		// Cek apa ada fitur kondisi?
+		kondisi > 0 (true)
+		i. cari Nama Tabel
+			// scan nama tabel dari t[1] - t[4] => fitur kondisi
+			table_atribut[1] = "mahasiswa" -> t[3]
+		ii. Cari atribut dari tabel
+			// scan nama atrbut berdasarkan setiap tabel yg ter detek
+				tidak di temukan nama atribut
+				// jika tidak di temukan nama atribut maka
+				atribut[1] = "*"
+			
+	e. Penyusunan Query yang akan ditampilkan
+		// Fokus DML
+		fokus -> "SELECT"
+		part_query[1] = fokus;
+		// atribut yang ditampilkan
+			//jika isi atribut pertama "*" maka atribut selesai
+		atribut[1] -> "*"
+		part_query[2] = atrbut[1]
+		// table yg digunakan
+			part_query[3] = "FROM"
+			part_query[4] = tabel[1]
+			//jika tabel lebih dari 1 maka jadi multi table
+			part_query[5] = "JOIN"
+			part_query[6] = tabel[2]
+			part_query[7] = "USING"
+			part_query[8] = relasi[1]
+			part_query[9] = "JOIN"
+			part_query[10] = tabel[3]
+			part_query[11] = "USING"
+			part_query[12] = relasi[2]
+		// Fitur Kondisi
+			// Cek apa ada fitur kondisi?
+			kondisi > 0 (true)
+			part_query[13] = "WHERE"
+			// jika table lebih dari 1 maka gunakan nama tabel_kondisi gi gunakan
+				tabel > 1 (true)
+				part_query[14] = tabel_kondisi[1]+"."+atribut_kondisi[1]
+			part_query[15] = operator_banding[1]
+			part_query[16] = isi_kondisi[1]
+			//jika kondisi lebih dari 1 maka jadi multi kondisi
+			part_query[17] = operator_logika[1]
+			// jika table lebih dari 1 maka gunakan nama tabel_kondisi gi gunakan
+				tabel > 1 (true)
+				part_query[18] = tabel_kondisi[2]+"."+atribut_kondisi[2]
+			part_query[19] = operator_banding[2]
+			part_query[20] = isi_kondisi[2]
+		part_query[21] = ";"
+		// Menampilkan Hasil
+		Query = (part_query)
+		
+		Query = SELECT * FROM mahasiswa JOIN mhshobi USING (nim) JOIN hobi USING (kodehobi) WHERE hobi.namahobi = "Game" AND mahasiswa.tinggi_badan < 170;
+	
+3. Pengujian Query
+	Eksekusi query dan tampilkan dalam bentuk table
+	
+	 kodehobi 	nim 	nama 	tempat_lahir 	tanggal_lahir 	kota 	tanggal_masuk 	tinggi_badan 	namahobi 	
+	1 			2 		Astri 	Jakarta 		1990-01-02 		bandung 	2009-08-01 		165 		Game
+	1 			5 		Indah 	Jakarta 		1992-12-02 		jakarta 	2009-08-01 		158 		Game
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
