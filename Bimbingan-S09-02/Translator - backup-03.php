@@ -2,8 +2,6 @@
 	<head>
 		<title>Translator SQL</title>
 	</head>
-	
-	
 	<body>
 		<?php
 			$servername = "localhost";
@@ -29,7 +27,7 @@
 		<form action="Translator.php" method="post">
 			<p>Pilih Database :
 			<?php
-				$sql = "SHOW DATABASES";
+				$sql = "show databases";
 				$result = mysqli_query($conn, $sql);
 				if (mysqli_num_rows($result) > 0) {
 					// output data of each row
@@ -89,7 +87,7 @@
 						$table = $row["Tables_in_$dbname"];
 						$tables[$i] = $table;
 						$i++;
-						$sql2 = "DESC $table";
+						$sql2 = "desc $table";
 						$result2 = mysqli_query($connd, $sql2);
 						if (mysqli_num_rows($result2) > 0) {
 							// output data of each row
@@ -98,9 +96,7 @@
 							while($row2 = mysqli_fetch_assoc($result2)) {
 								//echo " (".$row2["Field"]. ")";
 								//$atribut = $row2["Field"];
-								$atributs[$table]['field'][$j] = $row2["Field"];
-								$atributs[$table]['type'][$j] = $row2["Type"];
-								$atributs[$table]['key'][$j] = $row2["Key"];
+								$atributs[$table][$j] = $row2["Field"];
 								$j++;
 							}
 							//echo "<br>";
@@ -114,97 +110,23 @@
 			} else {
 				echo "Database Belum dipilih";
 			}
-			
 			//mysqli_close($conn);
 			echo "<br>";
 			for($i=0; $i<$i2; $i++){
-				echo "Tabel Base [".$btables[$i]."] => Atribut : <br>";
-				$c_attr = count($atributs[$btables[$i]]['field']);
+				echo "Tabel Base [".$btables[$i]."] => Atribut : ";
+				$c_attr = count($atributs[$btables[$i]]);
 				for($j=0; $j<$c_attr; $j++){
-					echo 
-						" ( ".
-						$atributs[$btables[$i]]['key'][$j].
-						" [".
-						$atributs[$btables[$i]]['field'][$j].
-						"] = ".
-						$atributs[$btables[$i]]['type'][$j].
-						")"
-					;
-					echo "<br>";
+					echo " (".$atributs[$btables[$i]][$j]. ")";
 				}
 				echo "<br>";
 			}
 			echo "<br>";
 			for($i=0; $i<$i1; $i++){
-				echo "Tabel View [".$vtables[$i]."] => Atribut : <br>";
-				$c_attr = count($atributs[$vtables[$i]]['field']);
+				echo "Tabel View [".$vtables[$i]."] => Atribut : ";
+				$c_attr = count($atributs[$vtables[$i]]);
 				for($j=0; $j<$c_attr; $j++){
-					echo 
-						" ( ".
-						$atributs[$vtables[$i]]['key'][$j].
-						" [".
-						$atributs[$vtables[$i]]['field'][$j].
-						"] = ".
-						$atributs[$vtables[$i]]['type'][$j].
-						")"
-					;
-					echo "<br>";
+					echo " (".$atributs[$vtables[$i]][$j]. ")";
 				}
-				echo "<br>";
-			}
-			
-			//Cari Relasi tabel
-			
-			for($i=0; $i<$i2; $i++){
-				$c_attr = count($atributs[$btables[$i]]['field']);
-				for($j=0; $j<$c_attr; $j++){
-					if ($atributs[$btables[$i]]['key'][$j] == "PRI") {
-						//echo $btables[$i].".".$atributs[$btables[$i]]['field'][$j].":<br> ";
-						for($ii=0; $ii<$i2; $ii++){
-							if ($btables[$i] != $btables[$ii]){
-								$c_attr2 = count($atributs[$btables[$ii]]['field']);
-								$r=0;
-								for($jj=0; $jj<$c_attr2; $jj++){
-									
-									if ($atributs[$btables[$i]]['field'][$j] == $atributs[$btables[$ii]]['field'][$jj]) {
-										//echo "[".$btables[$i]."] :";
-										//echo " [".$btables[$ii]."] => ";
-										//echo "(".$btables[$i].".".$atributs[$btables[$i]]['field'][$j];
-										//echo " : ";
-										//echo $btables[$ii].".".$atributs[$btables[$ii]]['field'][$jj]. ")";
-										//echo " Relasi = [".$atributs[$btables[$i]]['key'][$j]." : ".$atributs[$btables[$ii]]['key'][$jj]."] <br>";
-										$relasi[$btables[$i]]['tab'][$r] = $btables[$ii];
-										$relasi[$btables[$i]]['attr'][$r] = $atributs[$btables[$ii]]['field'][$jj];
-										$relasi[$btables[$i]]['car'][$r] = $atributs[$btables[$i]]['key'][$j]."-".$atributs[$btables[$ii]]['key'][$jj];
-										$r++;
-									}
-									
-								}
-								
-							}
-							
-						}
-						//echo "<br>";
-					}
-				}
-			}
-			for($i=0; $i<$i2; $i++){
-				echo "[".$btables[$i]."] => Relasi : <br>";
-				
-				$c_relasi = count($relasi[$btables[$i]]['tab']);
-
-				for($j=0; $j<$c_relasi; $j++){
-					echo 
-						" [ ".
-						$relasi[$btables[$i]]['tab'][$j].
-						".".
-						$relasi[$btables[$i]]['attr'][$j].
-						"] = ".
-						$relasi[$btables[$i]]['car'][$j]
-					;
-					echo "<br>";
-				}
-				
 				echo "<br>";
 			}
 			
