@@ -433,13 +433,38 @@
 								"] = ".
 								$relasi[$nama_table[$i]]['car'][$j]
 							;
-							echo "<br>";
-							echo "--- $i ---";
+							
 							for($ii=0; $ii<=$nt; $ii++){
 								if ($ii != $i){
-									echo "--- $ii ---";
+									//echo "bandingkan dengan ".$nama_table[$ii];
+									//cek relasi langsung
+									if ($nama_table[$ii] == $relasi[$nama_table[$i]]['tab'][$j]){
+										echo " Yess relasi langsung";
+									} else {
+										echo " Bukan relasi langsung dari $nama_table[$ii]<br>";
+										$c_relasi = count($relasi[$nama_table[$i]]['tab']);
+										
+									}
+									$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']);
+									for($jj=0; $jj<$c_relasi2; $jj++){
+										echo 
+											" [ ".
+											$relasi[$nama_table[$ii]]['tab'][$jj].
+											".".
+											$relasi[$nama_table[$ii]]['attr'][$jj].
+											"] = ".
+											$relasi[$nama_table[$ii]]['car'][$jj]
+										;
+										echo "<br>";
+										if ($relasi[$nama_table[$i]]['tab'][$j] == $relasi[$nama_table[$ii]]['tab'][$jj]){
+											echo " Akhirnya berhasil menemukan relasinya";
+										}
+									}
+									//echo "== yg di cek $ii ==";
 								}
 							}
+							
+							echo "<br>";
 						}
 						
 						echo "<br>";
