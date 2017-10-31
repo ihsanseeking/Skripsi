@@ -190,6 +190,7 @@
 					}
 				}
 			}
+			
 			for($i=0; $i<$i2; $i++){
 				echo "[".$btables[$i]."] => Relasi : <br>";
 				
@@ -421,10 +422,10 @@
 				<?php
 					//Echo"tanpa relasi dulu";
 					
-					for($i=0; $i<=$nt; $i++){
+					for($i=0; $i<=$nt; $i++){ // ini kan ngecek dari data tabel
 						echo "[".$nama_table[$i]."] => Relasi ";
-						$c_relasi = count($relasi[$nama_table[$i]]['tab']);
-						for($j=0; $j<$c_relasi; $j++){
+						$c_relasi = count($relasi[$nama_table[$i]]['tab']); // ini nge cek tabel tersebut punya berapa relasi tabel
+						for($j=0; $j<$c_relasi; $j++){ // di scan lah berapa tabel yng berelasi 
 							/*echo 
 								" [ ".
 								$relasi[$nama_table[$i]]['tab'][$j].
@@ -433,12 +434,12 @@
 								"] = ".
 								$relasi[$nama_table[$i]]['car'][$j]
 							;*/
-							$rr=1;
-							for($ii=0; $ii<=$nt; $ii++){
-								if ($ii != $i){
+							for($ii=0; $ii<=$nt; $ii++){ // ini juga nge scan tabel lagi tp semacam tabel yg ke dua
+								if ($ii != $i){ // dengan catatan buka pada posisi aray yang sama harus beda tabel 
 									//echo "bandingkan dengan ".$nama_table[$ii];
 									//cek relasi langsung
-									if ($nama_table[$ii] == $relasi[$nama_table[$i]]['tab'][$j]){
+									
+									if ($relasi[$nama_table[$i]]['tab'][$j] == $nama_table[$ii]){
 										echo " Langsung : ";
 										echo 
 											" [ ".
@@ -448,8 +449,6 @@
 											"] = ".
 											$relasi[$nama_table[$i]]['car'][$j]
 										;
-										$attr_relasi[$rr]=$relasi[$nama_table[$i]]['attr'][$j];
-										$rr++;
 									} else { 
 										$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']);
 										for($jj=0; $jj<$c_relasi2; $jj++){
@@ -463,6 +462,19 @@
 											;*/
 											//echo "<br>";
 											if ($relasi[$nama_table[$i]]['tab'][$j] == $relasi[$nama_table[$ii]]['tab'][$jj]){
+												//Karena tidak langsung berarti ada tabel baru yang di masukan ke list tabel;
+												echo "<br> batas awal adalah $nama_table[$i] di posisi $i ";
+												echo "<br>	 batas akhir adalah $nama_table[$ii] di posisi $ii <br>";
+												$nt++;
+												
+												for($nti=$nt; $nti>=$ii; $nti--){
+													//$nama_table[$iii]=$relasi[$nama_table[$i]]['tab'][$j];
+													echo "<br> $nama_table[$nti] di posisi $nti";
+												}
+												
+												
+												echo "[".$relasi[$nama_table[$i]]['tab'][$j]."] => Relasi ";
+												
 												echo " Tidak Langsung : ";
 												echo 
 													" [ ".
@@ -472,11 +484,11 @@
 													"] = ".
 													$relasi[$nama_table[$i]]['car'][$j]
 												;
+
 												//if($nama_tabel[]){
 													
 												//}
-												$attr_relasi[$rr]=$relasi[$nama_table[$i]]['attr'][$j];
-												$rr++;
+		
 												//$nama_table[$nt] = $relasi[$nama_table[$i]]['tab'][$j];
 											}
 										}
