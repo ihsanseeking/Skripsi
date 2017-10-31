@@ -420,25 +420,93 @@
 				?>
 				<p><i>Tahap 2.b.ii Relasi Tabel</i></p>
 				<?php
-					//Echo"tanpa relasi dulu";
+					//bismillah
+					$tr=0;
+					$tabel_relasi[$tr]=$nama_table[0];
+					echo "<br>Tabel FROM => [$tabel_relasi[$tr]]";
+					$c_relasi = count($relasi[$tabel_relasi[$tr]]['tab']);
+					echo " Punya relasi sebanyak $c_relasi yaitu: ";
+					for($j=0; $j<$c_relasi; $j++){
+						echo "<br>$j. ".$relasi[$tabel_relasi[$tr]]['tab'][$j];
+					}
+					echo "<br> --- kita bandingkan dengan nama tabel yang terdeteksi (kecuali tabel from) apa kah ada yang sama?";
+					for($j=0; $j<$c_relasi; $j++){
+						for($ii=0; $ii<=$nt; $ii++){
+							if ($nama_table[$ii] != $tabel_relasi[$tr]) {
+								echo "<br>$j. [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."] ";
+								echo "dengan [$nama_table[$ii]] ";
+								if ($relasi[$tabel_relasi[$tr]]['tab'][$j] == $nama_table[$ii]) {
+									echo " = Sama ";
+								} else {
+									echo " = Beda ";
+								}
+							}
+						}
+					}
+					echo "<br> --- karena tidak ada yang sama maka <br> --- kita bandingkan dengan nama relasi dari tabel yang terdeteksi apa kah ada yang sama?";
+					for($j=0; $j<$c_relasi; $j++){
+						for($ii=0; $ii<=$nt; $ii++){
+							if ($nama_table[$ii] != $tabel_relasi[$tr]) {
+								echo "<br>$j. [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."] ";
+								echo "dengan [$nama_table[$ii]] ";
+								if ($relasi[$tabel_relasi[$tr]]['tab'][$j] == $nama_table[$ii]) {
+									echo " = Sama ";
+								} else {
+									echo " = Beda ";
+									echo "<br> - karena tidak sama maka bandingkan dengan nama relasinya";
+									$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']);
+									echo "<br> relasi tabel milik $nama_table[$ii]] ada ($c_relasi2) yaitu : ";
+									/*
+									for($jj=0; $jj<$c_relasi2; $jj++){
+										echo "<br>$jj. [".$relasi[$nama_table[$ii]]['tab'][$jj]."]";
+										echo " bandingkan dengan [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."]";
+										if ($relasi[$nama_table[$ii]]['tab'][$jj] == $relasi[$tabel_relasi[$tr]]['tab'][$j]){
+											echo " = Sama ";
+										} else {
+											echo " = Beda ";
+										}
+									}
+									echo"<br>";*/
+									echo "<br>-------------pake while awal---------------<br>";
+									$jj=0;
+									do{
+										echo "<br>$jj. [".$relasi[$nama_table[$ii]]['tab'][$jj]."]";
+										echo " bandingkan dengan [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."]";
+										if ($relasi[$nama_table[$ii]]['tab'][$jj] == $relasi[$tabel_relasi[$tr]]['tab'][$j]){
+											echo " = Sama ";
+										} else {
+											echo " = Beda ";
+										}
+										$jj++;
+									} while ($jj<$c_relasi2);
+									echo "<br>-------------pake while akhir---------------<br>";
+									
+								}
+								
+							}
+						}
+					}
 					
-					for($i=0; $i<=$nt; $i++){ // ini kan ngecek dari data tabel
-						echo "[".$nama_table[$i]."] => Relasi ";
+					/*for($i=0; $i<=$nt; $i++){ // ini kan ngecek dari data tabel
+						//echo "[".$nama_table[$i]."] => Relasi ";
+						echo "<br>[level 1][$i] = ".$nama_table[$i] ; //alat cek level 1
 						$c_relasi = count($relasi[$nama_table[$i]]['tab']); // ini nge cek tabel tersebut punya berapa relasi tabel
 						for($j=0; $j<$c_relasi; $j++){ // di scan lah berapa tabel yng berelasi 
-							/*echo 
+							echo "<br>[level 1][$i]-[level 2][$j] = ".$relasi[$nama_table[$i]]['tab'][$j];
+							/ *echo 
 								" [ ".
 								$relasi[$nama_table[$i]]['tab'][$j].
 								".".
 								$relasi[$nama_table[$i]]['attr'][$j].
 								"] = ".
 								$relasi[$nama_table[$i]]['car'][$j]
-							;*/
+							;* /
 							for($ii=0; $ii<=$nt; $ii++){ // ini juga nge scan tabel lagi tp semacam tabel yg ke dua
+								
 								if ($ii != $i){ // dengan catatan buka pada posisi aray yang sama harus beda tabel 
 									//echo "bandingkan dengan ".$nama_table[$ii];
 									//cek relasi langsung
-									
+									echo "<br>[level 1][$i]-[level 2][$j]-[level 3][$j] = ".$nama_table[$ii];
 									if ($relasi[$nama_table[$i]]['tab'][$j] == $nama_table[$ii]){
 										echo " Langsung : ";
 										echo 
@@ -449,32 +517,29 @@
 											"] = ".
 											$relasi[$nama_table[$i]]['car'][$j]
 										;
+										//break;
 									} else { 
 										$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']);
 										for($jj=0; $jj<$c_relasi2; $jj++){
-											/*echo 
+											echo "<br>[level 1][$i]-[level 2][$j]-[level 3][$j]-[level 4][$j] = ".$relasi[$nama_table[$ii]]['tab'][$jj];
+											/ *echo 
 												" [ ".
 												$relasi[$nama_table[$ii]]['tab'][$jj].
 												".".
 												$relasi[$nama_table[$ii]]['attr'][$jj].
 												"] = ".
 												$relasi[$nama_table[$ii]]['car'][$jj]
-											;*/
+											;* /
 											//echo "<br>";
 											if ($relasi[$nama_table[$i]]['tab'][$j] == $relasi[$nama_table[$ii]]['tab'][$jj]){
 												//Karena tidak langsung berarti ada tabel baru yang di masukan ke list tabel;
-												echo "<br> batas awal adalah $nama_table[$i] di posisi $i ";
-												echo "<br>	 batas akhir adalah $nama_table[$ii] di posisi $ii <br>";
-												$nt++;
+												//echo "<br> batas awal adalah $nama_table[$i] di posisi $i ";
+												//echo "<br>	batas akhir adalah $nama_table[$ii] di posisi $ii <br>";
 												
-												for($nti=$nt; $nti>=$ii; $nti--){
-													//$nama_table[$iii]=$relasi[$nama_table[$i]]['tab'][$j];
-													echo "<br> $nama_table[$nti] di posisi $nti";
-												}
-												
-												
-												echo "[".$relasi[$nama_table[$i]]['tab'][$j]."] => Relasi ";
-												
+												//$nt++;
+												//$nama_table[$nt] = $nama_table[$nt-1];
+												//$nama_table[$nt-1] = $relasi[$nama_table[$i]]['tab'][$j];
+											
 												echo " Tidak Langsung : ";
 												echo 
 													" [ ".
@@ -484,7 +549,8 @@
 													"] = ".
 													$relasi[$nama_table[$i]]['car'][$j]
 												;
-
+												//break;
+			
 												//if($nama_tabel[]){
 													
 												//}
@@ -502,6 +568,7 @@
 						
 						echo "<br>";
 					}
+					*/
 					
 				?>				
 				<p><u>Tahap 2.c. Identifikasi Syarat Kondisi</u></p>
