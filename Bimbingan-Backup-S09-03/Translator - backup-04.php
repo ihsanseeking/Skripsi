@@ -114,7 +114,7 @@
 			} else {
 				echo "Database Belum dipilih";
 			}
-			/*
+			
 			//mysqli_close($conn);
 			echo "<br>";
 			for($i=0; $i<$i2; $i++){
@@ -151,7 +151,7 @@
 					echo "<br>";
 				}
 				echo "<br>";
-			}*/
+			}
 			
 			//Cari Relasi tabel
 			
@@ -190,7 +190,6 @@
 					}
 				}
 			}
-			
 			for($i=0; $i<$i2; $i++){
 				echo "[".$btables[$i]."] => Relasi : <br>";
 				
@@ -385,7 +384,7 @@
 				<?php
 					$nama_table = array();
 					$i = 0; $nt = 0; $ct = 0;
-					$nama_table[$nt] = "Tidak ada nama tabel";
+					$nama_table[0] = "Tidak ada nama tabel";
 					$c_table = count($tables);
 					//Nyari Tabel dulu
 					while ($i !== $count){
@@ -397,19 +396,17 @@
 								//cek jumlah nama_tabel
 								if ($nt > 0) {
 									//looping nama_tabel
-									$sama=false;
-									for ($ct = 0; $ct < $nt; $ct++) {
-										//cek bisi ada token yang sama dengan nama_tabel yg sudah di daftarkan
-										if($tokens[$i] == $nama_table[$ct]){
-											//echo " nemu nama tabel yg sama [$nama_table[$ct]] <br>";
-											$sama=true;	
-										} 
+									for ($ct = 0; $ct <= $nt; $ct++) {
+										//nyari token yang sama dengan nama_tabel
+										if ($tokens[$i] == $nama_table[$ct]) {
+											$nt--;
+											break;
+										} else {
+											$nama_table[$nt] = $tables[$j];
+											echo "nama tabel[$nt] : $nama_table[$nt]<br>";
+										}
 									}
-									if (!$sama) {
-										$nama_table[$nt] = $tables[$j];
-										echo "nama tabel[$nt] : $nama_table[$nt]<br>";
-										$nt++;
-									}
+									$nt++;								
 								} else {
 									$nama_table[$nt] = $tables[$j];
 									echo "nama tabel[$nt] : $nama_table[$nt]<br>";
@@ -422,150 +419,56 @@
 				?>
 				<p><i>Tahap 2.b.ii Relasi Tabel</i></p>
 				<?php
-					//bismillah
-					$tr=0;
-					$tabel_relasi[$tr]=$nama_table[0];
-					echo "<br>Tabel FROM => [$tabel_relasi[$tr]]";
-					$c_relasi = count($relasi[$tabel_relasi[$tr]]['tab']);
-					echo " Punya relasi sebanyak $c_relasi yaitu: ";
-					for($j=0; $j<$c_relasi; $j++){
-						echo "<br>$j. ".$relasi[$tabel_relasi[$tr]]['tab'][$j];
-					}//ok 
-					echo "<br> --- kita bandingkan dengan nama tabel yang terdeteksi (kecuali tabel from) apa kah ada yang sama?";
-					for($j=0; $j<$c_relasi; $j++){// ngulang sebanyak relasi yg dimiliki tabel from
-						for($ii=0; $ii<=$nt; $ii++){ // ngulang sejumlah nama tabel yg terdetkesi di kuriangi 1
-							if ($nama_table[$ii] != $tabel_relasi[$tr]) { // jika tida sama dengan table from maka cek
-								echo "<br>$j. [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."] ";
-								echo "dengan [$nama_table[$ii]] ";
-								if ($relasi[$tabel_relasi[$tr]]['tab'][$j] == $nama_table[$ii]) {
-									echo " = Sama ";// jika sama maka selesai 1
-								} else {
-									echo " = Beda ";// jika tidak sama maka cek ke langkang berikutya yaitu cek dengan relasi dengan relasi lagi.
-								}
-							}
-						}
-					}
-					/*
-					echo "<br> --- karena tidak ada yang sama maka <br> --- kita bandingkan dengan nama relasi dari tabel yang terdeteksi apa kah ada yang sama?";
-					for($j=0; $j<$c_relasi; $j++){
-						
-						for($ii=0; $ii<=$nt; $ii++){
-							if ($nama_table[$ii] != $tabel_relasi[$tr]) {
-								echo "<br>$j. [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."] ";
-								echo "dengan [$nama_table[$ii]] ";
-								if ($relasi[$tabel_relasi[$tr]]['tab'][$j] == $nama_table[$ii]) {
-									echo " = Sama ";
-									echo "<br>JOIN $nama_table[$ii] USING (".$relasi[$tabel_relasi[$tr]]['attr'][$j].")<br>";
-								} else {
-									echo " = Beda ";
-									echo "<br> - karena tidak sama maka bandingkan dengan nama relasinya";
-									$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']); //hitung relasi milik nama tabel yg di scan
-									echo "<br> relasi tabel milik $nama_table[$ii]] ada ($c_relasi2) yaitu : ";
-									for($jj=0; $jj<$c_relasi2; $jj++){
-										echo "<br>$jj. [".$relasi[$nama_table[$ii]]['tab'][$jj]."]";
-										echo " bandingkan dengan [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."]";
-										if ($relasi[$nama_table[$ii]]['tab'][$jj] == $relasi[$tabel_relasi[$tr]]['tab'][$j]){
-											echo " == Sama ";
-											echo "<br>JOIN ".$relasi[$tabel_relasi[$tr]]['tab'][$j]." USING (".$relasi[$tabel_relasi[$tr]]['attr'][$j].")<br>";
-										} else {
-											echo " == Beda ";
-										}
-									}
-									echo"<br>";
-									echo"<br><hr><br>";
-									echo" ini harusnya looping ke 3 yg elasi dengan relasi kita ubah loopingnya ke while";
-									echo"<br><hr><br>";
-									
-								}
-								
-							}
-						}
-						
-					}
-					*/
+					//Echo"tanpa relasi dulu";
 					
-					/*for($i=0; $i<=$nt; $i++){ // ini kan ngecek dari data tabel
-						//echo "[".$nama_table[$i]."] => Relasi ";
-						echo "<br>[level 1][$i] = ".$nama_table[$i] ; //alat cek level 1
-						$c_relasi = count($relasi[$nama_table[$i]]['tab']); // ini nge cek tabel tersebut punya berapa relasi tabel
-						for($j=0; $j<$c_relasi; $j++){ // di scan lah berapa tabel yng berelasi 
-							echo "<br>[level 1][$i]-[level 2][$j] = ".$relasi[$nama_table[$i]]['tab'][$j];
-							/ *echo 
+					for($i=0; $i<=$nt; $i++){
+						echo "[".$nama_table[$i]."] => Relasi : <br>";
+						$c_relasi = count($relasi[$nama_table[$i]]['tab']);
+						for($j=0; $j<$c_relasi; $j++){
+							echo 
 								" [ ".
 								$relasi[$nama_table[$i]]['tab'][$j].
 								".".
 								$relasi[$nama_table[$i]]['attr'][$j].
 								"] = ".
 								$relasi[$nama_table[$i]]['car'][$j]
-							;* /
-							for($ii=0; $ii<=$nt; $ii++){ // ini juga nge scan tabel lagi tp semacam tabel yg ke dua
-								
-								if ($ii != $i){ // dengan catatan buka pada posisi aray yang sama harus beda tabel 
+							;
+							
+							for($ii=0; $ii<=$nt; $ii++){
+								if ($ii != $i){
 									//echo "bandingkan dengan ".$nama_table[$ii];
 									//cek relasi langsung
-									echo "<br>[level 1][$i]-[level 2][$j]-[level 3][$j] = ".$nama_table[$ii];
-									if ($relasi[$nama_table[$i]]['tab'][$j] == $nama_table[$ii]){
-										echo " Langsung : ";
+									if ($nama_table[$ii] == $relasi[$nama_table[$i]]['tab'][$j]){
+										echo " Yess relasi langsung";
+									} else {
+										echo " Bukan relasi langsung dari $nama_table[$ii]<br>";
+										$c_relasi = count($relasi[$nama_table[$i]]['tab']);
+										
+									}
+									$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']);
+									for($jj=0; $jj<$c_relasi2; $jj++){
 										echo 
 											" [ ".
-											$relasi[$nama_table[$i]]['tab'][$j].
+											$relasi[$nama_table[$ii]]['tab'][$jj].
 											".".
-											$relasi[$nama_table[$i]]['attr'][$j].
+											$relasi[$nama_table[$ii]]['attr'][$jj].
 											"] = ".
-											$relasi[$nama_table[$i]]['car'][$j]
+											$relasi[$nama_table[$ii]]['car'][$jj]
 										;
-										//break;
-									} else { 
-										$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']);
-										for($jj=0; $jj<$c_relasi2; $jj++){
-											echo "<br>[level 1][$i]-[level 2][$j]-[level 3][$j]-[level 4][$j] = ".$relasi[$nama_table[$ii]]['tab'][$jj];
-											/ *echo 
-												" [ ".
-												$relasi[$nama_table[$ii]]['tab'][$jj].
-												".".
-												$relasi[$nama_table[$ii]]['attr'][$jj].
-												"] = ".
-												$relasi[$nama_table[$ii]]['car'][$jj]
-											;* /
-											//echo "<br>";
-											if ($relasi[$nama_table[$i]]['tab'][$j] == $relasi[$nama_table[$ii]]['tab'][$jj]){
-												//Karena tidak langsung berarti ada tabel baru yang di masukan ke list tabel;
-												//echo "<br> batas awal adalah $nama_table[$i] di posisi $i ";
-												//echo "<br>	batas akhir adalah $nama_table[$ii] di posisi $ii <br>";
-												
-												//$nt++;
-												//$nama_table[$nt] = $nama_table[$nt-1];
-												//$nama_table[$nt-1] = $relasi[$nama_table[$i]]['tab'][$j];
-											
-												echo " Tidak Langsung : ";
-												echo 
-													" [ ".
-													$relasi[$nama_table[$i]]['tab'][$j].
-													".".
-													$relasi[$nama_table[$i]]['attr'][$j].
-													"] = ".
-													$relasi[$nama_table[$i]]['car'][$j]
-												;
-												//break;
-			
-												//if($nama_tabel[]){
-													
-												//}
-		
-												//$nama_table[$nt] = $relasi[$nama_table[$i]]['tab'][$j];
-											}
+										echo "<br>";
+										if ($relasi[$nama_table[$i]]['tab'][$j] == $relasi[$nama_table[$ii]]['tab'][$jj]){
+											echo " Akhirnya berhasil menemukan relasinya";
 										}
 									}
 									//echo "== yg di cek $ii ==";
 								}
 							}
 							
-							//echo "<br>";
+							echo "<br>";
 						}
 						
 						echo "<br>";
 					}
-					*/
 					
 				?>				
 				<p><u>Tahap 2.c. Identifikasi Syarat Kondisi</u></p>
@@ -581,12 +484,11 @@
 						if($tokens[$t] == "yang") {
 							$kata_kondisi[$nk] = $tokens[$t];
 							$nk++;
-							//$s_2c = 1;
+							$s_2c = 1;
 							$p_kondisi=$t;
 							echo "Kata Kondisi : $kata_kondisi[$nk]<br>";
-							break;
 						}
-						
+						break;
 					}
 					//Cari Operator Logika
 					If ($s_2c == 1){
@@ -610,33 +512,28 @@
 				<p><u>Tahap 2.d. Identifikasi Nama atribut</u></p>
 				<?php
 					//nyari atribut dari tabel
-					for($i_nt=0; $i_nt<$nt; $i_nt++){
-						$i2=0;
-						$na=0;
-						$c_atribut = count($atributs[$nama_table[$i_nt]]);
-						//echo "$i_nt --- $c_atribut";
-						//echo "<p>jumlah $c_atribut</p>";
-						//looping sebanyak token
-						while ($i2 !== $p_kondisi) {
-							$i2++;
-							//echo "-$i2-";
-							//looping sebanyak atribut table terpilih
-							for ($j2 = 0; $j2 < $c_atribut; $j2++)
-							{
-								//echo "kata kunci atribut : $tokens[$i2]<br>";
-								//echo " - ".$tokens[$i2]." == ".$atributs[$nama_table[$i_nt]]['field'][$j2]."<br>";
-								if ($tokens[$i2] == $atributs[$nama_table[$i_nt]]['field'][$j2]) {
-									
-									$nama_atribut[$na] = $tokens[$i2];
-									echo "nama atribut[$na] : $nama_atribut[$na]<br>";
-									$na++;
-								}
+					$i2=0;
+					$na=0;
+					$c_atribut = count($atributs[$nama_table[0]]);
+					//echo "<p>jumlah $c_atribut</p>";
+					//looping sebanyak token
+					while ($i2 !== $p_kondisi) {
+						$i2++;
+						echo $p_kondisi."<br>";
+						//looping sebanyak atribut table terpilih
+						for ($j2 = 0; $j2 < $c_atribut; $j2++)
+						{
+							//echo "kata kunci atribut : $tokens[$i2]<br>";
+							if ($tokens[$i2] == $atributs[$nama_table[0]][$j2]) {
+								$nama_atribut[$na] = $tokens[$i2];
+								echo "nama atribut[$na] : $nama_atribut[$na]<br>";
+								$na++;
 							}
 						}
-						if($na == 0){
-							$nama_atribut[$na] = "*";
-							$na++;
-						}
+					}
+					if($na == 0){
+						$nama_atribut[$na] = "*";
+						$na++;
 					}
 				?>
 				<p><u>Tahap 2.e. Penyusunan Query</u></p>
