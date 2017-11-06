@@ -470,9 +470,9 @@
 				?>				
 				<p><u>Tahap 2.c. Identifikasi Syarat Kondisi</u></p>
 				<?php
-					$kata_kondisi = "tidak teridentifikasi";
+					$kata_kondisi[0] = "tidak teridentifikasi";
 					$t = 0;
-					$nk=0;
+					$nk = 0;
 					$s_2c = 0;
 					$p_kondisi=$count;
 					while ($t !== $count) {
@@ -480,14 +480,14 @@
 						echo "Token $t : $tokens[$t]<br>";
 						if($tokens[$t] == "yang") {
 							$kata_kondisi[$nk] = $tokens[$t];
-							$nk++;
 							//$s_2c = 1;
-							$p_kondisi=$t;
 							echo "Kata Kondisi : $kata_kondisi[$nk]<br>";
+							$p_kondisi=$t;
+							$nk++;
 							break;
 						}
-						
 					}
+					/*
 					//Cari Operator Logika
 					If ($s_2c == 1){
 						$t=$p_kondisi;
@@ -504,7 +504,7 @@
 								echo "Operator Logika[$nk] : $kata_kondisi[$nk]<br>";
 							}
 						}
-					}
+					}*/
 				
 				?> 
 				<p><u>Tahap 2.d. Identifikasi Nama atribut</u></p>
@@ -513,7 +513,7 @@
 					for($i_nt=0; $i_nt<$nt; $i_nt++){
 						$i2=0;
 						$na=0;
-						$c_atribut = count($atributs[$nama_table[$i_nt]]);
+						$c_atribut = count($atributs[$nama_table[$i_nt]['field']]);
 						//echo "$i_nt --- $c_atribut";
 						//echo "<p>jumlah $c_atribut</p>";
 						//looping sebanyak token
@@ -616,9 +616,9 @@
 						while($row = mysqli_fetch_assoc($result)) {
 							echo "<tr>";
 							if ($nama_atribut[0] == "*"){
-								$c_atribut = count($atributs[$nama_table[0]]);
+								$c_atribut = count($atributs[$nama_table[0]]['field']);
 								for ($i = 0; $i < $c_atribut; $i++) {
-									echo"<td>".$row[$atributs[$nama_table[0]][$i]]."</td>";
+									echo"<td>".$row[$atributs[$nama_table[0]]['field'][$i]]."</td>";
 								}
 							} else {
 								for ($kt=0;$kt<$c_attrb;$kt++)
