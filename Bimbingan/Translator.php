@@ -424,149 +424,49 @@
 				<?php
 					//bismillah
 					$tr=0;
-					$tabel_relasi[$tr]=$nama_table[0];
-					echo "<br>Tabel FROM => [$tabel_relasi[$tr]]";
-					$c_relasi = count($relasi[$tabel_relasi[$tr]]['tab']);
-					echo " Punya relasi sebanyak $c_relasi yaitu: ";
-					for($j=0; $j<$c_relasi; $j++){
-						echo "<br>$j. ".$relasi[$tabel_relasi[$tr]]['tab'][$j];
-					}//ok 
-					echo "<br> --- kita bandingkan dengan nama tabel yang terdeteksi (kecuali tabel from) apa kah ada yang sama?";
-					for($j=0; $j<$c_relasi; $j++){// ngulang sebanyak relasi yg dimiliki tabel from
-						for($ii=0; $ii<=$nt; $ii++){ // ngulang sejumlah nama tabel yg terdetkesi di kuriangi 1
-							if ($nama_table[$ii] != $tabel_relasi[$tr]) { // jika tida sama dengan table from maka cek
-								echo "<br>$j. [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."] ";
-								echo "dengan [$nama_table[$ii]] ";
-								if ($relasi[$tabel_relasi[$tr]]['tab'][$j] == $nama_table[$ii]) {
-									echo " = Sama ";// jika sama maka selesai 1
+					$tabel_relasi[0]=$nama_table[0];
+					echo "Tabel FROM => [$tabel_relasi[0]]<br>";
+					$c_relasi = count($relasi[$tabel_relasi[0]]['tab']);
+					for($j=0; $j<$c_relasi; $j++){// ngulang sebanyak relasi yg dimiliki tabel from	
+						for($ii=0; $ii<$nt; $ii++){// ngulang sejumlah nama tabel yg terdetkesi di kuriangi 1
+							if ($nama_table[$ii] != $tabel_relasi[0]) {// jika tida sama dengan table from maka cek
+								//echo "<br>$j. [".$relasi[$tabel_relasi[0]]['tab'][$j]."] ";
+								//echo "dengan [$nama_table[$ii]] ";
+								if ($relasi[$tabel_relasi[0]]['tab'][$j] == $nama_table[$ii]) {
+									//echo " = Sama ";// jika sama maka selesai 1
+									$tr++;
+									$tabel_relasi[$tr] = $nama_table[$ii];
+									$attr_relasi[$tr] = $relasi[$tabel_relasi[0]]['attr'][$j];
+									echo "JOIN $tabel_relasi[$tr] USING ($attr_relasi[$tr])<br>";
+								
 								} else {
-									echo " = Beda ";// jika tidak sama maka cek ke langkang berikutya yaitu cek dengan relasi dengan relasi lagi.
-								}
-							}
-						}
-					}
-					/*
-					echo "<br> --- karena tidak ada yang sama maka <br> --- kita bandingkan dengan nama relasi dari tabel yang terdeteksi apa kah ada yang sama?";
-					for($j=0; $j<$c_relasi; $j++){
-						
-						for($ii=0; $ii<=$nt; $ii++){
-							if ($nama_table[$ii] != $tabel_relasi[$tr]) {
-								echo "<br>$j. [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."] ";
-								echo "dengan [$nama_table[$ii]] ";
-								if ($relasi[$tabel_relasi[$tr]]['tab'][$j] == $nama_table[$ii]) {
-									echo " = Sama ";
-									echo "<br>JOIN $nama_table[$ii] USING (".$relasi[$tabel_relasi[$tr]]['attr'][$j].")<br>";
-								} else {
-									echo " = Beda ";
-									echo "<br> - karena tidak sama maka bandingkan dengan nama relasinya";
+									//echo " = Beda ";// jika tidak sama maka cek ke langkang berikutya yaitu cek dengan relasi dengan relasi lagi.
+									//echo "<br> - karena tidak sama maka bandingkan dengan nama relasinya";
 									$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']); //hitung relasi milik nama tabel yg di scan
-									echo "<br> relasi tabel milik $nama_table[$ii]] ada ($c_relasi2) yaitu : ";
+									//echo "<br> relasi tabel milik $nama_table[$ii]] ada ($c_relasi2) yaitu : ";
 									for($jj=0; $jj<$c_relasi2; $jj++){
-										echo "<br>$jj. [".$relasi[$nama_table[$ii]]['tab'][$jj]."]";
-										echo " bandingkan dengan [".$relasi[$tabel_relasi[$tr]]['tab'][$j]."]";
-										if ($relasi[$nama_table[$ii]]['tab'][$jj] == $relasi[$tabel_relasi[$tr]]['tab'][$j]){
-											echo " == Sama ";
-											echo "<br>JOIN ".$relasi[$tabel_relasi[$tr]]['tab'][$j]." USING (".$relasi[$tabel_relasi[$tr]]['attr'][$j].")<br>";
+										//echo "<br>$jj. [".$relasi[$nama_table[$ii]]['tab'][$jj]."]";
+										//echo " bandingkan dengan [".$relasi[$tabel_relasi[0]]['tab'][$j]."]";
+										if ($relasi[$nama_table[$ii]]['tab'][$jj] == $relasi[$tabel_relasi[0]]['tab'][$j]){
+											//echo " == Sama ";
+											$tr++;
+											$tabel_relasi[$tr] = $relasi[$tabel_relasi[0]]['tab'][$j];
+											$attr_relasi[$tr] = $relasi[$tabel_relasi[0]]['attr'][$j];
+											echo "JOIN $tabel_relasi[$tr] USING ($attr_relasi[$tr])<br>";
+											$tr++;
+											$tabel_relasi[$tr] = $nama_table[$ii];
+											$attr_relasi[$tr] = $relasi[$nama_table[$ii]]['attr'][$jj];
+											echo "JOIN $tabel_relasi[$tr] USING ($attr_relasi[$tr])<br>";
 										} else {
-											echo " == Beda ";
+											//echo " == Beda ";
 										}
 									}
-									echo"<br>";
-									echo"<br><hr><br>";
-									echo" ini harusnya looping ke 3 yg elasi dengan relasi kita ubah loopingnya ke while";
-									echo"<br><hr><br>";
-									
 								}
 								
 							}
 						}
 						
 					}
-					*/
-					
-					/*for($i=0; $i<=$nt; $i++){ // ini kan ngecek dari data tabel
-						//echo "[".$nama_table[$i]."] => Relasi ";
-						echo "<br>[level 1][$i] = ".$nama_table[$i] ; //alat cek level 1
-						$c_relasi = count($relasi[$nama_table[$i]]['tab']); // ini nge cek tabel tersebut punya berapa relasi tabel
-						for($j=0; $j<$c_relasi; $j++){ // di scan lah berapa tabel yng berelasi 
-							echo "<br>[level 1][$i]-[level 2][$j] = ".$relasi[$nama_table[$i]]['tab'][$j];
-							/ *echo 
-								" [ ".
-								$relasi[$nama_table[$i]]['tab'][$j].
-								".".
-								$relasi[$nama_table[$i]]['attr'][$j].
-								"] = ".
-								$relasi[$nama_table[$i]]['car'][$j]
-							;* /
-							for($ii=0; $ii<=$nt; $ii++){ // ini juga nge scan tabel lagi tp semacam tabel yg ke dua
-								
-								if ($ii != $i){ // dengan catatan buka pada posisi aray yang sama harus beda tabel 
-									//echo "bandingkan dengan ".$nama_table[$ii];
-									//cek relasi langsung
-									echo "<br>[level 1][$i]-[level 2][$j]-[level 3][$j] = ".$nama_table[$ii];
-									if ($relasi[$nama_table[$i]]['tab'][$j] == $nama_table[$ii]){
-										echo " Langsung : ";
-										echo 
-											" [ ".
-											$relasi[$nama_table[$i]]['tab'][$j].
-											".".
-											$relasi[$nama_table[$i]]['attr'][$j].
-											"] = ".
-											$relasi[$nama_table[$i]]['car'][$j]
-										;
-										//break;
-									} else { 
-										$c_relasi2 = count($relasi[$nama_table[$ii]]['tab']);
-										for($jj=0; $jj<$c_relasi2; $jj++){
-											echo "<br>[level 1][$i]-[level 2][$j]-[level 3][$j]-[level 4][$j] = ".$relasi[$nama_table[$ii]]['tab'][$jj];
-											/ *echo 
-												" [ ".
-												$relasi[$nama_table[$ii]]['tab'][$jj].
-												".".
-												$relasi[$nama_table[$ii]]['attr'][$jj].
-												"] = ".
-												$relasi[$nama_table[$ii]]['car'][$jj]
-											;* /
-											//echo "<br>";
-											if ($relasi[$nama_table[$i]]['tab'][$j] == $relasi[$nama_table[$ii]]['tab'][$jj]){
-												//Karena tidak langsung berarti ada tabel baru yang di masukan ke list tabel;
-												//echo "<br> batas awal adalah $nama_table[$i] di posisi $i ";
-												//echo "<br>	batas akhir adalah $nama_table[$ii] di posisi $ii <br>";
-												
-												//$nt++;
-												//$nama_table[$nt] = $nama_table[$nt-1];
-												//$nama_table[$nt-1] = $relasi[$nama_table[$i]]['tab'][$j];
-											
-												echo " Tidak Langsung : ";
-												echo 
-													" [ ".
-													$relasi[$nama_table[$i]]['tab'][$j].
-													".".
-													$relasi[$nama_table[$i]]['attr'][$j].
-													"] = ".
-													$relasi[$nama_table[$i]]['car'][$j]
-												;
-												//break;
-			
-												//if($nama_tabel[]){
-													
-												//}
-		
-												//$nama_table[$nt] = $relasi[$nama_table[$i]]['tab'][$j];
-											}
-										}
-									}
-									//echo "== yg di cek $ii ==";
-								}
-							}
-							
-							//echo "<br>";
-						}
-						
-						echo "<br>";
-					}
-					*/
-					
 				?>				
 				<p><u>Tahap 2.c. Identifikasi Syarat Kondisi</u></p>
 				<?php
@@ -660,21 +560,22 @@
 							}
 						}
 					}
-					if ($nt > 0) {
-						echo "<br>Ada nama Tabel[0] => ".$nama_table[0];
-							$sql_part[$nsql]="FROM ";
-							$nsql++;
-							$sql_part[$nsql]=$nama_table[0]." ";
-							$nsql++;
-						if ($nt > 1) {
-							for ($i = 1; $i < $nt; $i++) {
+					if ($tr > 0) {
+						echo "<br>Ada nama Tabel[0] => $tabel_relasi[0]";
+						$sql_part[$nsql]="FROM ";
+						$nsql++;
+						$sql_part[$nsql]=$tabel_relasi[0]." ";
+						$nsql++;
+						if ($tr > 1) {
+							for ($i = 1; $i <= $tr; $i++) {
+								echo "<br>Ada Join Tabel[$i] => $tabel_relasi[$i] (Using) $attr_relasi[$i]";
 								$sql_part[$nsql]="JOIN ";
 								$nsql++;
-								$sql_part[$nsql]=$nama_table[nt]." ";
+								$sql_part[$nsql]=$tabel_relasi[$i]." ";
 								$nsql++;
 								$sql_part[$nsql]="USING ";
 								$nsql++;
-								$sql_part[$nsql]="(".$nama_relasi[nt-1].") ";
+								$sql_part[$nsql]="(".$attr_relasi[$i].") ";
 								$nsql++;
 							}
 						}
@@ -684,6 +585,8 @@
 						$sql_part[$nsql]="WHERE ";
 						$nsql++;
 					}
+					//$sql_part[$nsql]=";";
+					//$nsql++;
 					$codesql = join("",$sql_part);
 					echo "<p>$codesql</p>";
 					
@@ -695,13 +598,14 @@
 					if (mysqli_num_rows($result) > 0) {
 						// output data of each row
 						// echo "Database <b>$dbname</b><br>";
+						
 						$c_attrb=count($nama_atribut);
 						echo "<table border=1><tr>";
 						if ($nama_atribut[0] == "*"){
-							$c_atribut = count($atributs[$nama_table[0]]);
+							$c_atribut = count($atributs[$nama_table[0]]['field']);
 							for ($i = 0; $i < $c_atribut; $i++) {
 	
-								echo"<th>".$atributs[$nama_table[0]][$i]."</th>";
+								echo"<th>".$atributs[$nama_table[0]]['field'][$i]."</th>";
 							}
 						} else {
 							for ($kt=0;$kt<$c_attrb;$kt++) {
@@ -712,9 +616,9 @@
 						while($row = mysqli_fetch_assoc($result)) {
 							echo "<tr>";
 							if ($nama_atribut[0] == "*"){
-								$c_atribut = count($atributs[$nama_table[0]]);
+								$c_atribut = count($atributs[$nama_table[0]]['field']);
 								for ($i = 0; $i < $c_atribut; $i++) {
-									echo"<td>".$row[$atributs[$nama_table[0]][$i]]."</td>";
+									echo"<td>".$row[$atributs[$nama_table[0]]['field'][$i]]."</td>";
 								}
 							} else {
 								for ($kt=0;$kt<$c_attrb;$kt++)
