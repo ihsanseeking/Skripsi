@@ -1,12 +1,9 @@
- <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
 		<title>Translator SQL</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="../bootstrap.min.css">
-		<script src="../jquery.min.js"></script>
-		<script src="../bootstrap.min.js"></script>
 	</head>
+	
+	
 	<body>
 		<?php
 			$servername = "localhost";
@@ -29,301 +26,215 @@
 				$string = "";
 			}
 		?>
-		<div class="container">
-			<h2>Translator</h2>
-			<p>Perancangan Translator Bahasa Alami ke dalam format SQL yang berfokus pada DML :</p>
-
-			<ul class="nav nav-tabs">
-				<li class="active"><a data-toggle="tab" href="#home">Info Database</a></li>
-				<li><a data-toggle="tab" href="#menu1">Translator</a></li>
-				<li><a data-toggle="tab" href="#menu2">Penelusuran</a></li>
-			</ul>
-
-			<div class="tab-content">
-				<div id="home" class="tab-pane fade in active">
-					<h3>Analisis Database</h3>
-					<p></p>
-					<form action="Translator.php" method="post">
-						<div class="form-group">
-							<label for="sel1">Pilih Database :</label>
-							<?php
-							$sql = "SHOW DATABASES";
-							$result = mysqli_query($conn, $sql);
-							if (mysqli_num_rows($result) > 0) {
-								// output data of each row
-							?>
-							<select class="form-control" name="database" id="database">
-								<option>= Pilih Database =</option>
-								<?php
-								while($row = mysqli_fetch_assoc($result)) {
-									if (!empty($_POST["database"])) {
-										if ($_POST["database"] == $row["Database"]){
-											echo "<option value=". $row["Database"]." selected=selected>". $row["Database"]."</option>";
-										} else {
-											echo "<option value=". $row["Database"].">". $row["Database"]."</option>";
-										}
-									} else {
-										echo "<option value=". $row["Database"].">". $row["Database"]."</option>";
-									}
-								}
-								?>
-							</select>
-						</div>
-							<?php
+		<form action="Translator.php" method="post">
+			<p>Pilih Database :
+			<?php
+				$sql = "SHOW DATABASES";
+				$result = mysqli_query($conn, $sql);
+				if (mysqli_num_rows($result) > 0) {
+					// output data of each row
+					echo "<select name='database'>";
+					echo "<option>= Pilih Database =</option>";
+					while($row = mysqli_fetch_assoc($result)) {
+						if (!empty($_POST["database"])) {
+							if ($_POST["database"] == $row["Database"]){
+								echo "<option value=". $row["Database"]." selected=selected>". $row["Database"]."</option>";
 							} else {
-								echo "0 results";
+								echo "<option value=". $row["Database"].">". $row["Database"]."</option>";
 							}
-							?>
-						<div class="form-group">
-							<input name='kalimat' value="<?php echo $string; ?>" type='hidden'>
-							<input value="kirim" type="submit" class="btn btn-primary btn-md">
-						</div>
-					</form>
-					<?php
-					$i=0; $j=0;
-					if (!empty($_POST["database"])) {
-						$dbname = $_POST["database"]; 
-						// Create connection to database
-						$connd = mysqli_connect($servername, $username, $password, $dbname);
-						// Check connection
-						if (!$connd) {
-							die("Connection failed: " . mysqli_connect_error());
+						} else {
+							echo "<option value=". $row["Database"].">". $row["Database"]."</option>";
 						}
-						echo "<p>Connected to database <b>$dbname</b> successfully </p>";	
-							
-						$sql = "SHOW FULL TABLES";
-						$result = mysqli_query($connd, $sql);
+					}
+					echo"</select>";
+				} else {
+					echo "0 results";
+				}
+			?>
+			<input name='kalimat' value="<?php echo $string; ?>" type='hidden'>
+			<input value="kirim" type="submit"></p>
+		</form>
+		<?php
+			$i=0; $j=0;
+			if (!empty($_POST["database"])) {
+				$dbname = $_POST["database"]; 
+				// Create connection to database
+				$connd = mysqli_connect($servername, $username, $password, $dbname);
+				// Check connection
+				if (!$connd) {
+					die("Connection failed: " . mysqli_connect_error());
+				}
+				echo "<p>Connected to database <b>$dbname</b> successfully </p>";	
+				
+				$sql = "SHOW FULL TABLES";
+				$result = mysqli_query($connd, $sql);
 
-						if (mysqli_num_rows($result) > 0) {
+				if (mysqli_num_rows($result) > 0) {
+					// output data of each row
+					echo "Database <b>$dbname</b><br>";
+					$i1=0;$i2=0;
+					while($row = mysqli_fetch_assoc($result)) {
+						if ($row["Table_type"]=="VIEW"){
+							//Echo "View ";
+							$vtable = $row["Tables_in_$dbname"];
+							$vtables[$i1] = $vtable;
+							$i1++;
+						} else {
+							//Echo "Base ";
+							$btable = $row["Tables_in_$dbname"];
+							$btables[$i2] = $btable;
+							$i2++;
+						}
+						//echo "Table [". $row["Tables_in_$dbname"]. "] => ";
+						$table = $row["Tables_in_$dbname"];
+						$tables[$i] = $table;
+						$i++;
+						$sql2 = "DESC $table";
+						$result2 = mysqli_query($connd, $sql2);
+						if (mysqli_num_rows($result2) > 0) {
 							// output data of each row
-							//echo "Database <b>$dbname</b><br>";
-							$i1=0;$i2=0;
-							while($row = mysqli_fetch_assoc($result)) {
-								if ($row["Table_type"]=="VIEW"){
-									//Echo "View ";
-									$vtable = $row["Tables_in_$dbname"];
-									$vtables[$i1] = $vtable;
-									$i1++;
-								} else {
-									//Echo "Base ";
-									$btable = $row["Tables_in_$dbname"];
-									$btables[$i2] = $btable;
-									$i2++;
-								}
-								//echo "Table [". $row["Tables_in_$dbname"]. "] => ";
-								$table = $row["Tables_in_$dbname"];
-								$tables[$i] = $table;
-								$i++;
-								$sql2 = "DESC $table";
-								$result2 = mysqli_query($connd, $sql2);
-								if (mysqli_num_rows($result2) > 0) {
-									// output data of each row
-									//echo "Atribut : ";
-									$j=0;
-									while($row2 = mysqli_fetch_assoc($result2)) {
-										//echo " (".$row2["Field"]. ")";
-										//$atribut = $row2["Field"];
-										$atributs[$table]['field'][$j] = $row2["Field"];
-										$atributs[$table]['type'][$j] = $row2["Type"];
-										$atributs[$table]['key'][$j] = $row2["Key"];
-										$j++;
-									}
-										//echo "<br>";
-								} else {
-									echo "0 results";
-								}
+							//echo "Atribut : ";
+							$j=0;
+							while($row2 = mysqli_fetch_assoc($result2)) {
+								//echo " (".$row2["Field"]. ")";
+								//$atribut = $row2["Field"];
+								$atributs[$table]['field'][$j] = $row2["Field"];
+								$atributs[$table]['type'][$j] = $row2["Type"];
+								$atributs[$table]['key'][$j] = $row2["Key"];
+								$j++;
 							}
+							//echo "<br>";
 						} else {
 							echo "0 results";
 						}
-					} else {
-						echo "Database Belum dipilih";
 					}
-					
-					?>
-					<h4> Analisis Tabel dan Atribut </h4>
-					<hr>
-					<div class="row">		
-					<?php
-					for($i=0; $i<$i2; $i++){
-					?>
-						<div class="col-sm-4">
-							<div class="table-responsive">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th><?php echo "Table Base [".$btables[$i]."]"; ?></th>
-											<th>AS</th>
-											<th>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $btables[$i]; ?></textarea>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php
-									$c_attr = count($atributs[$btables[$i]]['field']);
-									for($j=0; $j<$c_attr; $j++){
-									?>
-										<tr>
-											<td>
-												<?php echo $atributs[$btables[$i]]['field'][$j]; ?>
-												<?php echo $atributs[$btables[$i]]['type'][$j]; ?>
-												<?php echo $atributs[$btables[$i]]['key'][$j]; ?>
-											</td>
-											<td>AS</td>
-											<td>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $atributs[$btables[$i]]['field'][$j]; ?></textarea>
-											</td>
-										</tr>
-									<?php
-									}
-									?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					<?php
-					}
-					for($i=0; $i<$i1; $i++){
-					?>
-						<div class="col-sm-4">
-							<div class="table-responsive">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th><?php echo "Table View [".$vtables[$i]."]"; ?></th>
-											<th>AS</th>
-											<th>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $btables[$i]; ?></textarea>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php
-									$c_attr = count($atributs[$vtables[$i]]['field']);
-									for($j=0; $j<$c_attr; $j++){
-									?>
-										<tr>
-											<td>
-												<?php echo $atributs[$vtables[$i]]['field'][$j]; ?>
-												<?php echo $atributs[$vtables[$i]]['type'][$j]; ?>
-												<?php echo $atributs[$vtables[$i]]['key'][$j]; ?>
-											</td>
-											<td>AS</td>
-											<td>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $atributs[$vtables[$i]]['field'][$j]; ?></textarea>
-											</td>
-										</tr>
-									<?php
-									}
-									?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					<?php
-					}
-					//Cari Relasi tabel
-					for($i=0; $i<$i2; $i++){
-						$c_attr = count($atributs[$btables[$i]]['field']);
-						for($j=0; $j<$c_attr; $j++){
-							if ($atributs[$btables[$i]]['key'][$j] == "PRI") {
-								//echo $btables[$i].".".$atributs[$btables[$i]]['field'][$j].":<br> ";
-								$r=0;
-								for($ii=0; $ii<$i2; $ii++){
-									if ($btables[$i] != $btables[$ii]){
-										$c_attr2 = count($atributs[$btables[$ii]]['field']);
-										for($jj=0; $jj<$c_attr2; $jj++){
-											
-											if ($atributs[$btables[$i]]['field'][$j] == $atributs[$btables[$ii]]['field'][$jj]) {
-												//echo "[".$btables[$i]."] :";
-												//echo " [".$btables[$ii]."] => ";
-												//echo "(".$btables[$i].".".$atributs[$btables[$i]]['field'][$j];
-												//echo " : ";
-												//echo $btables[$ii].".".$atributs[$btables[$ii]]['field'][$jj]. ")";
-												//echo " Relasi = [".$atributs[$btables[$i]]['key'][$j]." : ".$atributs[$btables[$ii]]['key'][$jj]."] <br>";
-												$relasi[$btables[$i]]['tab'][$r] = $btables[$ii];
-												$relasi[$btables[$i]]['attr'][$r] = $atributs[$btables[$ii]]['field'][$jj];
-												$relasi[$btables[$i]]['car'][$r] = $atributs[$btables[$i]]['key'][$j]."-".$atributs[$btables[$ii]]['key'][$jj];
-												//$c_relasi = count($relasi[$btables[$i]]['tab']);
-												//echo"---- $c_relasi ------";
-												$r++;
-											}
-											
-										}
-										
+				} else {
+					echo "0 results";
+				}
+			} else {
+				echo "Database Belum dipilih";
+			}
+			//*
+			//mysqli_close($conn);
+			echo "<br><b>Tahap 0. Analisis Database</b><br>";
+			echo "<br><u>Tahap 0.1.  Analisis Tabel dan Atribut</u><br>";
+			echo "<br>";
+			for($i=0; $i<$i2; $i++){
+				echo "Tabel Base [".$btables[$i]."] => Atribut : <br>";
+				$c_attr = count($atributs[$btables[$i]]['field']);
+				for($j=0; $j<$c_attr; $j++){
+					echo 
+						" ( ".
+						$atributs[$btables[$i]]['key'][$j].
+						" [".
+						$atributs[$btables[$i]]['field'][$j].
+						"] = ".
+						$atributs[$btables[$i]]['type'][$j].
+						")"
+					;
+					echo "<br>";
+				}
+				echo "<br>";
+			}
+			echo "<br>";
+			for($i=0; $i<$i1; $i++){
+				echo "Tabel View [".$vtables[$i]."] => Atribut : <br>";
+				$c_attr = count($atributs[$vtables[$i]]['field']);
+				for($j=0; $j<$c_attr; $j++){
+					echo 
+						" ( ".
+						$atributs[$vtables[$i]]['key'][$j].
+						" [".
+						$atributs[$vtables[$i]]['field'][$j].
+						"] = ".
+						$atributs[$vtables[$i]]['type'][$j].
+						")"
+					;
+					echo "<br>";
+				}
+				echo "<br>";
+			}//*/
+			
+			//Cari Relasi tabel
+			
+			for($i=0; $i<$i2; $i++){
+				$c_attr = count($atributs[$btables[$i]]['field']);
+				for($j=0; $j<$c_attr; $j++){
+					if ($atributs[$btables[$i]]['key'][$j] == "PRI") {
+						//echo $btables[$i].".".$atributs[$btables[$i]]['field'][$j].":<br> ";
+						$r=0;
+						for($ii=0; $ii<$i2; $ii++){
+							if ($btables[$i] != $btables[$ii]){
+								$c_attr2 = count($atributs[$btables[$ii]]['field']);
+								for($jj=0; $jj<$c_attr2; $jj++){
+									
+									if ($atributs[$btables[$i]]['field'][$j] == $atributs[$btables[$ii]]['field'][$jj]) {
+										//echo "[".$btables[$i]."] :";
+										//echo " [".$btables[$ii]."] => ";
+										//echo "(".$btables[$i].".".$atributs[$btables[$i]]['field'][$j];
+										//echo " : ";
+										//echo $btables[$ii].".".$atributs[$btables[$ii]]['field'][$jj]. ")";
+										//echo " Relasi = [".$atributs[$btables[$i]]['key'][$j]." : ".$atributs[$btables[$ii]]['key'][$jj]."] <br>";
+										$relasi[$btables[$i]]['tab'][$r] = $btables[$ii];
+										$relasi[$btables[$i]]['attr'][$r] = $atributs[$btables[$ii]]['field'][$jj];
+										$relasi[$btables[$i]]['car'][$r] = $atributs[$btables[$i]]['key'][$j]."-".$atributs[$btables[$ii]]['key'][$jj];
+										//$c_relasi = count($relasi[$btables[$i]]['tab']);
+										//echo"---- $c_relasi ------";
+										$r++;
 									}
 									
 								}
-								//echo "<br>";
+								
 							}
+							
 						}
+						//echo "<br>";
 					}
-					
-					?>
-					</div>
-					<hr>
-					<h4> Analisis Relasi </h4>
-					<hr>
-					<div class="row">		
-					<?php
-					for($i=0; $i<$i2; $i++){
-					?>
-						<div class="col-sm-4">
-							<div class="table-responsive">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th><?php echo "Table [".$btables[$i]."]"; ?></th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php
-									$c_relasi = count($relasi[$btables[$i]]['tab']);
-									for($j=0; $j<$c_relasi; $j++){
-									?>
-										<tr>
-											<td>
-												<?php echo $relasi[$btables[$i]]['tab'][$j]; ?>
-												(<?php echo $relasi[$btables[$i]]['attr'][$j]; ?>)
-												<?php echo $relasi[$btables[$i]]['car'][$j]; ?>
-											</td>
-										</tr>
-									<?php
-									}
-									?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					<?php
-					}
-					
-					?>
-					</div>
-				</div>
-				<?php
-				//load database
-				if (!empty($_POST["database"])) {
-					$dbname = $_POST["database"];
-					//print_r($tables);
-					//print_r($atributs);
-				} else {
-					$dbname = "";
 				}
-				?>
-				<div id="menu1" class="tab-pane fade">
-					<h3>Translator</h3>
-					<p></p>
-					
-					
-					
-				</div>
-				<div id="menu2" class="tab-pane fade">
-					<h3>Penelusuran</h3>
-					<p></p>
-					
-					<form action="Translator.php" method="post">
+			}
+			
+			echo "<u>Tahap 0.2.  Analisis Tabel dan Atribut</u><br><br>";
+			for($i=0; $i<$i2; $i++){
+				echo "[".$btables[$i]."] => Relasi : <br>";
+				
+				$c_relasi = count($relasi[$btables[$i]]['tab']);
+
+				for($j=0; $j<$c_relasi; $j++){
+					echo 
+						" [ ".
+						$relasi[$btables[$i]]['tab'][$j].
+						".".
+						$relasi[$btables[$i]]['attr'][$j].
+						"] = ".
+						$relasi[$btables[$i]]['car'][$j]
+					;
+					echo "<br>";
+				}
+				
+				echo "<br>";
+			}
+			
+		?>
+		<?php
+			//load database
+			if (!empty($_POST["database"])) {
+				$dbname = $_POST["database"];
+				//print_r($tables);
+				
+				//print_r($atributs);
+			} else {
+				$dbname = "";
+			}
+		?>
+		<!--<p>
+			Contoh : tampilkan <i>nama_atribut1</i> , ... , <i>nama_atributn</i> dari <i>nama_tabel</i> 
+			<br>Contoh : tampilkan semua data <i>nama_tabel</i> 
+			<br>Contoh : tampilkan <i>nama_atribut1</i> , ... , <i>nama_atributn</i> dari <i>nama_tabel</i> yang memiliki <i>nama_atribut</i> = <i>nilai</i> 
+			<br>Contoh : tampilkan semua data <i>nama_tabel</i> yang memiliki <i>nama_atribut</i> = <i>nilai</i> dan <i>nama_atribut</i> = <i>nilai</i> 
+			<br>Contoh : tampilkan semua data <i>nama_tabel</i> dan <i>nama_tabel2</i> 
+			<br>Contoh : tampilkan <i>nama_atribut1</i> <i>nama_tabel1</i> , ... , <i>nama_atributn</i> <i>nama_tabeln</i> dari <i>nama_tabel1</i> dan <i>nama_tabeln</i> 
+		</p>-->		
+		<form action="Translator.php" method="post">
 			<p><textarea name="kalimat" rows="4" cols="50" placeholder="Kalimat Perintah"><?php echo $string; ?></textarea></p>
 			<input name="database" value="<?php echo $dbname; ?>" type="hidden">
 			<p><input value="kirim" type="submit"></p>
@@ -683,11 +594,11 @@
 							}
 						}
 					}
-					//if ($s_2c > 0) {
-						//echo "<br>Ada Kata kondisi => ".$kata_kondisi;
-						//$sql_part[$nsql]="WHERE ";
-						//$nsql++;
-					//}
+					if ($s_2c > 0) {
+						echo "<br>Ada Kata kondisi => ".$kata_kondisi;
+						$sql_part[$nsql]="WHERE ";
+						$nsql++;
+					}
 					//$sql_part[$nsql]=";";
 					//$nsql++;
 					$codesql = join("",$sql_part);
@@ -740,9 +651,5 @@
 				<?php
 			}
 		?>
-					
-				</div>
-			</div>
-		</div>
 	</body>
-</html> 
+</html>
