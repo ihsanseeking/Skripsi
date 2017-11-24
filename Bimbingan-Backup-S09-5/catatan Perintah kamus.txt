@@ -1,0 +1,13 @@
+Perintah 2 Kamus
+
+SELECT :
+tampilkan, tampilkanlah, menampilkan, siapa, siapakah, cari, carikan, berapa, berapakah, 
+
+DELETE :
+hapus, hapuslah, menghapus, delete, buang, kurangi
+
+UPDATE :
+ubah, mengubah, ubahlah, ganti, gantilah, gantikan,
+
+INSERT :
+tambah, tambahkan

@@ -1,0 +1,7 @@
+Menerjemahkan kalimat perintah ke dalam format SQL bergantung kepada informasi dari kalimat perintah dan database yang dipilih.
+
+informasi dari kalimat perintah biasanya berupa kata-kata yang menjadi indikator perintah atau fungsi dan nama-nama tabel hingga atribut dari database yang digunakan. 
+ 
+Perintah atau fungsi tersebut digunakan untuk menentukan jenis fungsi query yang akan digunakan, sedangkan nama tabel atau atribut menjadi parameternya.
+
+
