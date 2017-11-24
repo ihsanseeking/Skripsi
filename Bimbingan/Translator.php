@@ -611,10 +611,11 @@
 				<?php
 				//cek dulu soalnya apakaha atribut selalu sebelum "yang"
 					//nyari atribut dari tabel
+					$na=0;
 					for($i_nt=0; $i_nt<$nt; $i_nt++){
 						$i2=0;
-						$na=0;
-						/*$c_atribut = count($atributs[$nama_table[$i_nt]['field']]);
+						
+						$c_atribut = count($atributs[$nama_table[$i_nt]]['field']);
 						//echo "$i_nt --- $c_atribut";
 						//echo "<p>jumlah $c_atribut</p>";
 						//looping sebanyak token
@@ -628,19 +629,21 @@
 								//echo " - ".$tokens[$i2]." == ".$atributs[$nama_table[$i_nt]]['field'][$j2]."<br>";
 								if ($tokens[$i2] == $atributs[$nama_table[$i_nt]]['field'][$j2]) {
 									
-									$nama_atribut[$na] = $tokens[$i2];
-									echo "nama atribut[$na] : $nama_atribut[$na]<br>";
+									$nama_atribut[$na] = "$tokens[$i2]";// $nama_table[$i_nt]";
+									echo "nama atribut[$na] : ".$nama_atribut[$na]."<br>";
 									$na++;
+									
 								}
 							}
-						}*/
-						if($na == 0){
+						}
+						
+					}
+					if($na < 1){
 							$nama_atribut[$na] = "*";
 							$na++;
 							
 						}
-					}
-					echo "sementara atributnya * dulu";
+					//echo "sementara atributnya * dulu";
 				?>
 				<p><u>Tahap 2.e. Penyusunan Query</u></p>
 				<?php
@@ -703,7 +706,12 @@
 						// echo "Database <b>$dbname</b><br>";
 						
 						$c_attrb=count($nama_atribut);
-						echo "<table border=1><tr>";
+						?>
+						<div class="table-responsive">
+						<table class="table table-striped">
+						<tr>
+						<?php
+						//echo "<table border=1><tr>";
 						if ($nama_atribut[0] == "*"){
 							$c_atribut = count($atributs[$nama_table[0]]['field']);
 							for ($i = 0; $i < $c_atribut; $i++) {
@@ -731,7 +739,7 @@
 							}
 							echo"</tr>";
 						}
-						echo "</table>";
+						echo "</table></div>";
 					} else {
 						echo "0 results";
 					}

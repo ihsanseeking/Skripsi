@@ -611,10 +611,11 @@
 				<?php
 				//cek dulu soalnya apakaha atribut selalu sebelum "yang"
 					//nyari atribut dari tabel
+					$na=0;
 					for($i_nt=0; $i_nt<$nt; $i_nt++){
 						$i2=0;
-						$na=0;
-						/*$c_atribut = count($atributs[$nama_table[$i_nt]['field']]);
+						
+						$c_atribut = count($atributs[$nama_table[$i_nt]]['field']);
 						//echo "$i_nt --- $c_atribut";
 						//echo "<p>jumlah $c_atribut</p>";
 						//looping sebanyak token
@@ -628,19 +629,21 @@
 								//echo " - ".$tokens[$i2]." == ".$atributs[$nama_table[$i_nt]]['field'][$j2]."<br>";
 								if ($tokens[$i2] == $atributs[$nama_table[$i_nt]]['field'][$j2]) {
 									
-									$nama_atribut[$na] = $tokens[$i2];
-									echo "nama atribut[$na] : $nama_atribut[$na]<br>";
+									$nama_atribut[$na] = "$tokens[$i2]";// $nama_table[$i_nt]";
+									echo "nama atribut[$na] : ".$nama_atribut[$na]."<br>";
 									$na++;
+									
 								}
 							}
-						}*/
-						if($na == 0){
+						}
+						
+					}
+					if($na < 1){
 							$nama_atribut[$na] = "*";
 							$na++;
 							
 						}
-					}
-					echo "sementara atributnya * dulu";
+					//echo "sementara atributnya * dulu";
 				?>
 				<p><u>Tahap 2.e. Penyusunan Query</u></p>
 				<?php
@@ -683,11 +686,11 @@
 							}
 						}
 					}
-					if ($s_2c > 0) {
-						echo "<br>Ada Kata kondisi => ".$kata_kondisi;
-						$sql_part[$nsql]="WHERE ";
-						$nsql++;
-					}
+					//if ($s_2c > 0) {
+						//echo "<br>Ada Kata kondisi => ".$kata_kondisi;
+						//$sql_part[$nsql]="WHERE ";
+						//$nsql++;
+					//}
 					//$sql_part[$nsql]=";";
 					//$nsql++;
 					$codesql = join("",$sql_part);
