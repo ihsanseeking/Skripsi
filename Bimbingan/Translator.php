@@ -125,7 +125,7 @@
 								// output data of each row
 								while($row_database = mysqli_fetch_assoc($result_database)) {
 									$db_analisis_id = $row_database["id"];
-									echo "id = $db_analisis_id nama = ".$row_database["nama"];
+									//echo "id = $db_analisis_id nama = ".$row_database["nama"];
 								}
 							}
 							//analisis tabel db_analisis baru
@@ -157,7 +157,7 @@
 										// output data of each row
 										while($row_table = mysqli_fetch_assoc($result_table)) {
 											$tbl_analisis_id = $row_table["id"];
-											echo "id = $tbl_analisis_id nama = ".$row_table["nama"];
+											//echo "id = $tbl_analisis_id nama = ".$row_table["nama"];
 										}
 									}
 									//lihat semua atribut di tbl_analisis baru
@@ -169,15 +169,16 @@
 										$sql_part_attribute[$sql_i_attribute]="INSERT INTO `d_attribute` (`id`, `id_table`, `nama`, `tipe`) VALUES ";
 										while($row_table = mysqli_fetch_assoc($result_table)) {
 											$attr_analisis = $row_table["Field"];
-											$attr_analisis_tipe = $row_table["Type"];
+											$attr_analisis_tipe = '"'.$row_table['Type'].'"';
+											//echo "<br> $attr_analisis_tipe <br>";
 											$sql_i_attribute++;
-											$sql_part_attribute[$sql_i_attribute]="(NULL, '$tbl_analisis_id', '$attr_analisis', '$attr_analisis_tipe')";
+											$sql_part_attribute[$sql_i_attribute]="(NULL, '$tbl_analisis_id', '$attr_analisis', $attr_analisis_tipe)";
 											$sql_i_attribute++;
 											$sql_part_attribute[$sql_i_attribute]=",";
 										}
 										$sql_part_attribute[$sql_i_attribute]=";";
 										$sql_attribute = join("",$sql_part_attribute);
-										echo "$sql_attribute";
+										//echo "<br> $sql_attribute </br>";
 										$result_attribute = mysqli_query($connect_db_p, $sql_attribute);
 										if($result_attribute){
 											echo"<p class='text-success'>Analisis Atribut Tabel <b>$tbl_analisis</b> Berhasil</p>";
