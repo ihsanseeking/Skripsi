@@ -228,6 +228,30 @@
 									} else {
 										echo "0 results";
 									}
+								}
+							} else {
+								echo "0 results";
+							}
+							//lihat semua table di db_analisis
+							$sql_database = "SHOW FULL TABLES";
+							$result_database = mysqli_query($connect_db_a, $sql_database);
+							if (mysqli_num_rows($result_database) > 0) {
+								while($row_database = mysqli_fetch_assoc($result_database)) {
+									$tbl_analisis = $row_database["Tables_in_$db_analisis"];
+									//Temukan ID tbl_analisis baru
+									$sql_table = "
+										SELECT * FROM `d_table` 
+										WHERE `d_table`.`id_database` = '$db_analisis_id' 
+										AND `d_table`.`nama` = '$tbl_analisis'
+									";
+									$result_table = mysqli_query($connect_db_p, $sql_table);
+									if (mysqli_num_rows($result_table) > 0) {
+										// output data of each row
+										while($row_table = mysqli_fetch_assoc($result_table)) {
+											$tbl_analisis_id = $row_table["id"];
+											//echo "id = $tbl_analisis_id nama = ".$row_table["nama"];
+										}
+									}
 									//Temukan Relasi
 									$sql_table = "SHOW CREATE TABLE $tbl_analisis";
 									$result_table = mysqli_query($connect_db_a, $sql_table);
@@ -322,7 +346,6 @@
 								echo "0 results";
 							}
 						}
-						
 						if (!empty($_POST["hapus"])) {
 							$db_hapus = $_POST["hapus"];
 							$db_id_hapus = $_POST["id_hapus"];
