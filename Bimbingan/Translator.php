@@ -113,19 +113,19 @@
 							if (!$connect_db_p) {die("Connection failed: " . mysqli_connect_error());}
 							//echo "<p>Connected to database <b>".$_SESSION["db_pendukung"]."</b> successfully </p>";	
 							//Simpan db ke db_pendukung
-							$sql = "INSERT INTO `d_database` (`id`, `nama`) VALUES (NULL, '$db_analisis')";
-							$result = mysqli_query($connect_db_p, $sql);
-							if($result){
+							$sql_database = "INSERT INTO `d_database` (`id`, `nama`) VALUES (NULL, '$db_analisis')";
+							$result_database = mysqli_query($connect_db_p, $sql_database);
+							if($result_database){
 								echo"<p class='text-success'>Analisis Database <b>$db_analisis</b> Berhasil</p>";
 							}
 							//Temukan ID db_analisis baru
-							$sql = "SELECT * FROM `d_database` WHERE `d_database`.`nama` = '$db_analisis'";
-							$result = mysqli_query($connect_db_p, $sql);
-							if (mysqli_num_rows($result) > 0) {
+							$sql_database = "SELECT * FROM `d_database` WHERE `d_database`.`nama` = '$db_analisis'";
+							$result_database = mysqli_query($connect_db_p, $sql_database);
+							if (mysqli_num_rows($result_database) > 0) {
 								// output data of each row
-								while($row = mysqli_fetch_assoc($result)) {
-									$db_analisis_id = $row["id"];
-									echo "id = $db_analisis_id nama = ".$row["nama"];
+								while($row_database = mysqli_fetch_assoc($result_database)) {
+									$db_analisis_id = $row_database["id"];
+									echo "id = $db_analisis_id nama = ".$row_database["nama"];
 								}
 							}
 							//analisis tabel db_analisis baru
@@ -136,11 +136,58 @@
 								die("Connection failed: " . mysqli_connect_error());
 							}
 							echo "<p>Connected to database <b>$db_analisis</b> successfully </p>";	
+							//lihat semua table di db_analisis
+							$sql_database = "SHOW FULL TABLES";
+							$result_database = mysqli_query($connect_db_a, $sql_database);
+							if (mysqli_num_rows($result_database) > 0) {
+								while($row_database = mysqli_fetch_assoc($result_database)) {
+									$tbl_analisis = $row_database["Tables_in_$db_analisis"];
+									$tbl_analisis_tipe = $row_database["Table_type"];
+									//simpan table ke d_table
+									$sql_table="INSERT INTO `d_table` (`id`, `id_database`, `nama`, `tipe`) VALUES (NULL, '$db_analisis_id', '$tbl_analisis', '$tbl_analisis_tipe')";
+									//echo "$sql_table";
+									$result_table = mysqli_query($connect_db_p, $sql_table);
+									if($result_table){
+										echo"<p class='text-success'>Analisis Tabel <b>$db_analisis.$tbl_analisis</b> Berhasil</p>";
+									}
+									//Temukan ID tbl_analisis baru
+									$sql_table = "SELECT * FROM `d_table` WHERE `d_table`.`id_database` = '$db_analisis_id' AND `d_table`.`nama` = '$tbl_analisis'";
+									$result_table = mysqli_query($connect_db_p, $sql_table);
+									if (mysqli_num_rows($result_table) > 0) {
+										// output data of each row
+										while($row_table = mysqli_fetch_assoc($result_table)) {
+											$tbl_analisis_id = $row_table["id"];
+											echo "id = $tbl_analisis_id nama = ".$row_table["nama"];
+										}
+									}
+									//lihat semua atribut di tbl_analisis baru
+									$sql_table = "DESC $tbl_analisis";
+									$result_table = mysqli_query($connect_db_a, $sql_table);
+									if (mysqli_num_rows($result_table) > 0) {
+										$sql_part_attribute = array();
+										$sql_i_attribute=0;
+										$sql_part_attribute[$sql_i_attribute]="INSERT INTO `d_attribute` (`id`, `id_table`, `nama`, `tipe`) VALUES ";
+										while($row_table = mysqli_fetch_assoc($result_table)) {
+											$attr_analisis = $row_table["Field"];
+											$attr_analisis_tipe = $row_table["Type"];
+											$sql_i_attribute++;
+											$sql_part_attribute[$sql_i_attribute]="(NULL, '$tbl_analisis_id', '$attr_analisis', '$attr_analisis_tipe')";
+											$sql_i_attribute++;
+											$sql_part_attribute[$sql_i_attribute]=",";
+										}
+										$sql_part_attribute[$sql_i_attribute]=";";
+										$sql_attribute = join("",$sql_part_attribute);
+										echo "$sql_attribute";
+										$result_attribute = mysqli_query($connect_db_p, $sql_attribute);
+										if($result_attribute){
+											echo"<p class='text-success'>Analisis Atribut Tabel <b>$tbl_analisis</b> Berhasil</p>";
+										}	
+									} else {
+										echo "0 results";
+									}
+								}	
 								
-							$sql = "SHOW FULL TABLES";
-							$result = mysqli_query($connect_db_a, $sql);
-
-							if (mysqli_num_rows($result) > 0) {
+								/*
 								// output data of each row
 								//echo "Database <b>$db_analisis</b><br>";
 								$i=0;
@@ -162,7 +209,7 @@
 								if($result){
 									echo"<p class='text-success'>Analisis Tabel <b>$db_analisis</b> Berhasil</p>";
 								}	
-									
+								*/	
 									/*$sql2 = "DESC $table";
 									$result2 = mysqli_query($connd, $sql2);
 									if (mysqli_num_rows($result2) > 0) {
