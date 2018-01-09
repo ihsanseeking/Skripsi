@@ -1,0 +1,46 @@
+#1==================================================================== 
+	Tampilkan 
+		nama "lengkap" 
+	actor 
+		dan judul-judul 
+	film 
+	yang pernah dilakoninya
+
+Versi Ideal
+
+	Tampilkan 
+		fisrt_name (actor)
+		last_name (actor) 
+		dan 
+		title - title  (film)(group_concat) "karena diulang 2 kali = grup dan pasti menggunakan grup by dari id dari tabel from jika tidak terdefinisi yg di grup bynya."
+	actor 
+		Join film
+
+#2====================================================================
+	Tampilkan 
+		nama 
+	customer 
+	yang pernah meminjam dvd lebih dari 3 hari
+	
+#3====================================================================
+	Tampilkan 
+		judul-judul 
+	film 
+	yang terdapat pada store 2, 
+		tapi tidak terdapat pada store 1
+		
+#4====================================================================
+	Tampilkan 
+		judul 
+	film 
+	yang termasuk kategori comedy, 
+		dimana dalam deskripsi film tersebut mengandung kata “dentist”
+	
+#5====================================================================
+	Total berapa
+		US Dollar-kah pendapatan rental selama bulan Mei tahun 2005 
+		
+	yang dihasilkan oleh setiap anggota (penyewa rental) 
+		dan 
+	tampilkan pula berapa kali si penyewa tersebut melakukan penyewaan pada waktu tersebut?
+	

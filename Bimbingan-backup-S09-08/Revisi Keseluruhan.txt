@@ -1,0 +1,222 @@
+Revisian Seminar semester kemarin:
+
+#Pembimbing - Galih Hermawan, S.Kom, M.T. :
+1. Latar Belakang
+2. Maksud
+3. Tujuan
+4. Referensi Bab 2
+5. Beberapa Gambar Kurang Jelas
+6. Daftar Pustaka
+7. DFD
+
+#Reviewer - Andri Heryandi, S.T., M.T. :
+1. Latar Belakang
+2. Maksud
+3. Tujuan
+4. Bawa Referensi
+5. Insert
+6. Update
+7. Delete
+8. Where
+5. Validasi-Validasi
+
+#Review Tak Tertulis :
+1. Daftar Symbol (Kelengkapan)
+2. Metode Peembangunan Perangkat lunak (Pilih gambar yang Benar)
+3. FlowChart-Flowchart
+4. Janji Desain
+
+#Review Hasil Persentasi kemarin:
+- Dokument
+1. Latar Belakang (Translator SQL?, Fungsi, manfaat, Review Hasil Penelitian Sejenis, Pengembangan).
+2. Batasan Masalah (Perbaiki, input, output, penelusuran, model).
+3. Metodelogi Penelitian (Kaji lagi)
+4. Metode pembangunan perangkat lunak (kaji lagi)
+5. Proses Masukan Alias-alias
+6. Perintah DLM Fokus ke Select (hapus insert update delete)
+7. Skema (symbol Input dan Output).
+8. Contoh Input (Spek, ketentuan, idealnya)
+9. Lampiran (skema dan Hasil Output)
+10. chek typo
+
+-Persentasi
+1. Desain (Warna Font)
+2. Latar Belakang (Point-Point)
+3. Tujuan penelitian (tambah Peniliaan Akurasi)
+4. Batasan Masalah (Perbaiki, input, output, penelusuran, model)
+5. Keyword DML Fokus ke Select. (hapus insert update delete)
+6. Metode Penelitian (kaji Lagi)
+7. Metode pembangunan perangkat lunak (kaji lagi, beri nama)
+8. Analisis masalah (point-point)
+9. Skema (symbol Input dan Output).
+10. Contoh Input (Spek, ketentuan, idealnya)
+11. Hasil Penyelesaian (di ambil 3 teratas dan terbawah)
+12. Hapus kebutuhan non fungsional.
+13. Cek typo
+
+-Demo Program
+1. Form Input Alias
+2. Desain (jadi Banyak Halaman)
+3. Halaman (Info database, daftar Alias, Translator Singkat, Penelusuran Detail).
+4. Tampilan Tabel hasil di buat Page.
+
+Kesimpulan yang perlu direvisi :
+1. Daftar Symbol
+2. Latar Belakang
+3. Maksud
+4. Tujuan
+5. Batasan Masalah
+6. Metode Penelitian
+7. Metode Pembangunan Perangkat Lunak
+8. Referensi Bab 2 dan dibawa
+9. Flowchart-Flowchart/Skema
+10. Insert(x)
+11. Update(X)
+12. Delete(X)
+13. Where
+14. Validasi-Validasi
+15. DFD
+16. Gambar Harus Jelas
+17. Daftar Pustaka
+18. Lampiran
+
+Dikelompokan :
+#Dokument :
+	Daftar-Daftar
+		- Daftar Symbol
+	Bab 1
+		- Latar Belakang
+			. Tentang Translator SQL
+				. Fungsi
+				. Manfaat
+			. Review Literatur Penelitian Sebelumnya
+				. Penjelasan
+				. Hasil Pencapaian
+			. Pengembangan dari penelitian Sebelumnya
+			. DBMS itu Mysql
+			(harus di kaji Ulang)
+		- Maksud dan Tujuan
+			. Maksud
+			. Tujuan
+			(Harus dipikirkan kembali)
+		- Batasan Masalah
+			. Platform
+			. Model Perancangan
+			. Input Data
+			. Output Data
+			. Output Penelusuran
+			(Perbaiki hapus perancangan php)
+		- Metodologi Penelitian
+			. Kaji Ulang
+			. Metode Pembangunan Perangkat Lunak
+				(Ganti Model Gamabr dan penjelasannya)
+
+	Bab 2
+		- Referensi
+			. Semua tools Di akhirkan
+			(yang awal-awal blm ada referensinya)
+
+	Bab 3
+		- Spesifikasi Data Input (Contoh Input)
+			. Ketentuan Kalimat input
+		- Flowchart
+			. Analisis System
+				. Symbol input dan Ouput
+				. Perbbaiki Flowchar yg kurag sesuai
+				(perbaik Flowchart Karena perbaiki Algoritma juga)
+		- Gambar 
+			Kurangi Warna halus, Pilih Warna kontras
+			(Sebenarnya Udah jelas yg salah hanya saat kualitas Print)
+		- DFD
+			(Setau saya yang kurang 1 jalur keluar)
+
+	Lainya :
+		- Daftar Pustaka
+			(Tinggal Update aja si kalau bab 2 referensi udah selesai)
+		- Lampiran
+			. Skema Relasi Database yang digunakan sebagai Contoh Penyelesaain
+			. Hasil output dari Contoh Proses 
+				. Jika banyak di ambil beberapa yg teratas dan terbawah
+		- Cek Typo lagi
+
+#Persentasi:
+	- Desain
+		. Warna Font Lebih Kontras agar terbaca
+		. Sisipkan Halaman dokument yang sedang di bahas dalam Slide.
+	- Latar belakang
+		. Ubah Ke Point-Point
+			. Cerita tentang Translator SQL
+				. Pengertian
+				. Fungsi
+				. manfaatnya
+			. Review Literatur
+				. Penjelasan
+				. Hasil Pencapaian
+			. Pegembangan
+				. yang membedakan
+	- Maksud dan Tujuan
+		. Tujuan Penelitian
+			. Tambah Pencarian Akurasi Penyelesaian
+	- Batasan Masalah
+		. Hapus Perancangan dengan PHP
+		. Tambahkan Model Pemograman yang di gunakan
+		. Platform yg digunakan
+		. Input yg lebih detail
+		. output penelusuran
+		. Ouput Hasil lebih detail
+		. Fokus di rettrival informasi
+	- Metodologi Penelitian
+		. Perbaiki jika di dokument diubah
+		. Metode Pembangunan perangkat lunak
+			. Kaji lagi Cari referensi atau ganti ke yang biasa.
+	- Analisis Masalah
+		. Point-Point dari Dokument
+	- Skema Mengikuti Dokument
+	- Contoh Masukan
+		. Ketentun / Spesifikasi Masukan yang diperbolehkan
+		. Contohnya
+	- Hasil Penyelesaian
+		. Jika Hasil ouput banyak
+			. Ambil 3 teratas dan 3 terbawah.
+	- Hapus kebutuhan Fungsional
+	- DFD Update jika ada perubahan
+	- Ubah Tampilan jika ada Prubahan Desai Tampilan
+	- Cek Typo lagi
+
+#Program : 
+	- Fitur Insert(X)
+	- Fitur Update(X)
+	- Fitur Delete(X)
+	- Fitur Where
+	masing-2 harus->
+		1. Cari Contoh Soal Fitur Sebanyak2nya
+		2. Analisis setiap Soal, tentukan Keyword yang berpengaruh
+		3. Buat model algoritma lagi
+		4. Coba implementasi
+		5. Uji 
+	
+	- Buat Halaman
+		. Pilih Database
+			. Info Database
+			. Form Alias-Alias
+		. Translator
+			. Form Kalimat
+			. Hasil Translator
+				. Syntax SQL
+				. Tabel Hasil/10 record (page)
+		. Detail Penelusuran
+			. Output tiap Proses
+	- Proses identifikasi Syarat Kondisi
+		. Kata Kondisi
+			. Operator banding
+			. Atribut
+			. Isi
+		. Operator Logika
+	- Proses Identifikasi Atribut
+		. Nama Atribut
+		. Fitur Atribut
+	- Validasi Error Message
+		. Ketidak sesuaian dalam proses penelusuran.
+		
+Belum tau:
+	- Validasi-Validasi? -> sebenarnya kalau program error apa yg mau ditampilkan.

@@ -1,0 +1,351 @@
+Contoh-contoh Soal SQL
+- DB sakila
+#1. Tampilkan nama lengkap actor dan judul-judul film yang pernah dilakoninya (urut nama ASC). (melibatkan tabel:actor, film_actor, film)
+
+
+# Tampilkan judul Film-Film apa saja yang di pinjam oleh kustomer yang mempunyai nama lengkap Mary SMITH selama bukan Agustus 2005
+
+select 
+	title AS "Judul Film"	
+from rental
+join customer using(customer_id)
+join inventory using(inventory_id)
+join film using(film_id)
+where year(rental_date) = 2005
+and monthname(rental_date) = "August"
+and concat_ws(' ',first_name,last_name) Like "%Mary SMITH%" ;
+
+select 
+	rental_date As "Tanggal Pinjam",
+	concat_ws(' ',first_name,last_name) AS "Nama",
+	group_concat(title) AS "Judul Film"	
+from rental
+join customer using(customer_id)
+join inventory using(inventory_id)
+join film using(film_id)
+where year(rental_date) = 2005
+and monthname(rental_date) = "August"
+and concat_ws(' ',first_name,last_name) Like "%Mary SMITH%" 
+group by customer_id;
+
+#soal 2
+# Tampilkan jumlah uang yang dibelnajakan dan jumlah film yang disewa oleh setiap customer, di setiap bulannya, selama tahun 2005. hanya untuk yang jumlah uangnya diatas $1000. data di urutkan berdasarkan bulan secara ascending dan jumlah uang yang di belanjakan secara descending
+
+select 
+	Monthname(payment_date) AS "Bulan",
+	customer_id,
+	sum(amount) AS "Jumlah",
+	count(rental_id) AS "Jumlah Film"
+from payment
+where year(payment_date) = 2005
+group by customer_id
+order by sum(amount) DESC
+;
+ ==================================================================================
+-- DB hobimahasiswa
+ 
+#1. Tampilkan Nama Mahasiswa yang memiliki hobi Sepak Bola
+SELECT mahasiswa.nama AS 'NAMA'
+FROM mahasiswa 
+JOIN mhshobi USING (nim) 
+JOIN hobi USING (kodehobi)
+WHERE hobi.namahobi = "Sepak Bola";
+
+#2. Tampilkan Data mahasiswa yang memiliki hobi Game dan memiliki tinggi badan di bawah 170 cm
+SELECT *
+FROM mahasiswa 
+JOIN mhshobi USING (nim) 
+JOIN hobi USING (kodehobi)
+WHERE hobi.namahobi = "Game"
+AND mahasiswa.tinggi_badan < 170;
+
+#3. Tampilkan data Mahasiswa dan nama hobi yang diminatinya, hanya untuk mahasiswa yang usianya masuk paling tua. Tampilkan juga Usianya dalam bentuk tahun.
+
+SELECT nim,nama,namahobi,YEAR(tanggal_masuk)-YEAR(tanggal_lahir) AS 'USIA'
+FROM mahasiswa 
+JOIN mhshobi USING (nim)
+JOIN hobi USING (kodehobi)
+WHERE YEAR(tanggal_masuk)-YEAR(tanggal_lahir) = 
+(
+	SELECT MAX(YEAR(tanggal_masuk)-YEAR(tanggal_lahir))
+	FROM mahasiswa
+)
+
+#4. Tampilkan Data mahasiswa yang belum mencantumkan hobi yang diminatinya.
+SELECT *
+FROM mahasiswa 
+LEFT JOIN mhshobi USING (nim) 
+LEFT JOIN hobi USING (kodehobi)
+WHERE kodehobi IS NULL;
+
+#5. Tampilkan data hobi yang belum ada peminatnya
+SELECT *
+FROM mahasiswa 
+RIGHT JOIN mhshobi USING (nim) 
+RIGHT JOIN hobi USING (kodehobi)
+WHERE nim IS NULL;
+
+#6. Tampilkan hobi yang paling banyak peminatnya beserta jumlahmahasiswanya dan nama-namanya
+SELECT 
+	kodehobi, 
+	COUNT(nim) AS "Jumlah",
+	GROUP_CONCAT(nama) AS "Nama-nama"
+FROM mhshobi
+JOIN mahasiswa USING (nim)
+JOIN hobi USING (kodehobi)
+GROUP BY kodehobi
+HAVING Jumlah = 
+(
+	SELECT COUNT(nim) AS "Jumlah"
+	FROM mhshobi
+	GROUP BY kodehobi
+	ORDER BY Jumlah DESC
+	LIMIT 1
+);
+
+-- Kasus
+
+menampilkan seluruh data mahasiswa dan data hobi yang diminatinya
+1
+SELECT * 
+FROM mahasiswa,mhshobi,hobi
+WHERE mahasiswa.nim=mhshobi.nim
+AND mhshobi.kodehobi=hobi.kodehobi;
+2
+SELECT *
+FROM mahasiswa JOIN mhshobi USING (nim) JOIN hobi USING (kodehobi);
+3
+SELECT *
+FROM mahasiswa JOIN mhshobi ON mahasiswa.nim=mhshobi.nim
+JOIN hobi ON mhshobi.kodehobi=hobi.kodehobi;
+4
+SELECT *
+FROM mahasiswa LEFT JOIN mhshobi USING (nim) 
+		   LEFT JOIN hobi USING (kodehobi);
+5
+SELECT *
+FROM mahasiswa RIGHT JOIN mhshobi USING (nim) 
+		   RIGHT JOIN hobi USING (kodehobi);
+
+
+		   
+1. Menampilkan seluruh data mahasiswa yang tempat lahirnya di kota Surabaya.
+
+SELECT *
+FROM mahasiswa
+WHERE tempat_lahir="Surabaya";
+
+Operator Perbandingan: =, <, <= ,>, >=, <>, dll.
+Operator Logika: AND, OR, NOT, dll.
+
+2. Menampilkan data mahasiswa pada kolom nama dan tanggal lahir untuk mahasiswa yang namanya berawalan “A” dan tahun lahirnya >= 1990
+
+SELECT nama, tanggal_lahir
+FROM mahasiswa
+WHERE nama LIKE "A%" AND tanggal_lahir>="1990-01-01";
+
+3. Menampilkan data mahasiswa yang lahir di kota Surabaya maupun Jakarta, data diurutkan berdasarkan tanggal lahir dari termuda sampai tertua
+
+SELECT *
+FROM mahasiswa
+WHERE tempat_lahir="Surabaya" OR tempat_lahir="Jakarta"
+ORDER BY tanggal_lahir DESC;
+
+4. Menampilkan data mahasiswa yang tanggal lahirnya paling muda
+
+SELECT *
+FROM mahasiswa
+ORDER BY tanggal_lahir DESC
+LIMIT 1;
+
+5. Menampilkan data nama kota tempat lahir mahasiswa secara unik urut nama kota
+
+SELECT DISTINCT tempat_lahir
+FROM mahasiswa ORDER BY tempat_lahir;
+
+6. Menampilkan data mahasiswa dengan pemberian nama baru pada judul kolom tempat_lahir menjadi Tempat Lahir, dan kota menjadi Alamat
+
+SELECT nim, nama, tempat_lahir AS "Tempat Lahir", kota AS Alamat
+FROM mahasiswa;
+
+### Agregasi
+
+1. Menampilkan nilai maksimal, minimal, dan rata-rata tinggi badan mahasiswa
+
+SELECT max(tinggi_badan), min(tinggi_badan), avg(tinggi_badan), sum(tinggi_badan), count(tinggi_badan)
+FROM mahasiswa;
+
+Max(tinggi_badan) : menghitung nilai maksimal pada kolom tinggi_badan.
+Min(tinggi_badan) : menghitung nilai minimal pada kolom tinggi_badan.
+Avg(tinggi_badan) : menghitung nilai rata-rata pada kolom tinggi_badan.
+Sum(tinggi_badan) : menghitung total nilai numerik pada kolom tinggi_badan.
+Count(tinggi_badan) : menghitung banyaknya baris/data pada kolom tinggi_badan
+
+2. Menampilkan jumlah (banyaknya) kota tempat lahir mahasiswa (mengacu pada soal I-5).
+
+SELECT COUNT(DISTINCT tempat_lahir)
+FROM mahasiswa ORDER BY tempat_lahir;
+
+3. Menampilkan data mahasiswa yang tinggi badannya paling besar/tingg
+
+SELECT *
+FROM mahasiswa ORDER BY tinggi_badan DESC
+LIMIT 1;
+
+SELECT *
+FROM mahasiswa 
+WHERE tinggi_badan = 
+(
+SELECT max(tinggi_badan) FROM mahasiswa
+);
+
+4. Menampilkan data mahasiswa yang tinggi badannya di atas nilai rata-rata tinggi badan teman-temannya yang lain
+
+SELECT *
+FROM mahasiswa 
+WHERE tinggi_badan > 
+(
+SELECT avg(tinggi_badan) FROM mahasiswa
+);
+
+5. Menampilkan jumlah mahasiswa per kota tempat lahirnya
+
+SELECT tempat_lahir, count(nim)
+FROM mahasiswa
+GROUP BY tempat_lahir;
+
+6. Menampilkan jumlah mahasiswa per kota tempat lahirnya, namun hanya untuk kota yang jumlah mahasiswanya lebih dari 1 (mengacu soal II-5).
+
+SELECT tempat_lahir, count(nim)
+FROM mahasiswa
+GROUP BY tempat_lahir
+HAVING count(nim) > 1 ;
+
+
+### db mahasiswa
+1. Menampilkan semua data dalam tabel mahasiswa.
+SELECT * FROM mahasiswa;
+
+2. Menampilkan data nim dan nama dari tabel mahasiswa yang berjenis kelamin p.
+SELECT nim, nama FROM mahasiswa WHERE jk="p";
+
+3. Menampilkan semua data dari tabel nilai.
+SELECT * FROM nilai;
+
+4. Menampilkan data nilai pada mata kuliah dengan kode “IF33302” yang mendapat “A”.
+SELECT * FROM nilai WHERE kode_mk="IF33302" AND hm="A";
+
+5. Menampilkan data nim, kode_mk, dan na yang na mulai 70 sampai 80.
+SELECT nim, kode_mk, na FROM nilai WHERE na BETWEEN 70 AND 80;
+
+6. Menampilkan data mahasiswa yang namanya mengandung kata ‘ar’.
+SELECT * FROM mahasiswa WHERE nama LIKE ‘%ar%’;
+
+7. Menampilkan data na (nilai akhir) dari tabel nilai yang termasuk nilai maks, min, dan
+rata-rata di mana nilai maks dialiaskan dengan maks, nilai minimum dengan min, dan
+rata-rata dengan rata.
+SELECT MAX(na) as maks, MIN(na) as min, AVG(na) as rata FROM nilai;
+
+8. Menampilkan data nilai mahasiswa yang mendapatkan nilai maksimum dengan
+menggunakan subquery.
+SELECT * FROM nilai
+WHERE na IN ( SELECT MAX(na) FROM nilai );
+
+9. Menampilkan data nilai mahasiswa yang mendapatkan nilai di atas rata-rata dengan
+menggunakan subquery. Data diurutkan secara menurun berdasarkan na.
+SELECT * FROM nilai
+WHERE na > ( SELECT AVG(na) FROM nilai )
+ORDER BY na DESC;
+
+10.Menampilkan data nim beserta indeks (hm) yang diperoleh dari mata kuliah yang diikuti
+dengan disertakan berapa jumlah hm yang diperoleh.
+
+SELECT nim, hm, count(hm) AS frekuensi FROM nilai
+GROUP BY nim,hm;
+
+11.Menampilkan jumlah mahasiswa yang mengikuti mata kuliah yang ada pada tabel nilai
+SELECT kode_mk, count(kode_mk) as jumlah FROM nilai
+GROUP BY kode_mk;
+
+
+2. Tampilkan semua field pada semua table mata kuliah yang mempunyai sks sama dengan 3 dan urutkan secara menurun berdasarkan nama mata kuliah.
+SELECT * FROM Matakuliah WHERE SKS=3 ORDER BY NAMA_MK DESC;
+
+3. Tampilkan semua field dari table biodata yang tinggal di Jakarta dan mempunyai kode pos.
+SELECT * FROM Biodata WHERE KOTA="Jakarta" AND KODE_POS NOT LIKE "% %";
+
+4. Tampilkan NPM, nama dan nama mata kuliah dari mahasiswa yang memiliki nilai final lebih kecil dari 60.
+SELECT NPM, NAMA, NAMA_MK FROM Mahasiswa,Matakuliah,Prestasi WHERE Mahasiswa.NPM=Prestasi.NPM AND Prestasi.KODE_MK=Matakuliah.KODE_MK AND Prestasi.NIL_FIN<60;
+
+5. Tampilkan NPM, nama, nama mata kuliah dan nama dosen dari mahasiswa yang mengambil mata kuliah Perancangan Sistem.
+ SELECT NPM,NAMA,NAMA_MK,NAMA_DOSEN FROM Mahasiswa, Matakuliah, Dosen, Prestasi WHERE Matakuliah.NAMA_MK = "Perancangan Sistem" AND Mahasiswa.NPM = Prestasi.NPM AND Prestasi.KODE_DOSEN = Dosen.KODE_DOSEN AND Prestasi.KODE_MK = Matakuliah.KODE_MK;
+ 
+6. Tampilkan NPM, nama, nama mata kuliah dan nilai total dari mahasiswa yang memiliki nilai total lebih besar dari 100 dan urutkan data berdasarkan nama mata kuliah.
+SELECT NPM,NAMA,NAMA_MK,NAMA_DOSEN FROM Mahasiswa, Matakuliah, Dosen, Prestasi WHERE Matakuliah.NAMA_MK = "Perancangan Sistem" AND Mahasiswa.NPM = Prestasi.NPM AND Prestasi.KODE_DOSEN = Dosen.KODE_DOSEN AND Prestasi.KODE_MK = Matakuliah.KODE_MK;
+
+7. Tampilkan nama mahasiswa, nama mata kuliah, nilai mid test dan nilai final test yang mengambil mata kuliah dengan kode ‘TI221’
+SELECT NPM,NAMA,NAMA_MK,NAMA_DOSEN FROM Mahasiswa, Matakuliah, Dosen, Prestasi WHERE Matakuliah.NAMA_MK = "Perancangan Sistem" AND Mahasiswa.NPM = Prestasi.NPM AND Prestasi.KODE_DOSEN = Dosen.KODE_DOSEN AND Prestasi.KODE_MK = Matakuliah.KODE_MK;
+
+8. Tampilkan jumlah dari mata kuliah yang diajarkan pada table prestasi.
+SELECT mahasiswa.npm, mahasiswa.nama, matakuliah.nama_mk, prestasi.nil_fin FROM mahasiswa,matakuliah,prestasi WHERE mahasiswa.npm=prestasi.npm AND matakuliah.kode_mk=prestasi.kode_mk AND prestasi.nil_fin > 100 ORDER BY nama_mk ASC;
+
+9. Tampilkan kode dan nama dosen yang mengajar lebih dari 1 mata kuliah.
+SELECT mahasiswa.nama, matakuliah.nama_mk, prestasi.nil_mid, prestasi.nil_fin FROM mahasiswa, matakuliah , prestasi, WHERE mahasiswa.npm=prestasi.npm AND matakuliah.kode_mk=prestasi.kode_mk AND prestasi.kode_mk='TI221';
+    SELECT COUNT(kode_mk) FROM prestasi;
+	
+10. Tampilkan nama dan nilai mid test lebih besar dari 75 (gunakan perintah sub select).
+ SELECT COUNT(prestasi.kode_dosen) AS jumlah_mk, dosen.kode_dosen, dosen.nama_dosen FROM dosen,prestasi WHERE dosen.kode_dosen = prestasi.kode_dosen GROUP BY dosen.kode_dosen HAVING jumlah_mk > 1;
+ 
+    SELECT mahasiswa.nama, prestasi.nil_mid FROM mahasiswa,prestasi WHERE mahasiswa.npm=prestasi.npm AND (SELECT prestasi.nil_mid > 75);
+    
+##modul lain
+
+
+1. Mencari mahasiswa dengan nilai paling tinggi
+2. mencari mahasiswa yang nilainya lebih besar dari rata-rata
+3. siapa saja yang sekora dengan mahasiswa denagan nilai paling tinggi
+
+tampilkan 5 terbesar gajih
+
+
+1. id, dan nama film yang durasi > 3 jam
+2. cari nama peminjaman terbanyak
+3. kategori yang tidak di bintangi oleh nick
+4. nama peminjam yang melakukan peminjaman paling lama
+5. nama pelanggan yang aktif
+6. cari jumlah durasi waktu 
+   dari semua jumlah film yang dibintangi seorang aktor
+
+
+
+
+
+
+
+
+
+
+=======================================================================
+
+Hapus 
+
+Menghapus data Mahasiswa yang memiliki nim 10101005
+DELETE FROM mahasiswa
+WHERE nim="10101005"
+
+upddate
+Mengubah data mahasiswa yang memiliki nim 10101006, dimana:
+
+Nama baru: Anton Sukma
+TTL: 1993-02-23
+JK: l
+
+UPDATE mahasiswa SET nama="Anton Sukma", ttl="1993-02-23", jk="l" WHERE nim="10101006"
+
+
+
+
+
+
+
+

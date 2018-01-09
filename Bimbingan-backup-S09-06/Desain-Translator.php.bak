@@ -1,0 +1,115 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Translator SQL</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../bootstrap.min.css">
+	<script src="../jquery.min.js"></script>
+	<script src="../bootstrap.min.js"></script>
+</head>
+<body>
+	<?php
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+
+		// Create connection
+		$conn = mysqli_connect($servername, $username, $password);
+
+		// Check connection
+		if (!$conn) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+		echo "<p>Connected to server localhost successfully </p>";
+	?>
+	<?php
+		if (!empty($_POST["kalimat"])) {
+			$string = $_POST["kalimat"]; 
+		} else {
+			$string = "";
+		}
+	?>
+<div class="container">
+  <h2>Translator</h2>
+  <p>Perancangan Translator Bahasa Alami ke dalam format SQL yang berfokus pada DML :</p>                  
+  <ul class="breadcrumb">
+    <li><a href="?page=database">Info Database</a></li>
+    <li><a href="?page=translator">Translator</a></li>
+    <li><a href="?page=penelusuran">Penelusuran</a></li>    
+  </ul>
+	
+	<?php 
+	if ($_GET["page"]=="database") {
+	?>
+	<form action="Translator.php" method="post">
+		<div class="form-group">
+			<label for="sel1">Pilih Database :</label>
+			<?php
+				$sql = "SHOW DATABASES";
+				$result = mysqli_query($conn, $sql);
+				if (mysqli_num_rows($result) > 0) {
+					// output data of each row
+					?>
+					
+					<select class="form-control" name="database" id="database">
+					<option>= Pilih Database =</option>
+					<?php
+					while($row = mysqli_fetch_assoc($result)) {
+						if (!empty($_POST["database"])) {
+							if ($_POST["database"] == $row["Database"]){
+								echo "<option value=". $row["Database"]." selected=selected>". $row["Database"]."</option>";
+							} else {
+								echo "<option value=". $row["Database"].">". $row["Database"]."</option>";
+							}
+						} else {
+							echo "<option value=". $row["Database"].">". $row["Database"]."</option>";
+						}
+					}
+					?>
+					</select></div>
+					<?php
+				} else {
+					echo "0 results";
+				}
+			?>
+		<input name='kalimat' value="<?php echo $string; ?>" type='hidden'>
+		<div class="form-group">
+			<input value="kirim" type="submit" class="btn btn-primary btn-md">
+		</div>
+	</form>
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Column 1</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Column 2</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Column 3</h3>        
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+    </div>
+  </div>
+	<?php	
+	} elseif ($_GET["page"]=="translator") {
+		echo " translator";
+	?>
+	
+	<?php
+		
+	} elseif ($_GET["page"]=="penelusuran") {
+		echo " penelusuran";
+	?>
+	
+	<?php
+	}
+	?>
+	
+</div>
+
+</body>
+</html> 

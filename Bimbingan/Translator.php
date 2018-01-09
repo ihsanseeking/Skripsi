@@ -1,3 +1,7 @@
+<?php
+	session_start();
+	$_SESSION["db_pendukung"] = "db_translator"; 
+?>
  <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -8,20 +12,7 @@
 		<script src="../bootstrap.min.js"></script>
 	</head>
 	<body>
-		<?php
-			$servername = "localhost";
-			$username = "root";
-			$password = "";
-
-			// Create connection
-			$conn = mysqli_connect($servername, $username, $password);
-
-			// Check connection
-			if (!$conn) {
-				die("Connection failed: " . mysqli_connect_error());
-			}
-			echo "<p>Connected to server localhost successfully </p>";
-		?>
+		
 		<?php
 			if (!empty($_POST["kalimat"])) {
 				$string = $_POST["kalimat"]; 
@@ -29,18 +20,279 @@
 				$string = "";
 			}
 		?>
+		<?php
+			if (!empty($_POST["tab"])) {
+				$tab = $_POST["tab"]; 
+			} else {
+				$tab = "setup";
+			}
+		?>
 		<div class="container">
 			<h2>Translator</h2>
 			<p>Perancangan Translator Bahasa Alami ke dalam format SQL yang berfokus pada DML :</p>
-
 			<ul class="nav nav-tabs">
-				<li><a data-toggle="tab" href="#home">Info Database</a></li>
-				<li><a data-toggle="tab" href="#menu1">Translator</a></li>
-				<li class="active"><a data-toggle="tab" href="#menu2">Penelusuran</a></li>
+				<li class="<?php if($tab=='setup'){echo"active";}?>"><a data-toggle="tab" href="#setup">Setup</a></li>
+				<li class="<?php if($tab=='info'){echo"active";}?>"><a data-toggle="tab" href="#info">Info Database</a></li>
+				<li class="<?php if($tab=='menu1'){echo"active";}?>"><a data-toggle="tab" href="#menu1">Translator</a></li>
+				<li class="<?php if($tab=='menu2'){echo"active";}?>"><a data-toggle="tab" href="#menu2">Detail Penelusuran</a></li>
 			</ul>
-
 			<div class="tab-content">
-				<div id="home" class="tab-pane fade">
+				<div id="setup" class="tab-pane fade <?php if ($tab == 'setup'){echo "in active";}?>">
+					<h3>Setup</h3>
+					<p></p>
+					<hr>
+					<h4>Connection</h4>
+					<p>form untuk koneksi ke dbms.</p> 
+					<form class="form-horizontal" action="Translator.php" method="post">
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="servername">Servername :</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="servername" placeholder="servername('localhost')" name='servername' value="<?php echo $_SESSION["servername"]?>">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="username">Username :</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="username" placeholder="username('root')" name='username' value="<?php echo $_SESSION["username"]?>">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="password">Password :</label>
+							<div class="col-sm-10">          
+								<input type="password" class="form-control" id="password" placeholder="password('')" name='password' value="<?php echo $_SESSION["password"]?>">
+							</div>
+						</div>
+						<!--
+						<div class="form-group">        
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label><input type="checkbox"> Remember me</label>
+								</div>
+							</div>
+						</div>
+						-->
+						<div class="form-group">        
+							<div class="col-sm-offset-2 col-sm-10">
+								<input name='kalimat' value="<?php echo $string; ?>" type='hidden'>
+								<input name='tab' value="setup" type='hidden'>
+								<button type="submit" class="btn btn-primary btn-md">Connect</button>
+							</div>
+						</div>
+					</form>
+					<?php
+						if (!empty($_POST["servername"])) {
+							$_SESSION["servername"] = $_POST["servername"]; 
+							$_SESSION["username"] = $_POST["username"];
+							$_SESSION["password"] = $_POST["password"];
+						}
+					?>
+					<?php
+						if (!empty($_SESSION["servername"])) {
+							//echo $_SESSION["servername"];echo $_SESSION["username"];echo $_SESSION["password"];
+							// Create connection
+							$conn = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"]);
+							// Check connection
+							if (!$conn) {
+								echo "<p class='text-danger'>";	die("Connection failed: " . mysqli_connect_error());echo "</p>";
+							} else {
+								echo "<p class='text-success'>Connected to server ".$_SESSION["servername"]." successfully </p>";
+							}
+						}
+					?>
+					<hr>
+					<h4>Database</h4>
+					<p>Pilih Analisis di Opsi untuk Menganalisis Database yang akan ingin digunakan.</p> 
+					
+					<?php
+						if (!empty($_POST["analisis"])) {
+							$db_analisis = $_POST["analisis"];
+							//echo "ngeanalisis database $db_analisis"; 
+							// Create connection to database
+							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
+							// Check connection
+							if (!$connd) {die("Connection failed: " . mysqli_connect_error());}
+							//echo "<p>Connected to database <b>".$_SESSION["db_pendukung"]."</b> successfully </p>";	
+							//Simpan db ke db_pendukung
+							$sql = "INSERT INTO `d_database` (`id`, `nama`) VALUES (NULL, '$db_analisis')";
+							$result = mysqli_query($connd, $sql);
+							if($result){
+								echo"<p class='text-success'>Analisis Database <b>$db_analisis</b> Berhasil</p>";
+							}
+							
+							$dbname = $_POST["database"]; 
+								// Create connection to database
+								$connd = mysqli_connect($servername, $username, $password, $dbname);
+								// Check connection
+								if (!$connd) {
+									die("Connection failed: " . mysqli_connect_error());
+								}
+								echo "<p>Connected to database <b>$dbname</b> successfully </p>";	
+									
+								$sql = "SHOW FULL TABLES";
+								$result = mysqli_query($connd, $sql);
+
+								if (mysqli_num_rows($result) > 0) {
+									// output data of each row
+									//echo "Database <b>$dbname</b><br>";
+									$i1=0;$i2=0;
+									while($row = mysqli_fetch_assoc($result)) {
+										if ($row["Table_type"]=="VIEW"){
+											//Echo "View ";
+											$vtable = $row["Tables_in_$dbname"];
+											$vtables[$i1] = $vtable;
+											$i1++;
+										} else {
+											//Echo "Base ";
+											$btable = $row["Tables_in_$dbname"];
+											$btables[$i2] = $btable;
+											$i2++;
+										}
+										//echo "Table [". $row["Tables_in_$dbname"]. "] => ";
+										$table = $row["Tables_in_$dbname"];
+										$tables[$i] = $table;
+										$i++;
+										$sql2 = "DESC $table";
+										$result2 = mysqli_query($connd, $sql2);
+										if (mysqli_num_rows($result2) > 0) {
+											// output data of each row
+											//echo "Atribut : ";
+											$j=0;
+											while($row2 = mysqli_fetch_assoc($result2)) {
+												//echo " (".$row2["Field"]. ")";
+												//$atribut = $row2["Field"];
+												$atributs[$table]['field'][$j] = $row2["Field"];
+												$atributs[$table]['type'][$j] = $row2["Type"];
+												$atributs[$table]['key'][$j] = $row2["Key"];
+												$j++;
+											}
+												//echo "<br>";
+										} else {
+											echo "0 results";
+										}
+									}
+								} else {
+									echo "0 results";
+								}
+							} else {
+								echo "Database Belum dipilih";
+							}
+							
+						}
+						
+						if (!empty($_POST["hapus"])) {
+							$db_hapus = $_POST["hapus"];
+							$db_id_hapus = $_POST["id_hapus"];
+							//echo "ngehapus database $db_hapus dengan id $db_id_hapus"; 
+							// Create connection to database
+							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
+							// Check connection
+							if (!$connd) {die("Connection failed: " . mysqli_connect_error());}
+							//echo "<p>Connected to database <b>".$_SESSION["db_pendukung"]."</b> successfully </p>";	
+							//Simpan db ke db_pendukung
+							$sql = "DELETE FROM `d_database` WHERE `d_database`.`id` = $db_id_hapus";
+							$result = mysqli_query($connd, $sql);
+							if($result){
+								echo"<p class='text-success'>Hapus Analisis Database <b>$db_hapus</b> berhasil</p>";
+							}
+						}
+					?>
+					
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Nama Database</th>
+								<th>Status Analisis</th>
+								<th>Opsi</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+							// Create connection to database
+							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"],$_SESSION["db_pendukung"]);
+							// Check connection
+							if (!$connd) {
+								die("Connection to database pendukung failed: " . mysqli_connect_error());
+							}
+							//echo "<p>Connected to database <b>$db_pendukung</b> successfully </p>";
+							
+							$sql = "SELECT * FROM `d_database`";
+							$result = mysqli_query($connd, $sql);
+							if (mysqli_num_rows($result) > 0) {
+								// output data of each row
+								$no=0;
+								while($row = mysqli_fetch_assoc($result)) {
+									$no++;
+									$d_database["id"][$no]=$row["id"];
+									$d_database["nama"][$no]=$row["nama"];
+									//echo "$no - ".$d_database["id"][$no]." - ".$d_database["nama"][$no]."<br>";
+								}
+							} else {
+								$d_database="";
+							}
+							$sql = "SHOW DATABASES";
+							$result = mysqli_query($conn, $sql);
+							if (mysqli_num_rows($result) > 0) {
+								// output data of each row
+								$no=0;
+								if (!empty($d_database["id"])) {
+									$count_db = count($d_database["id"]);
+								} else {$count_db = 0;}
+								$db_nama="";
+								$db_id="";
+								//echo $d_database[$count_db];
+								while($row = mysqli_fetch_assoc($result)) {
+									$no++;
+									?>
+									<tr>
+										<td><?php echo $no; ?></td>
+										<td><?php echo $row["Database"]; ?></td>
+										<td>
+										<?php
+											for ($i=1; $i<=$count_db; $i++){
+												if($row["Database"] == $d_database["nama"][$i]){
+													?>
+													<p class="text-success">Analisis Sukses</p>
+													<?php
+													$db_id = $d_database["id"][$i];
+													$db_nama = $d_database["nama"][$i];
+													//echo "$db_id";
+												}
+											}
+										?>
+										</td>
+										<td>
+										<?php
+											if ($db_nama == $row["Database"]){
+												?>
+												<form class="form-horizontal" action="Translator.php" method="post">
+													<input type="hidden" name='hapus' value="<?php echo $row["Database"]; ?>">
+													<input type="hidden" name='id_hapus' value="<?php echo $db_id; ?>">
+													<button type="submit" class="btn btn-danger">Hapus</button>
+												</form>
+												<?php
+											} else {
+												?>
+												<form class="form-horizontal" action="Translator.php" method="post">
+													<input type="hidden" name='analisis' value="<?php echo $row["Database"]; ?>">
+													<button type="submit" class="btn btn-primary">Analisis</button>
+												</form>
+												<?php
+											}
+										?>
+											
+										</td>
+									</tr>
+									<?php
+								}
+							} else {
+								echo "0 results";
+							}
+						?>
+						</tbody>
+					</table>
+				</div>
+				<div id="info" class="tab-pane fade <?php if ($tab == 'info'){echo "in active";}?>">
 					<h3>Analisis Database</h3>
 					<p></p>
 					<form action="Translator.php" method="post">
@@ -76,7 +328,8 @@
 							?>
 						<div class="form-group">
 							<input name='kalimat' value="<?php echo $string; ?>" type='hidden'>
-							<input value="kirim" type="submit" class="btn btn-primary btn-md">
+							<input name='tab' value="info" type='hidden'>
+							<input value="kirim" type="submit"  class="btn btn-primary btn-md">
 						</div>
 					</form>
 					<?php
@@ -312,13 +565,24 @@
 					$dbname = "";
 				}
 				?>
+				<?php
+					if ($tab == 'menu1'){
+					?>
+				<div id="menu1" class="tab-pane fade in active">
+					<?php
+					} else {
+					?>
 				<div id="menu1" class="tab-pane fade">
+					<?php
+					}
+				?>
 					<h3>Translator</h3>
 					<p></p>
 					
 					<form action="Translator.php" method="post">
 			<p><textarea class="form-control" name="kalimat" rows="4" cols="50" placeholder="Kalimat Perintah"><?php echo $string; ?></textarea></p>
 			<input name="database" value="<?php echo $dbname; ?>" type="hidden">
+			<input name='tab' value="menu1" type='hidden'>
 			<p><input value="kirim" type="submit" class="btn btn-primary btn-md"></p>
 		</form>
 		<?php
@@ -745,7 +1009,19 @@
 		?>
 					
 				</div>
+				
+				<?php
+					if ($tab == 'menu2'){
+					?>
 				<div id="menu2" class="tab-pane fade in active">
+					<?php
+					} else {
+					?>
+				<div id="menu2" class="tab-pane fade">
+					<?php
+					}
+				?>
+				<div id="menu2" class="tab-pane fade">
 					<h3>Penelusuran</h3>
 					<p></p>
 					

@@ -1,0 +1,189 @@
+Bab I Latar Belakang : 
+
+
+
+Database merupakan tempat penyimpanan suatu informasi, namun tidak semua orang dapat mengakses informasi tersebut, karena memerlukan suatu keahlian khusus, yaitu menguasai kode SQL (Structured Query Language). Untuk itu dibuatlah suatu sistem yang dinamakan DBMS (DataBase Management Sistem), salah satu DBMS yang cukup populer adalah “MySQL”, yang di mana dibuat untuk menjembatani antara pengguna yang tidak mengerti kode SQL dengan suatu Database.
+==
+#
+Database merupakan tempat penyimpanan suatu informasi, namun tidak semua orang dapat mengakses informasi tersebut, karena memerlukan suatu keahlian khusus, yaitu mengerti format baku yang disebut syntax SQL (Structured Query Language). Syntax SQL adalah suatu bahasa yang digunakan oleh DBMS MySQL. DBMS (Database Management System) sendiri adalah sebuah engine atau software yang digunakan untuk mengelola database. pengolahan struktur dan data pada DBMS juga dibagi 2 yaitu DDL (Data Definition Language) dan DML (Data Manipulation Language). Untuk memberikan kemudahan bagi orang yang ingin mengakses suatu informasi dari database namun tidak memahami syntax SQL, maka diperlukan suatu alat bantu yang dapat menerjemahkan bahasa alami ke dalam format SQL sebagai jembatan antara pengguna dengan suatu DBMS. 
+==
+Namun dengan DBMS pun masih banyak orang yang merasa kesulitan dalam menggunakan DBMS, karena ketika pengguna ingin menampilkan suatu data atau  membangun tabel-tabel beserta relasinya, pengguna di hadapkan dengan kode SQL atau tools (alat-alat)  yang rumit, dan pengguna tidak paham dalam menggunakannya.
+==
+-
+==
+Untuk  memudahkan pengguna dalam mengakses suatu informasi dari sebuah database, dapat menggunakan bahasa alami, bahasa Indonesia yang digunakan sehari-hari. Untuk mencapai hal tersebut maka diperlukan suatu sub sistem yang dapat menerjemahkan bahasa alami ke dalam format SQL untuk menjembatani antara pengguna dengan suatu database. Sistem yang dibutuhkan adalah sistem yang dapat memberikan jawaban atas pertanyaan yang diajukan oleh pengguna awam dengan memasukan pertanyaan dalam bahasa alami yang dikuasai oleh pengguna.
+==
+-
+==
+Dalam suatu sistem informasi, khususnya pada pengolahan data, operator sistem adalah pengguna yang tidak mempunyai latar belakang pengetahuan query yang cukup. Sehingga kebutuhan untuk mendapatkan informasi menggunakan sistem dengan interaksi bahasa alami yaitu bahasa Indonesia sangatlah diperlukan.
+
+
+Maka sistem yang tepat sebagai solusi adalah NLP (Natural Language Procesing) yaitu sistem Pemerosesan Bahasa Alami yang mengizinkan pengguna memberikan pernyataan tentang informasi yang dibutuhkan dalam bahasa alami.
+
+
+Pembangunan sistem translator bahasa alami ke dalam format SQL tidak luput dari penerapan metode–metode penganalisaan teks pertanyaan dari pengguna.
+
+ Salah satu metode untuk menganalisa teks pertanyaan adalah dengan menerapkan ekstraksi informasi. Ekstraksi Informasi dapat diartikan sebagai sebuah proses untuk mendapatkan informasi inti dari dokumen tidak terstruktur ataupun dokumen semi terstruktur [1]. Untuk mendapatkan informasi terstruktur dari teks yang tidak terstruktur, hal pertama yang perlu didefinisikan adalah informasi target sebagai informasi terstruktur yang akan diekstrak [2]. Contoh target informasi dari soal-soal SQL berupa retrival informasi suatu tabel, penggunaan fungsi-fungsi agregasi dan lain-lain.
+
+
+Berdasarkan uraian di atas perlu diadakan penelitian untuk membangun sebuah sistem yang dapat menganalisis pertanyaan dan jawabannya dengan menerapkan metode – metode pemrosesan bahasa alami khususnya ekstraksi informasi agar dapat menghasilkan langkah – langkah menerjemahkan pertanyaan ke dalam format SQL dan hasil dari SQL itu sendiri.
+
+
+======================================================
+
+Review Literartur
+
+Beberapa penelitian mengenai alat bantu untuk media pencari informasi adalah membuat penterjemah bahasa alami, karena perbedaan antara bahasa alami manusia dan bahasa yang digunakan untuk mengakses database.
+
+ Seperti penelitian Sri Hartati dan Eri Zuliarso, melakukan penelitian untuk pengolahan bahasa alami yang diterapkan pada basisdata XML, dimana penelitian ini dilakukan pada database sistem informasi pengolahan data buku [10].
+
+ Setyawan Wibisono, melakukan hal serupa dengan melakukan penelitian bahasa alami untuk basisdata akademik dengan format data XML dengan menambahkan pola-pola kalimat yang dapat menjadi referensi pengguna aplikasi tersebut [2].
+
+ Sariyun Naja Anwar melakukan penelitian dalam pembuatan query pada basisdata soal ujian yang dilakukan di Universitas STIKUBANK, seperti penelitian sebelumnya, pada penelitian ini juga menggunakan basisdata XML dalam media penyimpanan informasi [11].
+===
+
+Penelitian yang dilakukan oleh Nendi Isharmawan dengan judul "Ekstraksi Informasi dan SQL Parser untuk Query SQL dari Teks Berbahasa Indonesia", melakukan penelitian tentang penterjemah bahasa alami menjadi bahasa SQL dengan batasan database yang digunakan untuk dianalisis hanya satu database, dan kasus yang dicontohkan mengakses 1 tabel.
+
+Penelitian yang dilakukan oleh Muhammad Habibi Taqwim dengan Judul "Ekstraksi Informasi dengan Metode Rule-Based Untuk Evaluasi Pemahaman Fisika Kinematika", melakukan penelitian untuk membangun sebuah sistem yang dapat menganalisis soal cerita dan jawabanya dengan menerapkan metode-metode pemerosesan bahasa alami khususnya estraksi informasi agar dapat menghasilkan langkah-langkah penyelesaian soal cerita untuk mempermudah siswa mengecek kembali jawaban latihan soal yang ada.
+
+
+
+
+1.2	Rumusan Masalah
+
+Berdasarkan uraian latar belakang di atas maka dapat dirumuskan beberapa masalah yang muncul, di antaranya:
+
+Berdasarkan uraian latar belakang masalah yang telah dikemukakan, maka rumusan masalahnya adalah bagaimana merancang sebuah sistem translator dari perintah dalam bentuk bahasa alami ke dalam perintah dalam bentuk syntax SQL yang mampu mengatasi kasus banyak tabel dalam pencarian informasi.
+
+bagaimana penterjemah bahasa alami menjadi bahasa SQL dapat diterapkan dalam berbagai media pencari informasi.
+
+
+
+1.	Bagaimana merancang sebuah sistem translator dari perintah dalam bentuk bahasa alami ke dalam perintah dalam bentuk syntax SQL.
+
+2.	Diperlukannya nilai akurasi dari sistem yang akan dibangun untuk mengetahui apakah sistem dapat menangani masalah yang ada.
+
+
+1.3	Maksud dan Tujuan
+Maksud dan Tujuan Penulisan merupakan penjelasan tentang maksud penulisan skripsi dan tujuan berisi tentang hal yang diinginkan sesuai dengan konteks permasalahan yang akan dibahas.
+
+Maksud
+
+Menyediakan sistem yang berfungsi sebagai penerjemah bahasa alami ke dalam format SQL sebagai solusi untuk mengakses informasi suatu  database.
+
+Tujuan
+
+Adapun tujuan yang ingin dicapai dari penelitian ini adalah:
+
+1.	Menerjemahkan Kalimat perintah pencarian informasi SQL dalam bahasa alami ke dalam bentuk syntax SQL.
+
+2.	Menghitung akurasi sistem yang akan dibangun untuk mengetahui apakah sistem dapat menerjemahkan perintah ke dalam format SQL dan menampilkan data yang diminta.
+
+==
+
+
+ Batasan Masalah
+			. Platform
+			. Model Perancangan
+			. Input Data
+			. Output Data
+			. Output Penelusuran
+			(Perbaiki hapus perancangan php)
+
+			
+Dalam penelitian ini, penulis membatasi masalah sebagai berikut:
+
+. Input data berupa perintah untuk menampilkan informasi.
+. Bahasa alami yang digunakan adalah bahasa Indonesia yang baik dan benar.
+. DBMS yang digunakan adalah MYSQL.
+. Perancangan mengunakan model Prosedural.
+. Platform Berbasis Web dengan bahasa pemograman PHP.
+. Output penelusuran berupa hasil dari setiap langkah dalam penerjemahan.
+. Output data berupa format SQL dan hasil dari eksekusi SQL berupa tabel.
+
+==
+
+Metodologi
+
+Metodologi penelitian yang penulis maksud adalah segala hal yang berhubungan dengan metode-metode yang akan penulis gunakan dalam melakukan penelitian ini dengan cara melakukan pendekatan terhadap metode-metode yang telah ada. Metode itu sendiri merupakan cara-cara yang penulis akan lakukan dalam penelitian dan penyusunan skripsi ini. Penulis menggunakan metode-metode yang diuraikan di bawah ini.
+
+
+
+Penjelasan dari Gambar 1.1 :
+
+1. Studi Literatur
+
+Penulisan penelitian ini dilakukan dengan pembelajaran literatur dari sejumlah buku, artikel, paper, jurnal, makalah, maupun situs internet mengenai information extraction, natural language processing, Bahasa Pemrograman PHP, Kumpulan Soal dan perintah-perintah untuk menampilkan suatu informasi.
+
+2. Analisis Kebutuhan Algoritma
+Analisis yang dilakukan adalah sebagai berikut :
+
+a. Analisis Masalah
+
+analisis masalah membahas suatu solusi untuk memecahkan masalah dalam penerjemahan kalimat perintah dalam bahasa alami.
+
+Pada analisis masalah membahas suatu solusi untuk memecahkan masalah dalam pengenalan bahasa
+
+b. Analisis Data
+
+analisis data terdapat data masukan dan data keluaran. Analisis data masukan membahas komponen – komponen yang menjadi data masukan pada proses penerjemah kalimat perintah. Analisis data keluaran membahas komponen – komponen yang menjadi data keluaran pada proses penerjemahan dan hasil dari terjemahan kalimat perintah.
+
+Pada analisis data terdapat data masukan dan data keluaran. Analisis data masukan membahas komponen – komponen yang menjadi data masukan pada proses pembentukan query. Analisis data keluaran membahas komponen – komponen yang menjadi data keluaran pada proses pembentukan query.
+
+c. Analisis Proses
+analisis proses membahas tahapan yang dilakukan pada proses penerjemahan kalimat.
+
+d. Analisis Kebutuhan Fungsional
+
+Tahapan dimana dilakukan penuangan pikiran dan perancangan sistem terhadap solusi dari permasalahan yang ada dengan menggunakan perangkat pemodelan sistem seperti diagram alir data (Data Flow Diagram), perancangan struktur menu, perancangan antarmuka dan perancangan jaringan semantik.
+
+analisis kebutuhan fungsional adalah tahapan dimana dilakukan penuangan pikiran dan perancangan sistem terhadap solusi dari permasalahan yang ada dengan menggunakan pendekatan prosedural terdiri dari diagram alir data (Data Flow Diagram), perancangan struktur menu, perancangan antarmuka dan perancangan jaringan semantik.
+
+3. Perancangan Perangkat Lunak
+
+Penulisan kode program Pada penelitian ini menggunakan bahasa pemrograman php. Pemograman yang dilakukan bersifat prosedural. Setiap yang telah dirancang pada DFD akan diimplementasikan pada coding sehingga dapat menyelesaikan pertanyaan yang terdapat pada perintah pengguna dan melakukan terjemahan kedalam bentuk SQL. 
+pengembangan perangkat lunak untuk mengatasi masalah yang muncul, dengan menyesuaikan kondisi lingkungan dan kebutuhan.
+
+
+Perancangan dilakukan untuk mengetahui rancangan dari basis data, struktur menu dan antarmuka.
+
+4. Implementasi dan Pengujian
+
+
+Pada langkah ini dilakukan implementasi dan pengujian dari hasil perancangan dilakukan implementasi kedalam bahasa pemrograman untuk memulai dalam pembangunan perangkat lunak. Pengujian untuk mengetahui seberapa besar akurasi yang dihasilkan oleh metode yang diterapkan.
+
+====================================
+BAB II
+
+
+2.1 Artificial Intellegence (AI)
+2.2 Natural Language Processing (NLP)
+2.3 Structure Query Language (SQL)
+2.4 Database
+2.5 Scanner
+2.5.1 Besaran Leksik
+2.9 Tools Pembangunan Sistem
+2.9.3 MySQL
+2.5 Ekstraksi Informasi
+2.6 Sistem Berbasis Aturan
+2.8 Flowchart Program
+2.9 Data Flow Diagram
+2.10 Pengujian Sistem
+2.9.1 Sasaran – Sasaran Pengujian
+2.9.2 Pola Pengujian
+2.9.3 Pengujian Black – Box
+2.9.4 Pengujian Unit
+2.9.5 Pengujian F - Measure
+2.1	Kalimat	
+2.1.1	Kalimat Perintah	
+2.2.1	Database Relasional	
+2.2.2	Query	
+2.7	HTML	
+2.8	CSS	
+2.9	PHP	
+
+
+
+
+
+

@@ -1,6 +1,5 @@
 <?php
 	session_start();
-	$_SESSION["db_pendukung"] = "db_translator"; 
 ?>
  <!DOCTYPE html>
 <html lang="en">
@@ -105,36 +104,10 @@
 					
 					<?php
 						if (!empty($_POST["analisis"])) {
-							$db_analisis = $_POST["analisis"];
-							//echo "ngeanalisis database $db_analisis"; 
-							// Create connection to database
-							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
-							// Check connection
-							if (!$connd) {die("Connection failed: " . mysqli_connect_error());}
-							//echo "<p>Connected to database <b>".$_SESSION["db_pendukung"]."</b> successfully </p>";	
-							//Simpan db ke db_pendukung
-							$sql = "INSERT INTO `d_database` (`id`, `nama`) VALUES (NULL, '$db_analisis')";
-							$result = mysqli_query($connd, $sql);
-							if($result){
-								echo"<p class='text-success'>Analisis Database <b>$db_analisis</b> Berhasil</p>";
-							}
+							echo "ngeanalisis database".$_POST["analisis"]; 
 						}
-						
 						if (!empty($_POST["hapus"])) {
-							$db_hapus = $_POST["hapus"];
-							$db_id_hapus = $_POST["id_hapus"];
-							//echo "ngehapus database $db_hapus dengan id $db_id_hapus"; 
-							// Create connection to database
-							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
-							// Check connection
-							if (!$connd) {die("Connection failed: " . mysqli_connect_error());}
-							//echo "<p>Connected to database <b>".$_SESSION["db_pendukung"]."</b> successfully </p>";	
-							//Simpan db ke db_pendukung
-							$sql = "DELETE FROM `d_database` WHERE `d_database`.`id` = $db_id_hapus";
-							$result = mysqli_query($connd, $sql);
-							if($result){
-								echo"<p class='text-success'>Hapus Analisis Database <b>$db_hapus</b> berhasil</p>";
-							}
+							echo "ngehapus database".$_POST["hapus"]; 
 						}
 					?>
 					
@@ -149,24 +122,23 @@
 						</thead>
 						<tbody>
 						<?php
+							$db_pendukung = "db_translator"; 
 							// Create connection to database
-							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"],$_SESSION["db_pendukung"]);
+							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $db_pendukung);
 							// Check connection
 							if (!$connd) {
 								die("Connection to database pendukung failed: " . mysqli_connect_error());
 							}
 							//echo "<p>Connected to database <b>$db_pendukung</b> successfully </p>";
 							
-							$sql = "SELECT * FROM `d_database`";
+							$sql = "SELECT nama FROM `d_database`";
 							$result = mysqli_query($connd, $sql);
 							if (mysqli_num_rows($result) > 0) {
 								// output data of each row
 								$no=0;
 								while($row = mysqli_fetch_assoc($result)) {
 									$no++;
-									$d_database["id"][$no]=$row["id"];
-									$d_database["nama"][$no]=$row["nama"];
-									//echo "$no - ".$d_database["id"][$no]." - ".$d_database["nama"][$no]."<br>";
+									 $d_database[$no]=$row["nama"];
 								}
 							} else {
 								$d_database="";
@@ -176,11 +148,8 @@
 							if (mysqli_num_rows($result) > 0) {
 								// output data of each row
 								$no=0;
-								if (!empty($d_database["id"])) {
-									$count_db = count($d_database["id"]);
-								} else {$count_db = 0;}
-								$db_nama="";
-								$db_id="";
+								$count_db = count($d_database);
+								$namadb="";
 								//echo $d_database[$count_db];
 								while($row = mysqli_fetch_assoc($result)) {
 									$no++;
@@ -191,24 +160,21 @@
 										<td>
 										<?php
 											for ($i=1; $i<=$count_db; $i++){
-												if($row["Database"] == $d_database["nama"][$i]){
+												if($row["Database"] == $d_database[$i]){
 													?>
 													<p class="text-success">Analisis Sukses</p>
 													<?php
-													$db_id = $d_database["id"][$i];
-													$db_nama = $d_database["nama"][$i];
-													//echo "$db_id";
+													$namadb = $d_database[$i];
 												}
 											}
 										?>
 										</td>
 										<td>
 										<?php
-											if ($db_nama == $row["Database"]){
+											if ($namadb == $row["Database"]){
 												?>
 												<form class="form-horizontal" action="Translator.php" method="post">
 													<input type="hidden" name='hapus' value="<?php echo $row["Database"]; ?>">
-													<input type="hidden" name='id_hapus' value="<?php echo $db_id; ?>">
 													<button type="submit" class="btn btn-danger">Hapus</button>
 												</form>
 												<?php
