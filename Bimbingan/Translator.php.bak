@@ -125,7 +125,7 @@
 								// output data of each row
 								while($row_database = mysqli_fetch_assoc($result_database)) {
 									$db_analisis_id = $row_database["id"];
-									echo "id = $db_analisis_id nama = ".$row_database["nama"];
+									//echo "id = $db_analisis_id nama = ".$row_database["nama"];
 								}
 							}
 							//analisis tabel db_analisis baru
@@ -157,7 +157,7 @@
 										// output data of each row
 										while($row_table = mysqli_fetch_assoc($result_table)) {
 											$tbl_analisis_id = $row_table["id"];
-											echo "id = $tbl_analisis_id nama = ".$row_table["nama"];
+											//echo "id = $tbl_analisis_id nama = ".$row_table["nama"];
 										}
 									}
 									//lihat semua atribut di tbl_analisis baru
@@ -186,54 +186,61 @@
 									} else {
 										echo "0 results";
 									}
-								}	
-								
-								/*
-								// output data of each row
-								//echo "Database <b>$db_analisis</b><br>";
-								$i=0;
-								$sql_part_table = array();
-								$sql_i_table=0;
-								$sql_part_table[$sql_i_table]="INSERT INTO `d_table` (`id`, `id_database`, `nama`, `tipe`) VALUES ";
-								while($row = mysqli_fetch_assoc($result)) {
-									$tbl_analisis = $row["Tables_in_$db_analisis"];
-									$tbl_analisis_tipe = $row["Table_type"];
-									$sql_i_table++;
-									$sql_part_table[$sql_i_table]="(NULL, '$db_analisis_id', '$tbl_analisis', '$tbl_analisis_tipe')";
-									$sql_i_table++;
-									$sql_part_table[$sql_i_table]=",";
-								}	
-								$sql_part_table[$sql_i_table]=";";
-								$sql_table = join("",$sql_part_table);
-								echo "$sql_table";
-								$result = mysqli_query($connect_db_p, $sql_table);
-								if($result){
-									echo"<p class='text-success'>Analisis Tabel <b>$db_analisis</b> Berhasil</p>";
-								}	
-								*/	
-									/*$sql2 = "DESC $table";
-									$result2 = mysqli_query($connd, $sql2);
-									if (mysqli_num_rows($result2) > 0) {
-										// output data of each row
-										//echo "Atribut : ";
-										$j=0;
-										while($row2 = mysqli_fetch_assoc($result2)) {
-											//echo " (".$row2["Field"]. ")";
-											//$atribut = $row2["Field"];
-											$atributs[$table]['field'][$j] = $row2["Field"];
-											$atributs[$table]['type'][$j] = $row2["Type"];
-											$atributs[$table]['key'][$j] = $row2["Key"];
-											$j++;
+									//Temukan Relasi
+									$sql_table = "SHOW CREATE TABLE $tbl_analisis";
+									$result_table = mysqli_query($connect_db_a, $sql_table);
+									if (mysqli_num_rows($result_table) > 0) {
+										while($row_table = mysqli_fetch_assoc($result_table)) {
+											$rel_analisis = $row_table["Create Table"];
+											//echo "<br>$rel_analisis</br>";
+											//dapatkan format Relasinya
+											$token_relasi = strtok($rel_analisis, " ");
+											$tokens_relasi = array();
+											$token_i_relasi = 0;
+											$token_n_relasi = 0;
+											while ($token_relasi !== false) {
+												if ($token_relasi == "CONSTRAINT"){
+													$token_i_relasi = 0;
+													$token_n_relasi++;
+													while ($token_i_relasi <= 7) {
+														$token_i_relasi++;
+														//echo "Token_relasi[$token_n_relasi][$token_i_relasi] : $token_relasi<br>";
+														$tokens_relasi[$token_n_relasi][$token_i_relasi] = $token_relasi;										
+														$token_relasi = strtok(" ");
+													}
+												}
+												$token_relasi = strtok(" ");
+											}
 										}
-											//echo "<br>";
+										//Extraksi Informasi dari format yang di dapatkan
+										$token_i_relasi = 0;
+										while ($token_i_relasi < $token_n_relasi){
+											$token_i_relasi++;
+											
+											$rel_analisis_nama = strtok($tokens_relasi[$token_i_relasi][2], "`");
+											$rel_analisis_foreign = $tokens_relasi[$token_i_relasi][5];
+											$rel_analisis_references_table = $tokens_relasi[$token_i_relasi][7];
+											$rel_analisis_references_attribute = $tokens_relasi[$token_i_relasi][8];
+											
+											
+											echo "<br>nama = $rel_analisis_nama | foreign = $rel_analisis_foreign | references = $rel_analisis_references_table.$rel_analisis_references_attribute<br>";
+											//simpan relasi ke d_relasi
+											//$sql_relasi="INSERT INTO `d_relation` (`id`, `nama`, `id_foreign`, `id_references`) VALUES (NULL, '$rel_analisis_nama', '0', '0')";
+											//echo "$sql_table";
+											/*
+											$result_relasi = mysqli_query($connect_db_p, $sql_relasi);
+											if($result_relasi){
+												echo"<p class='text-success'>Analisis relasi <b>$db_analisis.$tbl_analisis</b> Berhasil</p>";
+											}
+											*/
+										}
 									} else {
 										echo "0 results";
-									}*/
-								
+									}
+								}
 							} else {
 								echo "0 results";
 							}
-							
 						}
 						
 						if (!empty($_POST["hapus"])) {
