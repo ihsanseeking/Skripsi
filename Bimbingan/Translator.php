@@ -90,9 +90,9 @@
 						if (!empty($_SESSION["servername"])) {
 							//echo $_SESSION["servername"];echo $_SESSION["username"];echo $_SESSION["password"];
 							// Create connection
-							$conn = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"]);
+							$connect = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"]);
 							// Check connection
-							if (!$conn) {
+							if (!$connect) {
 								echo "<p class='text-danger'>";	die("Connection failed: " . mysqli_connect_error());echo "</p>";
 							} else {
 								echo "<p class='text-success'>Connected to server ".$_SESSION["servername"]." successfully </p>";
@@ -108,73 +108,82 @@
 							$db_analisis = $_POST["analisis"];
 							//echo "ngeanalisis database $db_analisis"; 
 							// Create connection to database
-							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
+							$connect_db_p = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
 							// Check connection
-							if (!$connd) {die("Connection failed: " . mysqli_connect_error());}
+							if (!$connect_db_p) {die("Connection failed: " . mysqli_connect_error());}
 							//echo "<p>Connected to database <b>".$_SESSION["db_pendukung"]."</b> successfully </p>";	
 							//Simpan db ke db_pendukung
 							$sql = "INSERT INTO `d_database` (`id`, `nama`) VALUES (NULL, '$db_analisis')";
-							$result = mysqli_query($connd, $sql);
+							$result = mysqli_query($connect_db_p, $sql);
 							if($result){
 								echo"<p class='text-success'>Analisis Database <b>$db_analisis</b> Berhasil</p>";
 							}
-							
-							$dbname = $_POST["database"]; 
-								// Create connection to database
-								$connd = mysqli_connect($servername, $username, $password, $dbname);
-								// Check connection
-								if (!$connd) {
-									die("Connection failed: " . mysqli_connect_error());
+							//Temukan ID db_analisis baru
+							$sql = "SELECT * FROM `d_database` WHERE `d_database`.`nama` = '$db_analisis'";
+							$result = mysqli_query($connect_db_p, $sql);
+							if (mysqli_num_rows($result) > 0) {
+								// output data of each row
+								while($row = mysqli_fetch_assoc($result)) {
+									$db_analisis_id = $row["id"];
+									echo "id = $db_analisis_id nama = ".$row["nama"];
 								}
-								echo "<p>Connected to database <b>$dbname</b> successfully </p>";	
-									
-								$sql = "SHOW FULL TABLES";
-								$result = mysqli_query($connd, $sql);
+							}
+							//analisis tabel db_analisis baru
+							// Create connection to database
+							$connect_db_a = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $db_analisis);
+							// Check connection
+							if (!$connect_db_a) {
+								die("Connection failed: " . mysqli_connect_error());
+							}
+							echo "<p>Connected to database <b>$db_analisis</b> successfully </p>";	
+								
+							$sql = "SHOW FULL TABLES";
+							$result = mysqli_query($connect_db_a, $sql);
 
-								if (mysqli_num_rows($result) > 0) {
-									// output data of each row
-									//echo "Database <b>$dbname</b><br>";
-									$i1=0;$i2=0;
-									while($row = mysqli_fetch_assoc($result)) {
-										if ($row["Table_type"]=="VIEW"){
-											//Echo "View ";
-											$vtable = $row["Tables_in_$dbname"];
-											$vtables[$i1] = $vtable;
-											$i1++;
-										} else {
-											//Echo "Base ";
-											$btable = $row["Tables_in_$dbname"];
-											$btables[$i2] = $btable;
-											$i2++;
+							if (mysqli_num_rows($result) > 0) {
+								// output data of each row
+								//echo "Database <b>$db_analisis</b><br>";
+								$i=0;
+								$sql_part_table = array();
+								$sql_i_table=0;
+								$sql_part_table[$sql_i_table]="INSERT INTO `d_table` (`id`, `id_database`, `nama`, `tipe`) VALUES ";
+								while($row = mysqli_fetch_assoc($result)) {
+									$tbl_analisis = $row["Tables_in_$db_analisis"];
+									$tbl_analisis_tipe = $row["Table_type"];
+									$sql_i_table++;
+									$sql_part_table[$sql_i_table]="(NULL, '$db_analisis_id', '$tbl_analisis', '$tbl_analisis_tipe')";
+									$sql_i_table++;
+									$sql_part_table[$sql_i_table]=",";
+								}	
+								$sql_part_table[$sql_i_table]=";";
+								$sql_table = join("",$sql_part_table);
+								echo "$sql_table";
+								$result = mysqli_query($connect_db_p, $sql_table);
+								if($result){
+									echo"<p class='text-success'>Analisis Tabel <b>$db_analisis</b> Berhasil</p>";
+								}	
+									
+									/*$sql2 = "DESC $table";
+									$result2 = mysqli_query($connd, $sql2);
+									if (mysqli_num_rows($result2) > 0) {
+										// output data of each row
+										//echo "Atribut : ";
+										$j=0;
+										while($row2 = mysqli_fetch_assoc($result2)) {
+											//echo " (".$row2["Field"]. ")";
+											//$atribut = $row2["Field"];
+											$atributs[$table]['field'][$j] = $row2["Field"];
+											$atributs[$table]['type'][$j] = $row2["Type"];
+											$atributs[$table]['key'][$j] = $row2["Key"];
+											$j++;
 										}
-										//echo "Table [". $row["Tables_in_$dbname"]. "] => ";
-										$table = $row["Tables_in_$dbname"];
-										$tables[$i] = $table;
-										$i++;
-										$sql2 = "DESC $table";
-										$result2 = mysqli_query($connd, $sql2);
-										if (mysqli_num_rows($result2) > 0) {
-											// output data of each row
-											//echo "Atribut : ";
-											$j=0;
-											while($row2 = mysqli_fetch_assoc($result2)) {
-												//echo " (".$row2["Field"]. ")";
-												//$atribut = $row2["Field"];
-												$atributs[$table]['field'][$j] = $row2["Field"];
-												$atributs[$table]['type'][$j] = $row2["Type"];
-												$atributs[$table]['key'][$j] = $row2["Key"];
-												$j++;
-											}
-												//echo "<br>";
-										} else {
-											echo "0 results";
-										}
-									}
-								} else {
-									echo "0 results";
-								}
+											//echo "<br>";
+									} else {
+										echo "0 results";
+									}*/
+								
 							} else {
-								echo "Database Belum dipilih";
+								echo "0 results";
 							}
 							
 						}
@@ -184,13 +193,13 @@
 							$db_id_hapus = $_POST["id_hapus"];
 							//echo "ngehapus database $db_hapus dengan id $db_id_hapus"; 
 							// Create connection to database
-							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
+							$connect_db_p = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pendukung"]);
 							// Check connection
-							if (!$connd) {die("Connection failed: " . mysqli_connect_error());}
+							if (!$connect_db_p) {die("Connection failed: " . mysqli_connect_error());}
 							//echo "<p>Connected to database <b>".$_SESSION["db_pendukung"]."</b> successfully </p>";	
 							//Simpan db ke db_pendukung
 							$sql = "DELETE FROM `d_database` WHERE `d_database`.`id` = $db_id_hapus";
-							$result = mysqli_query($connd, $sql);
+							$result = mysqli_query($connect_db_p, $sql);
 							if($result){
 								echo"<p class='text-success'>Hapus Analisis Database <b>$db_hapus</b> berhasil</p>";
 							}
@@ -209,15 +218,15 @@
 						<tbody>
 						<?php
 							// Create connection to database
-							$connd = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"],$_SESSION["db_pendukung"]);
+							$connect_db_p = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"],$_SESSION["db_pendukung"]);
 							// Check connection
-							if (!$connd) {
+							if (!$connect_db_p) {
 								die("Connection to database pendukung failed: " . mysqli_connect_error());
 							}
 							//echo "<p>Connected to database <b>$db_pendukung</b> successfully </p>";
 							
 							$sql = "SELECT * FROM `d_database`";
-							$result = mysqli_query($connd, $sql);
+							$result = mysqli_query($connect_db_p, $sql);
 							if (mysqli_num_rows($result) > 0) {
 								// output data of each row
 								$no=0;
@@ -231,7 +240,7 @@
 								$d_database="";
 							}
 							$sql = "SHOW DATABASES";
-							$result = mysqli_query($conn, $sql);
+							$result = mysqli_query($connect, $sql);
 							if (mysqli_num_rows($result) > 0) {
 								// output data of each row
 								$no=0;
