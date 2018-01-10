@@ -33,7 +33,7 @@
 			<ul class="nav nav-tabs">
 				<li class="<?php if($tab=='setup'){echo"active";}?>"><a data-toggle="tab" href="#setup">Setup</a></li>
 				<li class="<?php if($tab=='info'){echo"active";}?>"><a data-toggle="tab" href="#info">Info Database</a></li>
-				<li class="<?php if($tab=='menu1'){echo"active";}?>"><a data-toggle="tab" href="#menu1">Translator</a></li>
+				<li class="<?php if($tab=='transator'){echo"active";}?>"><a data-toggle="tab" href="#transator">Translator</a></li>
 				<li class="<?php if($tab=='menu2'){echo"active";}?>"><a data-toggle="tab" href="#menu2">Detail Penelusuran</a></li>
 			</ul>
 			<div class="tab-content">
@@ -540,6 +540,80 @@
 					<h4>Informasi Data</h4>
 					<p class="text-secondary">Informasi Tabel, Atribut, Alias</p>
 					<?php
+						// Simpan data alias baru
+						if (!empty($_POST["as_nama"])) {
+							$as_nama = $_POST["as_nama"];
+							$as_tipe = $_POST["as_tipe"];
+							if($as_tipe == "tbl"){
+								$as_tbl_id	= $_POST["as_tbl_id"];
+								$as_tbl_nama = $_POST["as_tbl_nama"];
+								//echo " tambah alias baru dengan nama <b>$as_nama</b> sebagai alias dari table dengan id <b>$as_tbl_id</b>";
+								//Simpan db ke db_pendukung
+								$sql_alias = "
+									INSERT 
+									INTO `d_alias` (
+										`id`,
+										`id_table`,
+										`id_attribute`,
+										`nama`
+									) VALUES (
+										NULL,
+										'$as_tbl_id',
+										NULL,
+										'$as_nama'
+									)
+								";
+								$result_alias = mysqli_query($connect_db_p, $sql_alias);
+								if($result_alias){
+									echo"<p class='text-success'>Menambahkan Alias <b>$as_nama</b> untuk Table <b>$as_tbl_nama</b> berhasil</p>";
+								}
+							}
+							if($as_tipe == "attr"){
+								$as_attr_id	= $_POST["as_attr_id"];
+								$as_attr_nama	= $_POST["as_attr_nama"];
+								//echo " tambah alias baru dengan nama <b>$as_nama</b> sebagai alias dari atribut dengan id <b>$as_attr_id</b>";
+								//Simpan db ke db_pendukung
+								$sql_alias = "
+									INSERT 
+									INTO `d_alias` (
+										`id`,
+										`id_table`,
+										`id_attribute`,
+										`nama`
+									) VALUES (
+										NULL,
+										NULL,
+										'$as_attr_id',
+										'$as_nama'
+									)
+								";
+								$result_alias = mysqli_query($connect_db_p, $sql_alias);
+								if($result_alias){
+									echo"<p class='text-success'>Menambahkan Alias <b>$as_nama</b> untuk Atribute <b>$as_attr_nama</b> berhasil</p>";
+								}
+							}
+						}
+						
+						//Hapus Data Alias
+						if (!empty($_GET["as_hapus_id"])) {
+							$as_hapus_id = $_GET["as_hapus_id"];
+							//$as_hapus = $_POST["id_hapus"];
+							//echo "ngehapus Alias dengan id <b>$as_hapus_id</b>"; 	
+							//Hapus db ke db_pendukung
+							$sql_alias = "
+								DELETE 
+								FROM `d_alias` 
+								WHERE `d_alias`.`id` = '$as_hapus_id'
+							";
+							$result_alias = mysqli_query($connect_db_p, $sql_alias);
+							if($result_alias){
+								echo"<p class='text-success'>Hapus Alias dengan id <b>$as_hapus_id</b> berhasil</p>";
+							}
+							//header('location:Translator.php');
+							//header ( 'location: http://www.alamatwebsite.com' );
+						}
+						
+						//load data table dan atribut
 						if (!empty($_SESSION["db_pilih"])) {
 							$db_pilih = $_SESSION["db_pilih"];
 							$db_pilih_id = $_SESSION["db_pilih_id"];
@@ -593,7 +667,7 @@
 											$attr_i_pilih++;
 											$attr_pilih = $row_attribute["nama"];
 											$attr_pilih_id = $row_attribute["id"];
-											echo "<br>--id = $attr_pilih_id => ".$row_attribute["nama"]." => ".$row_attribute["tipe"];
+											//echo "<br>--id = $attr_pilih_id => ".$row_attribute["nama"]." => ".$row_attribute["tipe"];
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["id"] = $attr_pilih_id;
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["nama"] = $row_attribute["nama"]; 
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["tipe"] = $row_attribute["tipe"];
@@ -610,7 +684,7 @@
 													$as_attr_i_pilih++;
 													$as_attr_pilih = $row_alias_attr["nama"];
 													$as_attr_pilih_id = $row_alias_attr["id"];
-													echo "<br>----i attr = $as_attr_i_pilih => id = $as_attr_pilih_id => $as_attr_pilih --> $attr_pilih |";
+													//echo "<br>----i attr = $as_attr_i_pilih => id = $as_attr_pilih_id => $as_attr_pilih --> $attr_pilih |";
 													$as_attr_pilihan[$tbl_pilih][$as_attr_i_pilih]["id"] = $as_attr_pilih_id;
 													$as_attr_pilihan[$tbl_pilih][$as_attr_i_pilih]["nama"] = $row_alias_attr["nama"]; 
 													$as_attr_pilihan[$tbl_pilih][$as_attr_i_pilih]["alias"] = $attr_pilih;
@@ -618,22 +692,21 @@
 												}
 											}
 										}
-										echo "<br>jumlah atribut = ". count($attr_pilihan[$tbl_pilih]);
+										//echo "<br>jumlah atribut = ". count($attr_pilihan[$tbl_pilih]);
 									}
 								
 								}
 								//echo "<br>jumlah table = ". count($tbl_pilihan);
 								
 							?>
-							<table class="table table-hover table-bordered table-responsive">
+							<table class="table table-hover table-bordered">
 								<thead>
 									<tr>
 										<th style="width:5%">#Tbl</th>
 										<th style="width:5%">#Attr</th>
 										<th>Nama Tabel / Attribut</th>
 										<th>Tipe</th>
-										<th>List Alias</th>
-										<th style="width:10%">Aksi</th>
+										<th>Alias</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -648,15 +721,30 @@
 											<td colspan="2"><b><?php echo $tbl_pilihan[$tbl_i]["nama"]; ?></b></td>
 											<td><?php echo $tbl_pilihan[$tbl_i]["tipe"]; ?></td>
 											<td>
-											<?php
-												for ($as_tbl_i = 1; $as_tbl_i <= $as_tbl_n_pilihan; $as_tbl_i++){
-													if ($as_tbl_pilihan[$as_tbl_i]["alias"] == $tbl_pilihan[$tbl_i]["nama"]){
-														echo " ".$as_tbl_pilihan[$as_tbl_i]["nama"].",";
-													}
-												}
-											?>
+												<form class="form-inline" action="Translator.php" method="post">
+													<?php
+														for ($as_tbl_i = 1; $as_tbl_i <= $as_tbl_n_pilihan; $as_tbl_i++){
+															if ($as_tbl_pilihan[$as_tbl_i]["alias"] == $tbl_pilihan[$tbl_i]["nama"]){
+																?>
+																<a href="?as_hapus_id=<?php echo $as_tbl_pilihan[$as_tbl_i]["id"];?>">
+																	<button type="button" class="btn btn-danger btn-sm">-</button>
+																</a>
+																<?php echo $as_tbl_pilihan[$as_tbl_i]["nama"]; ?>
+																<?php
+															}
+														}
+													?>
+													<div class="form-group">
+														<label class="sr-only" for="as_nama">Alias:</label>
+														<input type="text" class="form-control" id="as_nama" placeholder="alias" name='as_nama'>
+													</div>
+													<input name='as_tipe' value="tbl" type='hidden'>
+													<input name='as_tbl_id' value="<?php echo $tbl_pilihan[$tbl_i]["id"];?>" type='hidden'>
+													<input name='as_tbl_nama' value="<?php echo $tbl_pilihan[$tbl_i]["nama"];?>" type='hidden'>
+													<input name='tab' value="info" type='hidden'>
+													<button type="submit" class="btn btn-primary btn-sm">+</button>
+												</form>
 											</td>
-											<td>Tambah ALias</td>
 										</tr>
 										<?php
 										for ($attr_i = 1; $attr_i <= $attr_n_pilihan; $attr_i++){
@@ -666,19 +754,34 @@
 												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]; ?></td>
 												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["tipe"]; ?></td>
 												<td>
-												<?php
-													if (!empty($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]])) {
-														$as_attr_n_pilihan = count($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
-														//echo "<br> jumlah  $as_attr_n_pilihan";
-														for ($as_attr_i = 1; $as_attr_i <= $as_attr_n_pilihan; $as_attr_i++){
-															if ($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["alias"] == $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]){
-																echo " ".$as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["nama"].",";
+													<form class="form-inline" action="Translator.php" method="post">
+													<?php
+														if (!empty($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]])) {
+															$as_attr_n_pilihan = count($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
+															//echo "<br> jumlah  $as_attr_n_pilihan";
+															for ($as_attr_i = 1; $as_attr_i <= $as_attr_n_pilihan; $as_attr_i++){
+																if ($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["alias"] == $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]){
+																	?>
+																	<a href="?as_hapus_id=<?php echo $as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["id"];?>">
+																		<button type="button" class="btn btn-danger btn-sm">-</button>
+																	</a>
+																		<?php echo $as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["nama"]; ?>
+																	<?php
+																}
 															}
 														}
-													}
-												?>
+													?>
+													<div class="form-group">
+														<label class="sr-only" for="as_nama">Alias:</label>
+														<input type="text" class="form-control" id="as_nama" placeholder="alias" name='as_nama'>
+													</div>
+													<input name='as_tipe' value="attr" type='hidden'>
+													<input name='as_attr_id' value="<?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["id"];?>" type='hidden'>
+													<input name='as_attr_nama' value="<?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"];?>" type='hidden'>
+													<input name='tab' value="info" type='hidden'>
+													<button type="submit" class="btn btn-primary btn-sm">+</button>
+													</form>
 												</td>
-												<td>Tambah ALias</td>
 											</tr>
 											<?php
 										}
@@ -782,7 +885,7 @@
 						}
 					?>
 				</div>
-				<div id="menu1" class="tab-pane fade <?php if ($tab == 'menu1'){echo "in active";}?>">
+				<div id="transator" class="tab-pane fade <?php if ($tab == 'transator'){echo "in active";}?>">
 					<h3>Translator</h3>
 					<p></p>
 					

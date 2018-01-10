@@ -1,0 +1,77 @@
+Soal:
+	Tampilkan judul film yang termasuk kategori comedy, dimana dalam deskripsi film tersebut mengandung kata “dentist”
+	(melibatkan tabel: category, film, film_category)
+	
+Jawaban:
+	SELECT
+		title AS "Judul Film"
+	FROM film 
+		JOIN film_category USING (film_id) 
+		JOIN category USING (category_id)
+	WHERE category.name='comedy' 
+		AND description LIKE '%dentist%'
+		
+Analisis Soal:
+
+	Tampilkan
+		judul 
+	film yang
+		termasuk categori comedy, 
+		dimana 
+			dalam deskripsi film tersebut mengandung kata “dentist”
+	
+	melibatkan tabel:
+		category,
+		film,
+		film_category
+	
+Analisis lebih detail
+
+Tahap 1:
+
+	Scan token
+	Token 1 : Tampilkan
+	Token 2 : judul
+	Token 3 : film
+	Token 4 : yang
+	Token 5 : termasuk
+	Token 6 : kategori
+	Token 7 : comedy,
+	Token 8 : dimana
+	Token 9 : dalam
+	Token 10 : deskripsi
+	Token 11 : film
+	Token 12 : tersebut
+	Token 13 : mengandung
+	Token 14 : kata
+	Token 15 : “dentist”
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+Jawaban:
+	SELECT
+		title AS "Judul Film"
+	FROM 
+		film 
+		JOIN film_category USING (film_id) 
+		JOIN category USING (category_id)
+	WHERE 
+		category.name='comedy' 
+		AND 
+			description LIKE '%dentist%'

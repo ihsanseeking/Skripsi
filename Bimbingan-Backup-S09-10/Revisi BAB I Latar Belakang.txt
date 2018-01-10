@@ -1,0 +1,356 @@
+Latar Belakang Yang direvisi :
+
+Database merupakan tempat penyimpanan suatu informasi, namun tidak semua orang dapat mengakses informasi tersebut, karena memerlukan suatu keahlian khusus, yaitu mengerti format baku yang disebut syntax SQL (Structured Query Language). Syntax SQL adalah suatu bahasa yang digunakan oleh DBMS MySQL. DBMS (Database Management System) sendiri adalah sebuah engine atau software yang digunakan untuk mengelola database. Pengolahan struktur dan data pada DBMS juga dibagi 2 yaitu DDL (Data Definition Language) dan DML (Data Manipulation Language).DDL adalah struktur syntax SQL yang berfokus pada pembangunan sebuah wadah untuk informasi sedangkan DML adalah struktur syntax SQL yang berfokus pada manipulasi data, seperti, menyimpan, mengubah, menghapus, dan menampilkan suatu informasi. Setiap orang tentu menginginkan kemudahan dalam mendapatkan informasi, apa lagi jika informasi bisa diakses dengan bahasa alami, maka untuk memberikan kemudahan bagi orang yang mengakses suatu informasi dari database, namun tidak memahami syntax SQL, diperlukan suatu alat bantu yang dapat menerjemahkan bahasa alami ke dalam format SQL sebagai jembatan antara pengguna dengan suatu DBMS.
+
+Alat bantu yang dibutuhkan adalah sub-sistem yang dapat memberikan jawaban atas pertanyaan yang diajukan oleh pengguna awam dengan memasukan pertanyaan dalam bahasa alami indonesia yang dipahami oleh pengguna. Ada beberapa penelitian mengenai alat bantu ini seperti penelitian yang dilakukan oleh Setyawan Wibisono dalam penelitian bahasa alami untuk basisdata akademik dengan format data XML dengan menambahkan pola-pola kalimat yang dapat menjadi referensi pengguna aplikasi tersebut [2]. penelitian Sariyun Naja Anwar melakukan penelitian dalam pembuatan query pada basisdata soal ujian yang dilakukan di Universitas STIKUBANK, pada penelitian ini juga menggunakan basisdata XML dalam media penyimpanan informasi [11]. Penelitian yang dilakukan oleh Nendi Isharmawan dalam penelitian tentang penterjemah bahasa alami menjadi bahasa SQL dengan batasan database yang digunakan untuk dianalisis hanya satu database, dan kasus yang dicontohkan mengakses 1 tabel[]. Penelitian yang dilakukan oleh Muhammad Habibi Taqwim dalam melakukan penelitian untuk membangun sebuah sistem yang dapat menganalisis soal cerita dan jawabanya dengan menerapkan metode-metode pemerosesan bahasa alami khususnya estraksi informasi agar dapat menghasilkan langkah-langkah penyelesaian soal cerita untuk mempermudah siswa mengecek kembali jawaban latihan soal yang ada, dimana dalam penelitian ini metode yang digunakan dapat diterapkan dalam kasus penerjemahan ini, karena memiliki karateristik yang sama yaitu menjawab pertanyaan dalam bahasa indonesia.
+
+Berdasarkan uraian di atas, perlu diadakan penelitian untuk membangun sebuah sistem yang dapat menganalisis pertanyaan, dengan menerapkan metode – metode pemrosesan bahasa alami, khususnya ekstraksi informasi agar dapat menghasilkan langkah – langkah untuk menerjemahkan pertanyaan ke dalam format SQL yang lebih dinamis dengan kasus banyak tabel.
+
+==
+
+Rumusan Masalah:
+
+Berdasarkan uraian latar belakang masalah yang telah dikemukakan, maka rumusan masalahnya adalah bagaimana merancang sebuah sistem translator dari perintah dalam bentuk bahasa alami ke dalam perintah dalam bentuk syntax SQL yang mampu mengatasi kasus banyak tabel dalam pencarian informasi.
+
+==
+
+1.3	Maksud dan Tujuan:
+
+Maksud dan Tujuan Penulisan merupakan penjelasan tentang maksud penulisan skripsi dan tujuan berisi tentang hal yang diinginkan sesuai dengan konteks permasalahan yang akan dibahas.
+
+Maksud
+
+Menyediakan sistem yang berfungsi sebagai penerjemah bahasa alami ke dalam format SQL sebagai solusi untuk mengakses informasi suatu  database.
+
+Tujuan
+
+Adapun tujuan yang ingin dicapai dari penelitian ini adalah:
+
+1.	Menerjemahkan Kalimat perintah pencarian informasi SQL dalam bahasa alami ke dalam bentuk syntax SQL.
+
+2.	Menghitung akurasi sistem yang akan dibangun untuk mengetahui apakah sistem dapat menerjemahkan perintah ke dalam format SQL dan menampilkan data yang diminta.
+
+==
+
+Batasan Masalah
+
+Dalam penelitian ini, penulis membatasi masalah sebagai berikut:
+
+Input data berupa perintah untuk menampilkan informasi.
+Bahasa alami yang digunakan adalah bahasa Indonesia yang baik dan benar.
+DBMS yang digunakan adalah MYSQL.
+Perancangan mengunakan model Prosedural.
+Platform Berbasis Web dengan bahasa pemograman PHP.
+Output penelusuran berupa hasil dari setiap langkah dalam penerjemahan.
+Output data berupa format SQL dan hasil dari eksekusi SQL berupa tabel.
+
+
+
+=========================================
+BAB II
+
+2.1 Artificial Intellegence (AI)
+2.2 Natural Language Processing (NLP)
+2.3 Structure Query Language (SQL)
+2.4 Database
+	2.4.1 Database Relasional	
+	2.4.2 Query
+2.5 Kalimat	
+	2.5.1 Kalimat Perintah	
+2.6 Scanner
+	2.6.1 Besaran Leksik
+2.7 Ekstraksi Informasi
+2.8 Sistem Berbasis Aturan
+2.9 Flowchart Program
+2.10 Data Flow Diagram
+2.11 Pengujian Sistem
+	2.12.1 Sasaran – Sasaran Pengujian
+	2.12.2 Pola Pengujian
+	2.12.3 Pengujian Black – Box
+	2.12.4 Pengujian Unit
+	2.12.5 Pengujian F - Measure
+2.13 Tools Pembangunan Sistem
+	2.13.1 MySQL
+	2.13.2 PHP	
+	2.13.3 HTML	
+	2.13.4 CSS	
+
+AtAU
+
+
+2.1 Artificial Intellegence (AI)
+2.2 Natural Language Processing (NLP)
+2.3 Structure Query Language (SQL)
+2.4 Database
+	2.4.1 Database Relasional x
+2.5 Scanner x
+	2.5.1 Besaran Leksik x
+2.6 Ekstraksi Informasi
+2.7 Sistem Berbasis Aturan
+2.8 Flowchart Program
+2.9 Data Flow Diagram
+2.11 Tools Pembangunan Sistem
+	2.11.1 MySQL
+	2.11.2 PHP	R
+	2.11.3 HTML	R
+	2.11.4 CSS  R
+2.10 Pengujian Sistem
+	2.10.1 Sasaran – Sasaran Pengujian
+	2.10.2 Pola Pengujian
+	2.10.3 Pengujian Black – Box
+	2.10.4 Pengujian Unit
+	2.10.5 Pengujian F - Measure
+
+
+	
+ISINYA ::
+
+2.1 Artificial Intellegence (AI)
+Artificial Intellegence atau AI dalam bahasa Indonesia artinya kecerdasan buatan yaitu, kecerdasan buatan yang ditunjukan oleh suatu entitas ilmiah. Kecerdasan dibuat untuk dimasukkan ke dalam suatu mesin/ komputer supaya bisa melakukan pekerjaan seperti yang biasa dikerjakan manusia [8]. Karena itu kecerdasan buatan harus didasarkan pada prinsip-prinsip teoretikal dan terapan yang menyangkut struktur data yang digunakan dalam representasi pengetahuan (knowledge representation), algoritma yang diperlukan dalam penerapan pengetahuan itu, serta teknik-teknik bahasa dan pemrograman yang dipakai dalam implementasinya.
+Beberapa persoalan yang ditangani oleh kecerdasan buatan antara lain adalah permainan (game), pembuktian teorema, pemecahan problema umum, persepsi (vision dan percakapan), pemahaman bahasa alamiah, pemecahan problema pakar atau expert (matematika simbolik, diagnosis medis, rancang bangun rekayasa, analisis kimia). Hal – hal seperti itu telah menjadi disiplin ilmu tersendiri, yang memusatkan perhatian pada penyediaan solusi masalah dikehidupan yang nyata [8].
+
+2.2 Natural Language Processing (NLP)
+Natural Language Processing (NLP) adalah salah satu cabang dari ilmu komputer, Artificial Intellegence dan Computational Linguistik yang berkonsentrasi pada hubungan komputer dengan bahasa alami manusia atau bisa disimpulkan bahwa NLP membahas terkait interaksi manusia dengan komputer. Banyak hal yang menjadi kajian dalam NLP diantaranya adalah Natural Language Understanding, Membuat komputer mengerti bahasa alami manusia yang diinputkan dan melibatkan generasi NLP selanjutnya.
+Tahap – tahap dalam Natural Language Processing menurut para ahli: Menurut Rich dan Knight (1991,pp379-380) tahapan Natural Language Processing terdiri dari beberapa level analisis. Level analisis tersebut adalah:
+a. Morphological Analysis
+Kata – kata secara indvidu dilakukan berdasarkan komponennya, dan token yang tidak termasuk, seperti tanda baca dipisahkan dari kata – kata yang ada. Analisis ini memperhatikan arti dari setiap komponen yang ada membentuk suatu kata. Analisis morfologi sangat penting untuk menetukan aturan kata yang ada dalam pada kalimat, termasuk tata bahasa.
+b. Syntax Analysis
+Urutan – urutan linear dari kata – kata diubah menjadi struktur yang menunjukan bagaimana satu kata berhubungan dengan kata yang lain. Dimana analisis ini mempelajari aturan untuk menggabungkan kata dari frase dan kalimat, serta menggunakan aturan tersebut untuk menguraikan dan membentuk kalimat. Level analisis ini yang lebih banyak berhasil.
+c. Semantic Analysis
+Struktur yang diciptakan dari hasil analisis sintaksis akan diperiksa arti yang sebenarnya. Kalau struktur tersebut tidak memenuhi persyaratan kaidah bahasa, maka kalimat tersebut dapat dianggap anomali semantik.
+d. Discourse Integration
+Mungkin saja arti dari suatu kalimat bergantung dari kalimat sebelumnya dan mungkin dapat mempengaruhi kalimat – kalimat selanjutnya.
+
+2.3 Structure Query Language (SQL)
+Structure Query Language atau SQL merupakan suatu bahasa yang digunakan untuk mengakses database. SQL juga sering disebut query. Secara umum SQL terdiri dari dua bahasa, yaitu Data Definition Language (DDL) dan Data Manipulation Language (DML) [6].
+DDL digunakan untuk mendefinisikan, mengubah, serta menghapus database dan objek – objek yang diperlukan database. Secara umum, DDL yang digunakan adalah Create, Alter, Use, Drop yang biasanya digunakan oleh administrator dalam pembuatan suatu aplikasi database. DML digunakan untuk memanipulasi data yang ada dalam suatu tabel. Perintah yang dapat dilakukan adalah Select, Insert, Update, Delete [6].
+Fungsi Agregat, yaitu fungsi khusus yang melibatkan sekelompok data, secara umum fungsi agregat adalah SUM, COUNT, AVG, MAX, dan MIN. Fungsi ini digunakan pada bagian select, syarat untuk fungsi ini adalah diletakkan pada bagian having, bukan where. Sub query adalah suatu query yang sudah menjadi kompleks terutama melibatkan lebih dari satu tabel atau fungsi agregat [6].
+
+2.4 Database
+Database atau basis data adalah kumpulan data yang disimpan secara sistematis di komputer dan dapat diolah atau dimanipulasi menggunakan perangkat lunak (program aplikasi) untuk menghasilkan informasi. Pendefinisian basis data meliputi spesifikasi berupa tipe data, struktur, dan juga batasan – batasan dan yang akan disimpan. Basis data merupakan aspek yang sangat penting dalam sistem informasi dimana basis data merupakan gudang penyimpanan data yang akan diolah lebih lanjut. Basis data menjadi penting karena dapat menghindari duplikasi data, hubungan antar data yang tidak jelas, organisasi data, dan juga ubah data yang rumit. Dalam aplikasi yang penulis buat, maka penulis menggunakan aplikasi dalam memanajemen database yaitu MySQL [6].
+Dalam konsep database, urutan atau hierarki database sangatlah penting. Urutan atau hierarki database digambarkan dalam gambar sebagai berikut :
+[Gambar 2. 1 Hierarki Database]
+
+2.4.1 Database Relasional	
+Basis data ini mempunyai struktur yang lebih logis terkait cara penyimpanan. Kata "relasional" berasal dari kenyataan bahwa tabel-tabel yang ada di basis data relasional dihubungkan satu dengan lainnya. Basis data relasional menggunakan sekumpulan tabel dua dimensi yang masing-masing tabel tersusun atas baris (tupel) dan kolom (atribut). Untuk membuat hubungan antara dua atau
+lebih tabel, digunakan key (atribut kunci) yaitu primary key di salah satu tabel dan foreign key di tabel yang lain. Saat ini, basis data relasional menjadi pilihan utama karena keunggulannya. Program aplikasi untuk mengakses basis data relasional menjadi lebih mudah dibuat dan dikembangkan dibandingkan dengan penggunaan basis data flat-file.
+
+2.5 Scanner
+Analisis Leksikal (Scanner) merupakan antarmuka antara kode program sumber dan analisa sintaktik (parser). Atau dalam pengertiannya adalah sebuah proses yang mendahului parsing sebuah rangkaian karakter. Scanner melakukan pemeriksaan karakter per karakter pada teksmasukan, memecah sumber program menjadi bagian-bagian disebut Token. Proses parsing akan lebih mudah dilakukan bila inputnya sudah berupa token [5].
+Analisis leksikal membuat pekerjaan membuat sebuah parser jadi lebih mudah daripada membangun nama setiap fungsi dan variabel darikarakter-
+karakter yang menyusunnya, dengan analisis leksikal parser cukup hanya berurusan dengan sekumpulan token dan ni ai sintaksis masing-masing.
+Terlepas dari efisiensi pemrograman yang dapat dicapai dengan penggunaannya, proses kerja analisis leksikal yang membaca lebih dari sekali setiap karakter dari input yang diberikan menjadikan penganalisa leksikal sebagai sub-sistem yang paling intensif melakukan komputasi, terutama bila digunakan dalam sebuah kompilator.
+Kompilator adalah sebuah program yang membaca suatu program yang ditulis dalam suatu bahasa sumber (source language) dan menterjemahkannya ke dalam suatu bahasa sasaran (target language). Dalam penguraian struktur kalimat, penganalisa leksikal menganalisa setiap kata dalam kalimat, kemudian menentukan jenis kelas katanya.
+Hasil dari penganalisa leksikal ini digunakan oleh penganalisa sintaks yang akan memeriksa urutan simbol-simbol kelas kata tersebut dalam kalimat. Analisa kata dalam kalimat ini dilakukan oleh penganalisa leksikal berdasarkan kecocokan kata dengan aturan-aturan leksikal berupa ekspresi regular yang sudah didefinisikan.
+Tugas scanner bisa dirangkum sebagai berikut :
+1. Melakukan pembacaan kode sumber dengan menurut karakter demi karakter.
+2. Mengenali besaran leksik.
+3. Mentransformasi menjadi sebuah token dan menentukan jenis token nya.
+4. Mengirimkan token.
+5. Menangani kesalahan.
+6. Menangani tabel simbol.
+Didalam aplikasi NLP sistem cerdas yang akan dibuat, yang dimaksud dengan program sumber yang diolah oleh scanner adalah berupa kalimat input dari pengguna.
+Ketika scanner menerima input berupa stream karakter kemudian memilah menjadi satuan leksik, satuan leksik tersebut terdiri atas simbolsimbol satuan yang jika dikombinasikan akan mempunyai arti yang berbedabeda. Simbol-simbol yang bisa dipergunakan dalam sebuah bahasa tentunya terbatas jumlahnya, yang membentuk sebuah himpunan dan disebut sebagai abjad (alphabet).
+Tata bahasa (grammatika) adalah sekumpulan dari himpunan variabel-variabel, simbol-simbol terminal, simbol non-terminal, simbol awal yang dibatasi oleh aturan-aturan produksi. Aturan produksi adalah pusat dari tata bahasa yang menspesifikasikan bagaimana suatu tata bahasa melakukan transformasi suatu string ke bentuk lainnya.
+Dalam pembicaraan grammar, anggota alfabet dinamakan simbol terminal atau token. Kalimat adalah string yang tersusun atas simbol-simbol terminal. Bahasa adalah himpunan kalimat-kalimat. Anggota bahasa bisa berupa tak berhingga hingga kalimat.
+Simbol-simbol berikut adalah symbol terminal :
+1. Huruf kecil alphabet, misalnya :a, b, c
+2. Simbol operator, misalnya : +, -, dan ‘
+3. Simbol tanda baca, misalnya : (, ), dan ;
+Sedangkan simbol-simbol berikut adalah simbol non terminal :
+1. Huruf besar awal alphabet, misalnya : A, B, C
+2. Huruf S sebagai simbol awal
+Pada saat scanner membaca input, tools yang digunakan untuk menggambarkan perpindahan dari posisi satu ke posisi lainnya adalah diagram transisi. Diagram transisi dapat dilihat pada gambar berikut ini :
+
+2.5.1 Besaran Leksik
+Besaran – besaran yang membangun bahasa leksik meliputi hal – hal
+sebagai berikut :
+2.5.1 Identifier
+Identifier bisa berupa keyword atau nama. Keywords adalah kata
+kunci yang sudah didefinisikan oleh suatu bahasa seperti
+SELECT, FROM, WHERE, ALTER, dan SQL.
+2.5.2 Nilai Konstanta
+Nilai Konstanta adalah suatu konstanta yang terdapat pada program. Bisa berupa konstanta integer, real, boolean, character, string, dan sebagainya
+2.5.3 Operator dan Delimiter
+Operator adalah suatu operator matematika seperti (+,-,*,/), ataupun operator logika seperti (>,<,=). Delimiter berguna sebagai pemisah atau pembatas, seperti : , ( ), ;, White Space. White Space adalah pemisah yang diabaikan program, seperti spasi, karakter Enter, Ganti baris, akhir file.
+
+2.6 Ekstraksi Informasi
+Untuk mendapatkan informasi terstruktur dari teks yang tidak terstruktur, hal pertama yang perlu didefinisikan adalah informasi target sebagai informasi terstruktur yang akan diekstrak[8]. Ekstraksi Informasi adalah pengambilan fakta dan informasi terstruktur dari isi koleksi teks yang besar. Pengertian fakta disini adalah beragam entitas yang diperhitungkan. Secara singkat ekstraksi informasi adalah sebuah proses mendapatkan fakta-fakta terstruktur dari data yang tersedia[11]. Berdasarkan penjelasan dari kutipan di atas, penulis berpendapat bahwa ekstraksi informasi adalah proses penyaringan parameter-parameter informasi fakta dari data yang telah tersedia.
+
+2.7 Sistem Berbasis Aturan
+Sistem Berbasis Aturan (Rule-based System) adalah jalan untuk menyimpan atau memanipulasi pengetahuan untuk menintrepentasikan informasi yang berguna[7]. Biasanya sistem ini diimplementasikan dengan aplikasi Artificial Intelligence. Suatu Aturan terdiri dari 2 bagian, yaitu:
+1. Antacedent, yaitu bagian yang mengekspresikan situasi atau premis (Pernyataan berawalan IF)
+2. Consequent, yaitu bagian yang menyatakan suatu tindakan tertentu atau konklusi yang diterapkan jika situasi atau premis bernilai benar (Pernyataan berawalan THEN).
+Umumnya, sebuah aturan dapat mempunyai gabungan beberapa antecedent dengan kata kunci AND (konjungsi), OR (disjungsi), atau kombinasi keduanya. Metode Aturan dapat dilihat pada ilustrasi berikut.
+
+2.8 Flowchart Program
+Flowchart adalah bagan-bagan yang mempunyai arus yang menggambarkan langkah-langkah penyelesaian suatu masalah[16]. Flowchart program merupakan langkah-langkah (instruksi-instruksi) program yang menceritakan kejadian suatu proses satu dengan proses lainya dalam suatu program secara mendetail yang di wakilkan dalam bentuk simbol atau bagan.
+Flowchart memiliki kriteria sebagai berikut
+1. Tidak ada kaidah yang baku.
+2. Flowchart = gambaran hasil analisa suatu masalah
+3. Flowchart dapat bervariasi antara satu pemrogram dengan pemrogram
+lainnya.
+4. Secara garis besar ada 3 bagian utama yaitu input, proses dan output
+5. Hindari pengulangan proses yang tidak perlu dan logika yang berbelit
+sehingga jalannya proses menjadi singkat.
+6. Jalannya proses digambarkan dari atas ke bawah dan diberikan tanda
+panah untuk memperjelas.
+
+2.9 Data Flow Diagram
+Data Flow Diagram (DFD) adalah alat pembuatan model yang
+memungkinkan profesional sistem untuk menggambarkan sistem sebagai suatu
+jaringan proses fungsional yang dihubungkan satu sama lain dengan alur data,baik secara manual maupun komputerisasi[17]. DFD ini sering disebut juga dengan nama Bubble chart, Bubble diagram, model proses, diagram alur kerja, atau model fungsi.
+DFD ini adalah salah satu alat pembuatan model yang sering digunakan, khususnya bila fungsi-fungsi sistem merupakan bagian yang lebih penting dan kompleks dari pada data yang dimanipulasi oleh sistem. Dengan kata lain, DFD adalah alat pembuatan model yang memberikan penekanan hanya pada fungsi sistem. DFD ini merupakan alat perancangan sistem yang berorientasi pada alur data dengan konsep dekomposisi dapat digunakan untuk penggambaran analisa maupun rancangan sistem yang mudah dikomunikasikan oleh profesional sistem kepada pemakai maupun pembuat program.
+Penelitian ini menggunakan acuan simbol DFD yang dikembangkan oleh Tom Demarco dan Edward Yourdon[17].
+
+2.10 Tools Pembangunan Sistem
+
+2.10.1 MySQL
+MySQL adalah sebuah sistem manajemen database relasi (relation database management system) yang bersifat open source. MySQL merupakan buah pikiran dari Michael “Monty” Widenius, Davied axmark dan Allan Larson yang dimulai tahun 1995. Mereka bertiga kemudian mendirikan perusahaan bernama MySQL AB di swedia. MySQL merupakan aplikasi database server. Perkembangannya disebut SQL yang merupakan kepanjangan dari Structured
+Query Language. SQL merupakan bahasa terstruktur yang digunakan untuk mengolah database beserta isinya. Kita dapat memanfaatkan MySQL untuk menambah, mengubah, dan menghapus data yang berada dalam database [6]. MySQL versi 1.0 rilis pada Mei 1996 dan penggunaannya hanya terbatas dikalangan perusahaan saja. Barulah pada bulan Oktober 1996, MySQL versi 3.11.0 dirilis ke masyarakat luas. MySQL menggunakan bahasa standar SQL (Structure Query Language) sebagai bahasa interaktif dalam mengelola data. MySQL memiliki kinerja, kecepatan, proses dan ketangguhan yang tidak kalah dibanding database manajemen system lain nya seperti Oracle, Sysbase, Unify, dan sebagainya. MySQL dapat berjalan diatas banyak sistem operasi Linux, Windows, Solaris, FreeBSD, Mac OS X dan lain sebagainya [6].
+
+2.10.2 PHP	
+PHP adalah singkatan dari "PHP: Hypertext Prepocessor", yaitu bahasa pemrograman yang digunakan secara luas untuk penanganan pembuatan dan pengembangan sebuah situs web dan bisa digunakan bersamaan dengan HTML. PHP diciptakan oleh Rasmus Lerdorf pertama kali tahun 1994. Pada awalnya PHP adalah singkatan dari "Personal Home Page Tools". Selanjutnya diganti menjadi FI ("Forms Interpreter"). Sejak versi 3.0, nama bahasa ini diubah menjadi "PHP: Hypertext Prepocessor" dengan singkatannya "PHP". PHP versi terbaru adalah versi ke-5. Berdasarkan survey Netcraft pada bulan Desember 1999, lebih dari sejuta website menggunakan PHP, di antaranya adalah NASA, Mitsubishi, dan RedHat.
+
+2.10.3 HTML	
+Hyper Text Markup Language (HTML) adalah sebuah bahasa markah yang digunakan untuk membuat sebuah halaman web, menampilkan berbagai informasi di dalam sebuah penjelajah web Internet dan pemformatan hiperteks sederhana yang ditulis dalam berkas format ASCII agar dapat menghasilkan tampilan wujud yang terintegerasi. Dengan kata lain, berkas yang dibuat dalam perangkat lunak pengolah kata dan disimpan dalam format ASCII normal sehingga menjadi halaman web dengan perintah-perintah HTML. Bermula dari sebuah bahasa yang sebelumnya banyak digunakan di dunia penerbitan dan percetakan yang disebut dengan SGML (Standard Generalized Markup Language), HTML adalah sebuah standar yang digunakan secara luas untuk menampilkan halaman web. HTML saat ini merupakan standar Internet yang didefinisikan dan dikendalikan penggunaannya oleh World Wide Web Consortium (W3C). HTML dibuat oleh kolaborasi Caillau TIM dengan Berners-lee Robert ketika mereka bekerja di CERN pada tahun 1989 (CERN adalah lembaga penelitian fisika energi tinggi di Jenewa)
+
+2.10.4 CSS	
+CSS adalah kependekan dari Cascading Style Sheet. CSS merupakan salah satu kode pemrograman yang bertujuan untuk menghias dan mengatur gaya tampilan/layout halaman web supaya lebih elegan dan menarik.CSS adalah sebuah teknologi internet yang direkomendasikan oleh World Wide Web Consortium atau W3C pada tahun 1996. Awalnya, CSS dikembangkan di SGML pada tahun 1970, dan terus dikembangkan hingga saat ini. CSS telah mendukung banyak bahasa markup seperti HTML, XHTML, XML, SVG (Scalable Vector Graphics) dan Mozilla XUL (XML User Interface Language).
+
+2.11 Pengujian Sistem
+Pengujian menyajikan anomali yang menarik bagi perekayasa perangkat lunak. Pada proses perangkat lunak, perekayasa pertama–tama berusaha membangun perangkat lunak dari konsep abstrak ke implementasi yang dapat dilihat, baru kemudian dilakukan pengujian. Pengujian diperlukan tidak hanya untuk meminimalisasi kesalahan secara teknis tapi juga kesalahan non teknis[17].
+
+2.11.1 Sasaran – Sasaran Pengujian
+Terdapat sejumlah aturan yang berfungsi sebagai sasaran pengujian :
+1. Pengujian adalah proses eksekusi suatu program dengan maksud menemukan kesalahan.
+22
+2. Test case yang baik adalah test case yang memiliki probabilitas tinggi untuk menemukan kesalahan yang belum pernah ditemukan sebelumnya.
+3. Pengujian yang sukses adalah pengujian yang mengungkap semua kesalahan yang belum pernah ditemukan sebelumnya.
+
+2.11.2 Pola Pengujian
+Secara umum pola pengujian pada perangkat lunak adalah sebagai berikut[17].
+1. Pengujian dimulai dari level komponen hingga integrasi antar komponen menjadi sebuah sistem
+2. Teknik pengujian berbeda –beda sesuai dengan berbagai sisi sesuai kebutuhan
+3. Pengujian dilakukan oleh pengembang perangkat lunak atau tim uji perangkat lunak
+4. Pengujian dan debugging merupakan aktifitas yang berbeda tetapi saling melengkapi satu sama lain.
+
+2.11.3 Pengujian Black – Box
+Pengujian black-box berfokus pada persyaratan fungsional perangkat lunak. Dengan demikian, pengujian black-box memungkinkan perekayasa perangkat lunak mendapatkan serangkaian kondisi input yang sepenuhnya menggunakan semua persyaratan fungsional untuk suatu program[17].
+Pengujian black-box berusaha menemukan kesalahan dalam kategori sebagai berikut :
+1. Fungsi – fungsi yang tidak benar atau hilang,
+2. Kesalahan antarmuka
+3. Kesalahan dalam struktur data atau akses eksternal
+4. Kesalahan kinerja
+5. Inisialisasi dan kesalahan terminasi
+
+2.11.4 Pengujian Unit
+Strategi pengujian perangkat lunak dimulai dengan unit testing, integration testing, validation testing, dan sistem testing. Salah satu strategi pengujian perangkat lunak adalah pengujian unit, yaitu berfokus pada usaha verifikasi pada inti terkecil dari desain perangkat lunak yang disebut modul[17]. Modul diuji untuk memastikan bahwa informasi secara tepat mengalir masuk dan keluar dari inti program yang diuji. Pengujian modul didesain untuk mengungkap kesalahan sehubungan dengan komputasi yang salah. Kesalahan umum dalam komputasi adalah:
+1. Kesalahpahaman atau preseden aritmatik yang tidak benar
+2. Operasi mode yang tercampur
+3. Inisialisasi yang tidak benar
+4. Akurasi ketelitian
+5. Representasi simbolis yang tidak benar dari sebuah persamaan
+Dalam pengujian unit juga harus mengungkap kesalahan kesalahankesalahanyang terjadi seperti:
+1. Perbandingan tipe data yang berbeda
+2. Preseden atau operator logika yang tidak benar
+3. Pengharapan akan persamaan bila precision error membuat persamaan yang tidak mungkin
+4. Perbandingan atau variabel yang tidak benar
+5. Penghentian loop yang tidak ada atau tidak teratur
+6. Kegagalan untuk keluar saat terjadi iterasi divergen
+7. Variabel loop yang dimodifikasi secara tidak teratur
+Pengujian unit ini berkonsentrasi pada verifikasi fungsional dari sebuah modul dan gabungan modul-modul ke dalam struktur program. Setelah melakukan pengujian unit diharapkan secara modul tidak menemukan lagi kesalahan.
+
+
+2.11.5 Pengujian F - Measure
+F - Measure adalah representasi ukuran keakuratan dari sebuah tes dengan
+menggunakan nilai precision dan recall dari tes tersebut[21]. Precision adalah
+tingkat ketepatan antara informasi yang diminta oleh pengguna dengan jawaban
+yang diberikan oleh sistem. Sedangkan recall adalah tingkat keberhasilan sistem
+dalam menemukan kembali sebuah informasi. Precision dan recall memanfaatkan
+tabel confusion tes untuk mengetahui nilainya. Hubungan tabel confusion,
+precision, recall dan F – Measure dapat dilihat pada gambar berikut.
+Gambar 2.8 Tabel Confusion, Precission, Recall, Accuracy
+
+
+2.1 Artificial Intellegence (AI)
+2.2 Natural Language Processing (NLP)
+2.3 Structure Query Language (SQL)
+2.4 Database
+2.5 Ekstraksi Informasi
+2.6 Sistem Berbasis Aturan
+2.7 Flowchart Program
+2.8 Data Flow Diagram
+2.9 Tools Pembangunan Sistem
+	2.9.1 MySQL
+	2.9.2 PHP	R
+	2.9.3 HTML	R
+	2.9.4 CSS  R
+2.10 Pengujian Sistem
+	2.10.1 Sasaran – Sasaran Pengujian
+	2.10.2 Pola Pengujian
+	2.10.3 Pengujian Black – Box
+	2.10.4 Pengujian Unit
+	2.10.5 Pengujian F - Measure
+
+
+
+
+
+
+EKSTRAKSI INFORMASI DENGAN METODE RULE – BASED UNTUK EVALUASI PEMAHAMAN FISIKA KINEMATIKA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+1. Desain tulisan Kurang gelap jadi gk keliatan
+2. Skemanya di lampirkan aja di lampiran dan persentasi
+3. Hasil yg di tampilkan di lampirkan saja di lampiran
+4. Masukan juga cara memasukan alias-alias
+5. program di buat lebih baik jadi banyak halaman
+6. latar belakang ceritain dulu tentang translasi SQL itu apa fungsinya untuk apa manfaatnya untuk apa
+6. penelitian sebelumnya seperti apa dan hasinya seperti apa
+7. metodenya pengembangnya seperti apa yang belum ada di sebelumnya
+9. Tujuan : selain menerjemahkan kalian juga harus menghitung akurasi di tujuan bukhan hanya menerjemahkan. untuk melihat ke akuratan 
+10. gk usah masukin perancangan sistem php
+11. pemodelan pake apa? sebutin
+12. mecerminkan platform web atau apa phpnya mh jangan di masukan
+13. input datanya : masukannya bahasa indonesia
+14. output programnya berupa syntax sql 
+15. penelurusannya ada syntax sql dan data apa aja
+16. yang dikerjakan nya jadi fokus di seleksi aja, mana saja yang akan di akomodir di skripsi ini yg selengkapnya aja, max min subquery where dan apa aja, jadi fokus di seleksi aja udah banyak bgt, tingaal cek di sekipsia sebelumnya sebanyak apa, dan mau nambahin apa aja..
+17. metodologi penelitian : seperti arsitektur umum
+18. judul modified waterfaal
+19. analisis masalah poin-poin aja
+20. dikasi simbol input di analisis system dan ouptutnya juga
+21. bukan contoh kasus tapi contoh input, jadi syarat contoh soalnya itu harus gimana, formatnya gimana jadi ada spek dari kalimat input. di tentukan ketentuannya seperti apa,
+22. nah arsitektur ini skema relasi dan contoh isi data setiap sis tael jadi di tampilkan di lampiran. kalau banyak tampilkan sebagian yg pertama dan terahir..
+23. proses pernerjemah kalimat yg inser update delet gk usah dimasukin fokus aja ke select
+24. cek lagi bisi ada yg typo
+25. tentukan itu kuti apa suatu karakter khusus atau engga?
+26. nanti jumlah record ambil aja 3 paling atas dan 3 paling bawah di pengujian kategory dan lengkapnya di lampiran aja
+27. kebutuhan non fungsional gk perlu
+
+
