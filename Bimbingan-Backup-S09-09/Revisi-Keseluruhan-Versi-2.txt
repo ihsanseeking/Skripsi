@@ -1,0 +1,387 @@
+Revisian Seminar semester kemarin dan sekarang:
+-----------------------------------------------
+- @Seminar Semester 8 -------------------------
+-----------------------------------------------
+# Lembar Revisian Pembimbing - Galih Hermawan, S.Kom, M.T. :
+1. Latar Belakang
+2. Maksud
+3. Tujuan
+4. Referensi Bab 2
+5. Beberapa Gambar Kurang Jelas
+6. Daftar Pustaka
+7. DFD
+
+# Lembar Revisian Reviewer - Andri Heryandi, S.T., M.T. :
+1. Latar Belakang
+2. Maksud
+3. Tujuan
+4. Bawa Referensi
+5. Insert
+6. Update
+7. Delete
+8. Where
+9. Validasi-Validasi
+
+#Review Tak Tertulis :
+1. Daftar Symbol (Kelengkapan)
+2. Metode Peembangunan Perangkat lunak (Pilih gambar yang Benar)
+3. FlowChart-Flowchart
+4. Janji Desain
+
+------------------------------------------------
+- @Persentasi pra Seminar Semester 9 -----------
+------------------------------------------------
+#Review Hasil Persentasi kemarin:
+- Dokument
+1. Latar Belakang (Translator SQL?, Fungsi, manfaat, Review Hasil Penelitian Sejenis, Pengembangan).
+2. Batasan Masalah (Perbaiki, input, output, penelusuran, model).
+3. Metodelogi Penelitian (Kaji lagi)
+4. Metode pembangunan perangkat lunak (kaji lagi)
+5. Proses Masukan Alias-alias
+6. Perintah DLM Fokus ke Select (hapus insert update delete)
+7. Skema (symbol Input dan Output).
+8. Contoh Input (Spek, ketentuan, idealnya)
+9. Lampiran (skema dan Hasil Output)
+10. chek typo
+
+-Persentasi
+1. Desain (Warna Font)
+2. Latar Belakang (Point-Point)
+3. Tujuan penelitian (tambah Peniliaan Akurasi)
+4. Batasan Masalah (Perbaiki, input, output, penelusuran, model)
+5. Keyword DML Fokus ke Select. (hapus insert update delete)
+6. Metode Penelitian (kaji Lagi)
+7. Metode pembangunan perangkat lunak (kaji lagi, beri nama)
+8. Analisis masalah (point-point)
+9. Skema (symbol Input dan Output).
+10. Contoh Input (Spek, ketentuan, idealnya)
+11. Hasil Penyelesaian (di ambil 3 teratas dan terbawah)
+12. Hapus kebutuhan non fungsional.
+13. Cek typo
+
+-Demo Program
+1. Form Input Alias
+2. Desain (jadi Banyak Halaman)
+3. Halaman (Info database, daftar Alias, Translator Singkat, Penelusuran Detail).
+4. Tampilan Tabel hasil di buat Page.
+
+--------------------------------------------
+- @Seminar Semester 9 ----------------------
+--------------------------------------------
+# Lembar Revisian Pembimbing - Galih Hermawan, S.Kom, M.T. :
+1. Daftar Isi, Tabel (judul)
+2. Daftar Pustaka
+3. Referensi Bab 2 di lengkapi -> Cek ke daftar Pustaka
+4. Penulisan teknisnya
+5. Referensi pemodelan PIL -> Buku Text
+6. Mekanisme penentuan relasi -> atribut struktur (cek lagi)information schema
+7. cek lagi daftar relasi tabel
+8. judul -> DML -> dihilangkan -> fokus cari/Retrival tapi lengkapi
+9. fungsi validasi di alur proses
+10. spesifikasi proses
+11. Struktur Tabel dan semua relasi pendukung yang non kasus
+
+# Lembar Revisian Reviewer - Andri Heryandi, S.T., M.T. :
+1. Penomoran BAB, sub BAB, Gambar, Tabel Konsistenkan
+2. Cek Struktur db (Tabel, Relasi, Kolom) Berdasarkan Information Skema
+3. Pastikan "SELECT" Murni adalah DML
+4. Di alur tidak ada kemungkinan "Error"
+5. "Struktur" di Kamus Data
+6. "Where" Harus ada
+
+#Review Tak Tertulis :
+ @Slide
+  - Latar Belakang - Maksud dan Tujuan
+   . cari kasus yang membuat kita wajib menerjemahkan chatbot, sub-sitem atau apa
+   . Cari alasan yang lebih kuat dalam mengambil judul ini
+  - Batasan Masalah 
+   . ganti jangan platform WEB tapi jadi Web Service, web hanya pengamplikasian saja
+  - Metode pembangunan
+   . Cari Referensinya atau ubah ke yang biasa aja
+  - Analisis data Masukan
+   . kalau mau contohnya jangan beda bahasa
+  - Analisis Database
+   . gunakan information shcema untuk analisis databasenya
+    . gunakan "Show Create tabel"
+  - Preporesing kalimat perintah
+   . Gunakan Steeming
+  - Proses Penerjemah
+   . Buktikan Select murni adalah DML Referensinya
+   . DML yang lain Insert/Update/Delete
+   . harus bisa relasi ke sendiri
+   . Algoritma harus bisa menghandle kesalahan
+   . handle keyword lebih detail
+   . handle berbagai posisi
+   . handle pengunakan nama kolom dengan nama table
+   . jangan gunakan join using
+  - kebutuhan Fungsional
+   . Perbaiki lagi semuanya pelajari jangan sampe ada yg salah
+    . Kamus , Struktur
+   . Database Pendukung Diluar kasus
+    . Tabel alias, table analisis tabel, table Keyword dll
+   . cara orang lain Pake programnya
+    . ada setup cara penggunaanya
+	 . nginstal tabel pengukung secara otomatis
+	 
+ @Demo
+  - Yang tidak mengerti lebih baik jangan di tampilkan
+  - jangan Pake multi layar ketika Demo
+  - Fitur WHERE
+  - Coba kalimat UTUH
+
+#Saran :
+- kejar
+- sebenernya lebih bagus kamu dari penelitian sebelumnya
+- kalau ini gk selesai nanti buntu
+- bisa jadai buat apa saja
+- kalau lagi kerja mah mending cuti dulu
+- tingkatkan
+- udah ada gambaran bisa lebih bagus
+- agar penelitian ini bisa hidup dan diterapkan
+- dikuatkan di semangat
+
+=============================================
+= Kesimpulan yang perlu direvisi : ==========
+=============================================
+@Dokument : -------------------
+	1. Judul
+	2. Daftar Isi
+	3. Daftar Tabel
+	4. Daftar Gambar
+	5. Daftar Symbol
+	6. Latar Belakang
+	7. Maksud dan Tujuan
+	8. Batasan Masalah
+	9. Metodologi Penelitian
+	10. Metode Pembangunan Perangkat Lunak
+	11. Referensi Bab 2 dan dibawa
+	12. Proses Masukan Alias-Alias
+	13. Skema-Skema
+	14. Penulisan teknisnyareferensi Pemodelan
+	15. Analisis Data Masukan
+	16. Analisis Databse
+	17. Preprcesing Kalimat Perintah
+	18. Proses penerjemah
+	19. Flowchart-Flowchart/Algoritma
+	20. Where
+	21. Insert
+	22. Update
+	23. Delete
+	24. Validasi-Validasi Flowchart
+	25. Kebutuhan fungsional
+	26. DFD
+	27. Spesifikasi Proses
+	28. Kamus Data
+	29. Database Pendukung
+	30. Gambar Harus Jelas
+	31. Daftar Pustaka
+	32. Lampiran
+	33. TYPO
+	
+@Persentasi : -----------------
+	1. Desain
+	2. Latar Belakang
+	3. Tujuan Penelitian
+	4. Batasan Masalah
+	5. Keyword DML
+	6. Metode Penelitian
+	7. Metode Pembangunan
+	8. Analisis Masalah
+	9. Skema
+	10. Spesifikasi Masukan
+	11. Hasil Penyelesaian
+	12. Hapus Kebutuhan non Fungsional
+	13. TYPO
+	
+@Program : --------------------
+	1. Form Input Alias
+	2. Desain
+	3. Halaman
+	4. Tampilah Tabel
+	5. Daftar Rlasi Tabel
+	6. Fitur Where
+	7. Coba Kalimat utuh
+	8. Jangan tampilkan yg tidak di mengerti
+
+Dikelompokan :
+----------------
+- @Dokument : --
+----------------
+	Judul
+		- DML dihilangkan fokus Retrival
+	Daftar-Daftar : Konsistenkan
+		- Daftar Isi
+			- Sub Bab
+		- Daftar Gambar
+		- Daftar Tabel
+		- Daftar Symbol
+		- Daftar Lampiran
+	Bab 1
+		- Latar Belakang
+			v.Tentang Translator SQL
+				. Fungsi
+				. Manfaat
+			v. Review Literatur Penelitian Sebelumnya
+				. Penjelasan
+				. Hasil Pencapaian
+			v. Pengembangan dari penelitian Sebelumnya
+			v. DBMS itu Mysql
+			(harus di kaji Ulang)
+			. Cari kasus yang Mewajibkan kita melakukan peenelitian ini (chatbot, Sub-sistem, dll...)
+		- Maksud dan Tujuan
+			. Maksud
+			. Tujuan
+			(Harus dipikirkan kembali)
+			. Alasan yang lebih Kuat mengambil penelitian ini.
+		- Batasan Masalah
+			. Platform Sebagai Pengamplikasian
+			. Jenis Sub Sistem (Web Service misal)
+			v. Model Perancangan
+			v. Input Data
+			v. Output Data
+			v. Output Penelusuran
+			(Perbaiki hapus perancangan php)
+		- Metodologi Penelitian
+			. Kaji Ulang
+			. Metode Pembangunan Perangkat Lunak
+				(Ganti Model Biasa aja)
+
+	Bab 2
+		- Referensi
+			. Semua tools Di akhirkan
+			(yang awal-awal blm ada referensinya)
+			. Cek Daftar Pustaka
+			. Pastikan "SELECT" Murni adalah DML
+
+	Bab 3
+		- Spesifikasi Data Input (Contoh Input)
+			v. Ketentuan Kalimat input
+			. kalau bisa kalimat dan data bahasa Indonesia
+		- Flowchart/Algoritma
+			. Setup
+				. Buat Struktur database Pendukung
+				. Instalasi Program	
+					. Instalasi Database Pendukung otomatis
+			. Analisis Database
+				. Sumber Informasi database ambil dari information Schema "Show Creat Tabel"
+					. Nama-Nama Atribut dan type
+					. Relasi
+			. Preporesing
+				. Gunakan Steeming
+			. Proses Penerjemah
+				. Handle Relasi ke diri sendiri
+				. Handle Keyword Lebih detail
+				. Handle berbagai Posisi
+				. jangan hanya pake Join Using
+				. Handle Pengunakan nama table untuk kolom name
+				. DML Lain Insert, Update, Delete
+				. Validasi Kesalahan Handel Error
+				. Sumber DPembanding dari database Pendukung
+		- Kebutuhan Fungsional
+			. DFD Semua
+			. Kamus DATA
+		- Perancangan Sistem
+			. Struktur Menu
+			. Antarmuka 
+			. jaringan Semantik
+		v- Gambar 
+			. Kurangi Warna halus, Pilih Warna kontras
+			(Sebenarnya Udah jelas yg salah hanya saat kualitas Print)
+
+	Lainya :
+		- Daftar Pustaka
+			(Tinggal Update aja si kalau bab 2 referensi udah selesai)
+		- Lampiran
+			. Skema Relasi Database yang digunakan sebagai Contoh Penyelesaain
+			. Hasil output dari Contoh Proses 
+				. Jika banyak di ambil beberapa yg teratas dan terbawah
+		- Cek Typo lagi
+----------------
+- @Persentasi: -
+----------------
+	- Desain
+		v. Warna Font Lebih Kontras agar terbaca
+		v. Sisipkan Halaman dokument yang sedang di bahas dalam Slide.
+		. Sisipkan juga halaman terkait (referensinya, ataau penjelasa detailnya)
+	v- Latar belakang
+		. Ubah Ke Point-Point
+			. Cerita tentang Translator SQL
+				. Pengertian
+				. Fungsi
+				. manfaatnya (alasan Lebih Kuat)
+			. Review Literatur
+				. Penjelasan
+				. Hasil Pencapaian
+			. Pegembangan
+				. yang membedakan
+	v- Maksud dan Tujuan
+		. Tujuan Penelitian
+			. Tambah Pencarian Akurasi Penyelesaian
+	v- Batasan Masalah
+		. Hapus Perancangan dengan PHP
+		. Tambahkan Model Pemograman yang di gunakan
+		. Platform yg pengaplikasian
+		. Jenis Sub sistem
+		. Input yg lebih detail
+		. output penelusuran
+		. Ouput Hasil lebih detail
+		. Fokus di rettrival informasi
+	- Metodologi Penelitian
+		. Perbaiki jika di dokument diubah
+		. Metode Pembangunan perangkat lunak
+			. ganti ke yang biasa.
+	v- Analisis Masalah
+		. Point-Point dari Dokument
+	v- Skema Mengikuti Dokument
+	v- Contoh Masukan
+		. Ketentun / Spesifikasi Masukan yang diperbolehkan
+		. Contohnya
+	v- Hasil Penyelesaian
+		. Jika Hasil ouput banyak
+			. Ambil 3 teratas dan 3 terbawah.
+	v- Hapus kebutuhan Fungsional
+	- DFD Update jika ada perubahan
+	- Ubah Tampilan jika ada Prubahan Desai Tampilan
+	- Cek Typo lagi
+----------------
+- @Program : ---
+----------------
+	- Fitur Insert(X)
+	- Fitur Update(X)
+	- Fitur Delete(X)
+	- Fitur Where
+	masing-2 harus->
+		1. Cari Contoh Soal Fitur Sebanyak2nya
+		2. Analisis setiap Soal, tentukan Keyword yang berpengaruh
+		3. Buat model algoritma lagi
+		4. Coba implementasi
+		5. Uji 
+		
+		
+	- Buat Halaman
+		. Setup
+			. Instalasi Database Pendukung
+		. Pilih Database
+			. Info Database
+			. Form Alias-Alias
+		. Translator
+			. Form Kalimat
+			. Hasil Translator
+				. Syntax SQL
+				. Tabel Hasil/10 record (page)
+		. Detail Penelusuran
+			. Output tiap Proses
+	- Proses identifikasi Syarat Kondisi
+		. Kata Kondisi
+			. Operator banding
+			. Atribut
+			. Isi
+		. Operator Logika
+	- Proses Identifikasi Atribut
+		. Nama Atribut
+		. Fitur Atribut
+	- Validasi Error Message
+		. Ketidak sesuaian dalam proses penelusuran.
+		
+Belum tau:
+	- Validasi-Validasi? -> sebenarnya kalau program error apa yg mau ditampilkan.

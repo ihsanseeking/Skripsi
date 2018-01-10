@@ -1,0 +1,113 @@
+#1===============================================================================
+
+	SELECT 
+		CONCAT_WS(
+			' ',
+			first_name,
+			last_name
+		) AS NamaLengkap,
+		title AS Film
+	FROM actor 
+		JOIN film_actor USING (actor_id) 
+		JOIN film USING (film_id)
+	ORDER BY NamaLengkap ASC 
+	
+	ATAU
+	
+	SELECT 
+		CONCAT_WS(
+			' ',
+			first_name,
+			last_name
+		) AS NamaLengkap, 
+		GROUP_CONCAT(title) AS Film
+	FROM actor 
+		JOIN film_actor USING (actor_id) 
+		JOIN film USING (film_id)
+	GROUP BY NamaLengkap
+	ORDER BY NamaLengkap ASC 
+	
+	[199 baris -> judul film menyamping]
+	
+	UPDATE: {Ada kemungkinan lebih dari satu aktor yang memiliki nama sama}
+	
+			SELECT 
+				CONCAT_WS(
+					' ',
+					first_name,
+					last_name
+				) AS NamaLengkap, 
+				GROUP_CONCAT(title) AS Film
+			FROM actor 
+				JOIN film_actor USING (actor_id) 
+				JOIN film USING (film_id)
+			GROUP BY actor_id
+			ORDER BY NamaLengkap ASC 
+			
+			[200 baris -> judul film menyamping]
+		
+#2===============================================================================
+	SELECT CONCAT_WS(
+		' ',
+		first_name,
+		last_name
+	) AS "Nama Pelanggan",
+	DATEDIFF(
+		return_date,
+		rental_date
+	) AS "Lama Sewa (hari)"
+
+	WHERE DATEDIFF(
+		return_date,
+		rental_date
+	) > 3
+	GROUP BY customer_id
+#3===============================================================================
+	
+	SELECT 
+		DISTINCT title AS "Judul Film"
+	FROM film 
+		JOIN inventory USING (film_id)
+	WHERE store_id=2 
+		AND store_id<>1 
+		
+	[762 baris]
+		
+	SELECT 
+		DISTINCT film_id,
+		title AS "Judul Film"
+	FROM film 
+		JOIN inventory USING (film_id)
+	WHERE store_id=2 
+		AND film_id NOT IN 	
+	(
+		SELECT
+			film_id 
+		FROM inventory 
+		WHERE store_id=1
+	) 
+	
+	[199 baris]
+#4===============================================================================
+	SELECT
+		title AS "Judul Film"
+	FROM film 
+		JOIN film_category USING (film_id) 
+		JOIN category USING (category_id)
+	WHERE category.name='comedy' 
+		AND description	LIKE '%dentist%'
+#5===============================================================================	
+SELECT 
+		customer_id AS "Kode Pelanggan", CONCAT_WS(
+			' ',
+			first_name,
+			last_name
+		) AS "Nama Pelanggan", 
+		COUNT(rental_id) AS "Jumlah x sewa",
+		SUM(amount) AS Pendapatan
+	FROM customer 
+		JOIN payment USING (customer_id)
+	WHERE MONTHNAME(payment_date)="may" 
+		AND YEAR(payment_date)="2005"
+	GROUP BY customer_id 	
+		

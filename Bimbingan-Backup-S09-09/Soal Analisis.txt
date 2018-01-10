@@ -1,0 +1,63 @@
+#1==================================================================== 
+	Tampilkan 
+		nama "lengkap" 
+	actor 
+		dan judul-judul 
+	film 
+	yang pernah dilakoninya
+
+Versi Ideal
+
+	Tampilkan 
+		fisrt_name (actor)
+		last_name (actor) 
+		dan 
+		title - title  (film)(group_concat) "karena diulang 2 kali = grup dan pasti menggunakan grup by dari id dari tabel from jika tidak terdefinisi yg di grup bynya." "dan jika tidak terdefinisi akan selalu order by field pertama yang di tampilkan"
+	actor 
+		Join film
+	
+
+#2===================================================================
+Belum pake date-datean jadi cancel dulu aja fitur ini
+	Tampilkan 
+		nama 
+	customer 
+	yang pernah meminjam dvd lebih dari 3 hari
+	
+#3===================================================================
+	Tampilkan 
+		judul-judul 
+	film 
+	yang terdapat pada store 2, 
+		tapi tidak terdapat pada store 1
+		
+Versi Ideal		
+	tampilkan 
+		title - title (karena yg di tampiljan tunggal jadinya DISTINCT)
+	film
+	yang terdapat pada store_id inventory = 2 , 
+		tapi tidak terdapat pada store_id inventory = 1
+		
+#4===================================================================
+	Tampilkan 
+		judul 
+	film 
+	yang termasuk kategori comedy, 
+		dimana dalam deskripsi film tersebut mengandung kata “dentist”
+	versi ideal
+	
+	Tampilkan 
+		title 
+	film 
+	yang termasuk category comedy, 
+		dimana dalam description film tersebut mengandung kata “dentist”
+#5===================================================================
+	Terlalu komples untuk saat ini jadi lewat
+	
+	Total berapa
+		US Dollar-kah pendapatan rental selama bulan Mei tahun 2005 
+		
+	yang dihasilkan oleh setiap anggota (penyewa rental) 
+		dan 
+	tampilkan pula berapa kali si penyewa tersebut melakukan penyewaan pada waktu tersebut?
+	

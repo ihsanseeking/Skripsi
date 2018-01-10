@@ -1,0 +1,241 @@
+Focus Setelah bimbingan Perdana di semester 09
+
+Ternyata fokus aja di select gali lebih dalam
+dan untuk progres bimbingan ke dua ini adalah menyelesaikan kasus yang di berikan pak galih soal-soalnya ada di file Contoh2 soal sakila, karena untuk kali ini fokus menggunakan database sakila saja.
+
+Sesi Program untuk Progres Program saat bimbingan
+
+Alurnya seperti ini..
+
+ada beberapa tahapan besar
+	
+Tahap ke - 0 
+	input 	: Nama database
+	Proses	: Analisis Tabel atribut dan relasinya
+	Output	: List Tabels atribut dan relasinya
+	desc	: disini prosese mencari relasi antar tabel dan mendapatkan tabel adan atribut apa saja yang ada di  database yg dipilih
+			  - Identifikasi nama tabel dari databas eyg di pilih
+			  - identifikasi semua atribut dari setiap tabel
+			  - Identifikasi Relasi antar tabel dalam database yang di pilih
+	
+tahap ke - 1
+	input 	: Bahasa alami 
+	Proses 	: convert ke format sql
+	output 	: format sql, dan schema kasus (bahan-bahan)
+	desc	: di sini mencari arti dari setiap kata dan mencocokan dengan schema database untuk mendapatkan list tabel, relasi, atribut yang digunakan dalam kasus ini. hasil keluaranya berupa kalima alami dengan format sql, dimana kata-kata dan susunanya disesuaikan dengan schema database.
+
+tahap ke - 2
+	input 	: format sql
+	proses 	: terjemahkan ke Code SQL
+	output 	: code SQL
+	desc	: di sini menerjemahkan bahasa alami yang berformat sql tersebut kedalam code sql yang sebenarnya, dengan mengunakan schema kasus yg sudah ditemukan.
+
+tahap ke - 3 
+	input 	: Code SQL
+	proses 	: Eksekusi Code
+	Output 	: data, dan notif
+	desc	: disini hanya meng eksekusi code sql tadi dan jika ada kesalahan maka akan ada notifkiasi untuk memperbaiki kesalahan ketik.
+
+---------------------------------------------------
+Tahapan lebih detail
+
+Proses di tahapan ke - 0
+	Analisis
+v	- > identifikasi nama tabel
+	
+		menggunakan SHOW FULL TABLES;
+		dan membedakan table base dengan tabe;l view karena tabel view tidak memiliki relasi
+	
+v	- > identifikasi atribut
+		
+		Mengidentifikasi setiap atribut dalam tabel beserta info lainya
+	
+v	- > identifikasi Relasi jika memiliki 2 tabel
+	
+		Menemukan relasi dari base tabel untuk mempermudah jika mengunakan tabelk yang berelasi
+		- Cara Mecarai relasi diantara tabel2
+			1. cari primary tabel pertama
+			2. lalu bandingkan primary key tersebut dengan atribut dari tabel lainya
+				setiap ketemu maka nama tabel tersebut masuk kedalam relasi tabel yg di cari
+				
+		
+
+===================================================
+//Dari yang termudah :D
+
+/*
+Soal Percobaan untuk di test
+
+tampilkan title film yang termasuk category comedy,	dimana 	dalam description film tersebut mengandung kata “dentist”
+
+*/
+
+
+Soal ke - 4 :	
+	Tampilkan 
+		judul film 
+	yang 
+		termasuk kategori comedy,
+	dimana 
+		dalam deskripsi film tersebut 
+			mengandung kata “dentist”
+
+Fitur dan Relasi Soal Ke - 4 : 	
+	melibatkan 3 tabel: 
+		category = "katagori"
+		film = "judul film"
+		film_category = [Relasi antara film dan kategori]
+
+Jawaban Soal Ke - 4 :
+	SELECT
+		title AS "Judul Film"
+	FROM film 
+		JOIN film_category USING (film_id) 
+		JOIN category USING (category_id)
+	WHERE category.name='comedy' 
+		AND description LIKE '%dentist%'
+	
+// Analisis Soal
+	// t[] => array token "t" 
+	
+	t[1]	: Tampilkan
+		> Perintah "SELECT"
+	
+	t[2]	: judul
+		> nama Atribut dari tabel "film" yaitu "title"
+		
+	t[3]	: film
+		> nama tabel "film"
+		
+	t[4]	: yang
+		> Fitur "WHERE"
+		
+	t[5]	: termasuk
+		> Fitur dari "WHERE" sub-Fitur -> "=" 
+	
+	t[6]	: kategori 
+		> Nama Tabel "category"
+		
+	t[7]	: comedy
+		> Isi dari Atribut "nama" dalam tabel "category"
+		
+	t[8]	: ,
+		> pemisah fitur
+		
+	t[9]	: dimana
+		> Fitur WHERE
+		
+	t[10]	: dalam 
+		> Fitur dari WHERE sub-Fitur -> "LIKE"
+	
+	t[11]	: deskripsi 
+		> nama atribut dari tabel "film"
+		
+	t[12]	: film 
+		> nama Tabel "film"
+		
+	t[13]	: tersebut 
+		> menegaskan Fitur Sebelumnya
+		
+	t[14]	: mengandung
+		> Menegaskan kata setelahnya sebagai isi dari fitur yg di maksud dari sebelumnya
+		
+	t[15]	: kata 
+		> Menegaskan type yang dicari yaitu sebuah "kata"
+		
+	t[16]	: “
+		> Menegaskan batas awal kata
+		
+	t[17]	: dentist
+		> isi "kata-kata
+		
+	t[18]	: ”
+		> Menegaskan kahir dari kata yang dimaksud
+
+//Bahan-bahan yang di gunakan(atribut,tabel,dll...)
+
+	Tabel (tbl) :
+		tbl[1]	= film
+		tbl[2]	= category (dari Kategori)
+		tbl[3]	= film_category (diketahui setelah mencari relasi antara film dan category)
+	
+	Relasi (rls) : (diketahui ketika ada kesamaan atribut key)
+		rls[1]	= film - film_category (film_id) 
+		rls[2]	= category - film_category (category_id)
+	
+	Atribut (atrb) :
+		atrb[film][1]			= film_id (dari relasi)
+		atrb[film][2]			= title (dari judul)
+		atrb[film][3]			= description (dari deskripsi)
+		atrb[category][1] 		= category_id (dari relasi)
+		atrb[category][2] 		= name (default category)
+		atrb[film_category][1] 	= film_id (dari relasi)
+		atrb[film_category][2] 	= category_id (dari relasi)
+
+		
+//Keterkaitan antar kata (pengelompokan kata / kesimpulan dari setiap kata yang di gabung)
+	// gt[] => array grup token "gt"
+	
+	gt[1]	:[ t[1], t[2], t[3] ]
+		> Tampilkan, judul, film
+		-> tampilkan => Perintah "SELECT"
+		-> judul => kata lain dari "title" (sebuah nama atribut)
+		-> film => "film" (sebuah nama tabel)
+		-> menampilkan dalam alias "judul film" 
+		
+		{ 
+			SELECT
+				film.title AS "judul film" 
+			FROM film 
+		}
+		
+	gt[2]	: [ t[4], t[5], t[6], t[7] ]
+		> yang, termasuk, kategori, comedy
+		-> yang => indikasi fitur "WHERE"
+		-> termasuk => indikasi sub fitur "="
+		-> kategori => sebuah nama tabel "category"
+		-> comedy => sebuah kata yang dicari dalam "category" (karena tidak disebutkan di atribut apa jadi defaultnya ke atribut "name")
+		
+		{ 
+			WHERE category.name = 'comedy' 
+		}
+		
+	gt[3]	: [ t[8] ]
+		> ,
+		-> , = Sebagai pemisah saja.
+		
+		{ 
+		}
+		
+	gt[4]	: [ t[9], t[10], t[11], t[12], t[13], t[14], t[15], t[16], t[17], t[18] ]
+		> dimana, dalam, deskripsi, film, tersebut, memgandung, kata, ", dentis, "
+		-> dimana => indikasi fitur "WHERE"
+		-> deskripsi, film => sebuah nama atribut dari "film" yaitu "description" 
+		-> dalam, mengandung, tersebut => indikasi sub fitur "LIKE"
+		-> kata, ", dentis, " => kata yang dicari adalah 'dentis'
+		
+		{ 
+			WHERE film.description LIKE '%dentis%' 
+		}
+
+// 	penggabungan Grup token
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

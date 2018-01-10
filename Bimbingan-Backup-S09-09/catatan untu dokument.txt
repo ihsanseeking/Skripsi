@@ -1,0 +1,14 @@
+Referensi2 di bab 2 yg belum dimasukan referensinya
+
+sebelum identifikais nama tabel sediakan nama tabel hasil generate
+dan relasinya
+
+tampilkan jenis2 kondisi atau operator2 logika, di tahap syarat kondisi
+dan type data dari tfield table juga atau atribut
+
+di tahap atribut, tampilkan nama atribut dari setiap tabel yang ada di databese terpilih
+
+di penyusunan query tampilkan tabel2 jenis2 query 
+
+
+

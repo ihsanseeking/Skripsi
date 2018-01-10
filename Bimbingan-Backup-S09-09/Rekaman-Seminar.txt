@@ -1,0 +1,136 @@
+Catatan Seminar:
+
+Rekaman : 
+
+#Pak Andri
+@slide "Maksud dan Tujuan"
+- Latar Belakangnya apa ya?
+	- Kasusnya apa yg membuat kita wajib memngunakan bahasa alami dan anda wajib menerjemahkan kedalam bahasa alami? (karena dalam SI itu tidak cocok)
+	- Contoh Kasus Paling cocok menurut Pak andri adalah Chatbot
+	- Alasannya apa ambil judul ini
+	- untuk saat ini kasusnya subsutem dalam apapun
+	
+@slide Batasan Masalah
+- kalau tujuannya sub sistem platformnya gk harus WEB 
+	- harusnya serperti Web Service
+	- di web itu hanya contoh pengaplikasiaannya.
+	
+@slide Metode Pembangunan
+- Aneh metode gambarnya
+	- referensinya
+	- saran udah mending pake yang biasa aja. dari buku aslinya aja.
+	
+@slide Analisis Data Masukan
+- bahasa yg di gunakana Bhasa indonesia, tapi contoh kasus databasenya bahasa ingris?
+
+@slide Analisis Databse
+- tau darimana sebuah tabel berelasi?
+	- tidak selasu tanda berelasi itu kolomnya sama
+	- kalau gk natural join gk bisa
+	- cari spesifikasi skema caranya
+
+@slide Analisis Database(2)
+- PRI-MUL itu apa
+	- apa maksudnya MUL itu
+	- pelajari information skema
+	- 
+
+@slide Preprocesing Kalimat Perintah
+- Masih permasalahan beda bahasa dengan contoh kasus
+	
+@slide Preprocesing Kalimat Perintah (1)
+- Ada steeming gk?
+
+@slide Proses Penerjemah Kalimat (1)
+- Kenapa Select Doang?
+	- Select tidak merubah data
+		- select itu jadi DML ketika ada kondisi select into
+		- Menyimpan data hasil select ke tabel
+	- DML itu merubah data
+	- Cari referensinya buktikan select murni masuk kedalam DML (resmi)
+- harusnya ada insert update delete
+
+@slide Proses penerjemahan kalimat (7)
+- tidak bisa ke relasi sendiri ya?
+	- harusnya bisa (tambahkan)
+
+@slide Proses Penerjemahan Kalimat
+- Algoritmanya belum menghendle kesalahan
+	- tidak ada nama tabel
+- kalau "di (spasi) mana" gimana cara handlenya
+
+- handle keyword di awali, di akhiri, tidak di awali , tidak di akhiri, tidak mengandung dan dsb..
+
+- ketika kondisinya nama tabel ada di belakang kondisi bukan sebelum kata kondisi
+
+- Kadang nama tabel di sebut nama kolomnya
+
+- gk mungkin setiap tabel yg berlasi nama kolomnya sama
+	- jangan pake using karena hanya untuk table yg nama kolomnya sama saja
+
+@slide Kebutuhan fungsional
+	@(1)
+- tabel database itu apa ya?
+	- Strukturnya datanya gimana (kamus datanya)?
+	- kamus data yg tidak ada strukturnya
+- tabel data alias di simpen dimana
+
+- databasenya mana yg diluar sakila yg mendukung program anda
+
+- gimana cara saya make program anda?
+
+- Saran pak andri sebelum mengunakan program ini ada setupnya dulu ketika setup di abca semua kolom dari semua table nah yg mau di isi save lalu disimpan
+
+@Demo
+- Mul itu apa?
+	- mul itu kata lain dari Index
+	- index yg boleh katanya sama
+	- kalau gk tau janga nditampilin jadi masalah
+- coba decribe actor
+
+- pelajari information skema
+
+- jangan pake duplikat ketika demo
+
+- where yg penting untuk pencarian belum selesai?
+
+@saran
+- kejar
+- sebenernya lebih bagus kamu dari penelitian sebelumnya
+- kalau ini gk selesai nanti buntu
+- bisa jadai buat apa saja
+- kalau lagi kerja mah mending cuti dulu
+
+@Lembar revisian
+- Penomoran BAB, sub BAB, Gambar, Tabel Konsistenkan
+- Cek Struktur db (Tabel, Relasi, Kolom) Berdasarkan Information Skema
+- Pastikan "SELECT" Murni adalah DML
+- Di alur tidak ada kemungkinan "Error"
+- "Struktur" di Kamus Data
+- "Where" Harus ada
+
+#Pak Galih
+
+@Demo
+- solusi untuk mencari relasi dengan cara "show create tabel 'nama_tabel';"
+
+- coba kalimat utuh
+
+@saran
+- tingkatkan
+- udah ada gambaran bisa lebih bagus
+- agar penelitian ini bisa hidup dan diterapkan
+- dikuatkan di semangat
+
+@Lembar Revisian
+- Daftar Isi, Tabel (judul)
+- Daftar Pustaka
+- Referensi Bab 2 di lengkapi -> Cek ke daftar Pustaka
+- Penulisan "teoriny"
+- Referensi pemodelan DLL -> Buku Text
+- Mekanisme penentuan relasi -> atribut struktur (cek lagi)information schema
+- cek lagi daftar relasi tabel
+- judul -> DML -> dihilangkan -> fokus cari/Retrival tapi lengkapi
+- fungsi validasi di alur proses
+- spesifikasi proses
+- Struktur Tabel dan semua relasi pendukung yang non kasus
