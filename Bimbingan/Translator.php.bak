@@ -629,166 +629,92 @@
 						}
 					?>
 					<hr>
-					<h4> Info Relasi </h4>
+					<h4> Informasi Relasi </h4>
 					<p></p>
-					<div class="row">		
 					<?php
-					for($i=0; $i<$i2; $i++){
-					?>
-						<div class="col-sm-4">
-							<div class="table-responsive">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th><?php echo "Table Base [".$btables[$i]."]"; ?></th>
-											<th>AS</th>
-											<th>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $btables[$i]; ?></textarea>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php
-									$c_attr = count($atributs[$btables[$i]]['field']);
-									for($j=0; $j<$c_attr; $j++){
-									?>
-										<tr>
-											<td>
-												<?php echo $atributs[$btables[$i]]['field'][$j]; ?>
-												<?php echo $atributs[$btables[$i]]['type'][$j]; ?>
-												<?php echo $atributs[$btables[$i]]['key'][$j]; ?>
-											</td>
-											<td>AS</td>
-											<td>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $atributs[$btables[$i]]['field'][$j]; ?></textarea>
-											</td>
-										</tr>
-									<?php
-									}
-									?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					<?php
-					}
-					for($i=0; $i<$i1; $i++){
-					?>
-						<div class="col-sm-4">
-							<div class="table-responsive">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th><?php echo "Table View [".$vtables[$i]."]"; ?></th>
-											<th>AS</th>
-											<th>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $btables[$i]; ?></textarea>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php
-									$c_attr = count($atributs[$vtables[$i]]['field']);
-									for($j=0; $j<$c_attr; $j++){
-									?>
-										<tr>
-											<td>
-												<?php echo $atributs[$vtables[$i]]['field'][$j]; ?>
-												<?php echo $atributs[$vtables[$i]]['type'][$j]; ?>
-												<?php echo $atributs[$vtables[$i]]['key'][$j]; ?>
-											</td>
-											<td>AS</td>
-											<td>
-												<textarea class="form-control" rows="1" id="comment"><?php echo $atributs[$vtables[$i]]['field'][$j]; ?></textarea>
-											</td>
-										</tr>
-									<?php
-									}
-									?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					<?php
-					}
-					//Cari Relasi tabel
-					for($i=0; $i<$i2; $i++){
-						$c_attr = count($atributs[$btables[$i]]['field']);
-						for($j=0; $j<$c_attr; $j++){
-							if ($atributs[$btables[$i]]['key'][$j] == "PRI") {
-								//echo $btables[$i].".".$atributs[$btables[$i]]['field'][$j].":<br> ";
-								$r=0;
-								for($ii=0; $ii<$i2; $ii++){
-									if ($btables[$i] != $btables[$ii]){
-										$c_attr2 = count($atributs[$btables[$ii]]['field']);
-										for($jj=0; $jj<$c_attr2; $jj++){
-											
-											if ($atributs[$btables[$i]]['field'][$j] == $atributs[$btables[$ii]]['field'][$jj]) {
-												//echo "[".$btables[$i]."] :";
-												//echo " [".$btables[$ii]."] => ";
-												//echo "(".$btables[$i].".".$atributs[$btables[$i]]['field'][$j];
-												//echo " : ";
-												//echo $btables[$ii].".".$atributs[$btables[$ii]]['field'][$jj]. ")";
-												//echo " Relasi = [".$atributs[$btables[$i]]['key'][$j]." : ".$atributs[$btables[$ii]]['key'][$jj]."] <br>";
-												$relasi[$btables[$i]]['tab'][$r] = $btables[$ii];
-												$relasi[$btables[$i]]['attr'][$r] = $atributs[$btables[$ii]]['field'][$jj];
-												$relasi[$btables[$i]]['car'][$r] = $atributs[$btables[$i]]['key'][$j]."-".$atributs[$btables[$ii]]['key'][$jj];
-												//$c_relasi = count($relasi[$btables[$i]]['tab']);
-												//echo"---- $c_relasi ------";
-												$r++;
-											}
-											
-										}
-										
-									}
+						if (!empty($_SESSION["db_pilih"])) {
+							$db_pilih = $_SESSION["db_pilih"];
+							$db_pilih_id = $_SESSION["db_pilih_id"];
+							$sql_foreign = "
+								SELECT 
+									`d_relation`.`id` AS 'rel_id',
+									`d_relation`.`nama` AS 'rel_nama',
+									`d_table`.`nama` AS 'rel_foreign_tbl',
+									`d_attribute`.`nama` AS 'rel_foreign_attr'
+								FROM `d_relation`
+								LEFT JOIN `d_attribute` ON `d_relation`.`id_foreign` = `d_attribute`.`id`
+								LEFT JOIN `d_table` ON `d_attribute`.`id_table` = `d_table`.`id`
+								WHERE `d_table`.`id_database` = '$db_pilih_id'
+							";
+							$result_foreign = mysqli_query($connect_db_p, $sql_foreign);
+							if (mysqli_num_rows($result_foreign) > 0) {
+								$rel_i_pilih=0;
+								while($row_foreign = mysqli_fetch_assoc($result_foreign)) {
+									$rel_i_pilih++;
+									$rel_pilih = $row_foreign["rel_nama"];
+									$rel_pilih_id = $row_foreign["rel_id"];
+									$rel_pilihan[$rel_i_pilih]["id"] = $rel_pilih_id;
+									$rel_pilihan[$rel_i_pilih]["nama"] = $row_foreign["rel_nama"]; 
+									$rel_pilihan[$rel_i_pilih]["foreign_table"] = $row_foreign["rel_foreign_tbl"];
+									$rel_pilihan[$rel_i_pilih]["foreign_attribute"] = $row_foreign["rel_foreign_attr"];
 									
-								}
-								//echo "<br>";
-							}
-						}
-					}
-					
-					?>
-					</div>
-					<hr>
-					<h4> Analisis Relasi </h4>
-					<hr>
-					<div class="row">		
-					<?php
-					for($i=0; $i<$i2; $i++){
-					?>
-						<div class="col-sm-4">
-							<div class="table-responsive">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th><?php echo "Table [".$btables[$i]."]"; ?></th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php
-									$c_relasi = count($relasi[$btables[$i]]['tab']);
-									for($j=0; $j<$c_relasi; $j++){
-									?>
-										<tr>
-											<td>
-												<?php echo $relasi[$btables[$i]]['tab'][$j]; ?>
-												(<?php echo $relasi[$btables[$i]]['attr'][$j]; ?>)
-												<?php echo $relasi[$btables[$i]]['car'][$j]; ?>
-											</td>
-										</tr>
-									<?php
+									$sql_references = "
+										SELECT 
+											`d_relation`.`id` AS 'rel_id',
+											`d_table`.`nama` AS 'rel_references_tbl',
+											`d_attribute`.`nama` AS 'rel_references_attr'
+										FROM `d_relation`
+										LEFT JOIN `d_attribute` ON `d_relation`.`id_references` = `d_attribute`.`id`
+										LEFT JOIN `d_table` ON `d_attribute`.`id_table` = `d_table`.`id`
+										WHERE `d_relation`.`id` = '$rel_pilih_id'
+									";
+									$result_references = mysqli_query($connect_db_p, $sql_references);
+									if (mysqli_num_rows($result_references) > 0) {
+										while($row_references = mysqli_fetch_assoc($result_references)) {
+											$rel_pilihan[$rel_i_pilih]["references_table"] = $row_references["rel_references_tbl"];
+											$rel_pilihan[$rel_i_pilih]["references_attribute"] = $row_references["rel_references_attr"];
+										}
 									}
-									?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					<?php
-					}
-					
+									/*
+									echo "<br>
+										".$rel_pilihan[$rel_i_pilih]["id"]." => 
+										".$rel_pilihan[$rel_i_pilih]["nama"]." | 
+										".$rel_pilihan[$rel_i_pilih]["foreign_table"].".
+										".$rel_pilihan[$rel_i_pilih]["foreign_attribute"]." =>
+										".$rel_pilihan[$rel_i_pilih]["references_table"].".
+										".$rel_pilihan[$rel_i_pilih]["references_attribute"]."
+									";
+									*/
+								}
+								//echo "<br>jumlah relasi = ". count($rel_pilihan);
+							}
+						}	
 					?>
-					</div>
+					<table class="table table-hover table-bordered table-responsive">
+						<thead>
+							<tr>
+								<th style="width:5%">#</th>
+								<th>Nama Relasi</th>
+								<th>Foreign Key (nama_table.nama_attribute)</th>
+								<th>References (nama_table.nama_attribute)</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+							$rel_n_pilihan = count($rel_pilihan);
+							for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){
+								?>
+								<tr>
+									<td><?php echo $rel_i; ?></td>
+									<td><?php echo $rel_pilihan[$rel_i]["nama"]; ?></td>
+									<td><?php echo $rel_pilihan[$rel_i]["foreign_table"].".".$rel_pilihan[$rel_i]["foreign_attribute"]; ?></td>
+									<td><?php echo $rel_pilihan[$rel_i]["references_table"].".".$rel_pilihan[$rel_i]["references_attribute"]; ?></td>
+								</tr>
+								<?php
+							}
+						?>
+						</tbody>
+					</table>
 				</div>
 				<?php
 				//load database
