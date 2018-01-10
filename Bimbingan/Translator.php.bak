@@ -371,13 +371,13 @@
 						}
 					?>
 					
-					<table class="table table-hover">
+					<table class="table table-hover table-striped">
 						<thead>
 							<tr>
-								<th>#</th>
+								<th style="width:5%">#</th>
 								<th>Nama Database</th>
 								<th>Status Analisis</th>
-								<th>Opsi</th>
+								<th style="width:10%">Aksi</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -555,7 +555,7 @@
 									$tbl_i_pilih++;
 									$tbl_pilih = $row_table["nama"];
 									$tbl_pilih_id = $row_table["id"];
-									echo "<br>id = $tbl_pilih_id => ".$row_table["tipe"]." => $tbl_pilih";
+									//echo "<br>id = $tbl_pilih_id => ".$row_table["tipe"]." => $tbl_pilih";
 									$tbl_pilihan[$tbl_i_pilih]["id"] = $tbl_pilih_id;
 									$tbl_pilihan[$tbl_i_pilih]["nama"] = $row_table["nama"]; 
 									$tbl_pilihan[$tbl_i_pilih]["tipe"] = $row_table["tipe"];
@@ -571,86 +571,66 @@
 										while($row_attribute = mysqli_fetch_assoc($result_attribute)) {
 											$attr_i_pilih++;
 											$attr_pilih_id = $row_attribute["id"];
-											echo "<br>--id = $attr_pilih_id => ".$row_attribute["nama"]." => ".$row_attribute["tipe"];
+											//echo "<br>--id = $attr_pilih_id => ".$row_attribute["nama"]." => ".$row_attribute["tipe"];
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["id"] = $attr_pilih_id;
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["nama"] = $row_attribute["nama"]; 
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["tipe"] = $row_attribute["tipe"];
 										}
-										echo "<br>jumlah atribut = ". count($attr_pilihan[$tbl_pilih]);
+										//echo "<br>jumlah atribut = ". count($attr_pilihan[$tbl_pilih]);
 									}
 								
 								}
-								echo "<br>jumlah table = ". count($tbl_pilihan);
-							}
-						}
-					<hr>
-					
-					
-					/*
-					$i=0; $j=0;
-					if (!empty($_SESSION["db_pilih"])) {
-						$dbname = $_POST["database"]; 
-						// Create connection to database
-						$connd = mysqli_connect($servername, $username, $password, $dbname);
-						// Check connection
-						if (!$connd) {
-							die("Connection failed: " . mysqli_connect_error());
-						}
-						echo "<p>Connected to database <b>$dbname</b> successfully </p>";	
-							
-						$sql = "SHOW FULL TABLES";
-						$result = mysqli_query($connd, $sql);
-
-						if (mysqli_num_rows($result) > 0) {
-							// output data of each row
-							//echo "Database <b>$dbname</b><br>";
-							$i1=0;$i2=0;
-							while($row = mysqli_fetch_assoc($result)) {
-								if ($row["Table_type"]=="VIEW"){
-									//Echo "View ";
-									$vtable = $row["Tables_in_$dbname"];
-									$vtables[$i1] = $vtable;
-									$i1++;
-								} else {
-									//Echo "Base ";
-									$btable = $row["Tables_in_$dbname"];
-									$btables[$i2] = $btable;
-									$i2++;
-								}
-								//echo "Table [". $row["Tables_in_$dbname"]. "] => ";
-								$table = $row["Tables_in_$dbname"];
-								$tables[$i] = $table;
-								$i++;
-								$sql2 = "DESC $table";
-								$result2 = mysqli_query($connd, $sql2);
-								if (mysqli_num_rows($result2) > 0) {
-									// output data of each row
-									//echo "Atribut : ";
-									$j=0;
-									while($row2 = mysqli_fetch_assoc($result2)) {
-										//echo " (".$row2["Field"]. ")";
-										//$atribut = $row2["Field"];
-										$atributs[$table]['field'][$j] = $row2["Field"];
-										$atributs[$table]['type'][$j] = $row2["Type"];
-										$atributs[$table]['key'][$j] = $row2["Key"];
-										$j++;
+								//echo "<br>jumlah table = ". count($tbl_pilihan);
+								
+							?>
+							<table class="table table-hover table-bordered table-responsive">
+								<thead>
+									<tr>
+										<th style="width:5%">#Tbl</th>
+										<th style="width:5%">#Attr</th>
+										<th>Nama Tabel / Attribut</th>
+										<th>Tipe</th>
+										<th>List Alias</th>
+										<th style="width:10%">Aksi</th>
+									</tr>
+								</thead>
+								<tbody>
+								<?php
+									$tbl_n_pilihan = count($tbl_pilihan);
+									for ($tbl_i = 1; $tbl_i <= $tbl_n_pilihan; $tbl_i++){
+										$attr_n_pilihan = count($attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
+										?>
+										<tr>
+											<td rowspan="<?php echo $attr_n_pilihan+1; ?>"><?php echo $tbl_i; ?></td>
+											<td colspan="2"><?php echo $tbl_pilihan[$tbl_i]["nama"]; ?></td>
+											<td><?php echo $tbl_pilihan[$tbl_i]["tipe"]; ?></td>
+											<td>a,b,c</td>
+											<td>Tambah ALias</td>
+										</tr>
+										<?php
+										
+										for ($attr_i = 1; $attr_i <= $attr_n_pilihan; $attr_i++){
+											?>
+											<tr>
+												<td><?php echo $attr_i; ?></td>
+												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]; ?></td>
+												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["tipe"]; ?></td>
+												<td>a,b,c</td>
+												<td>Tambah ALias</td>
+											</tr>
+											<?php
+										}
 									}
-										//echo "<br>";
-								} else {
-									echo "0 results";
-								}
+								?>
+								</tbody>
+							</table>							
+							<?php
 							}
-						} else {
-							echo "0 results";
 						}
-					} else {
-						echo "Database Belum dipilih";
-					}*/
-					
 					?>
 					<hr>
-					<h4> Analisis Tabel dan Atribut </h4>
-					<hr>
+					<h4> Info Relasi </h4>
+					<p></p>
 					<div class="row">		
 					<?php
 					for($i=0; $i<$i2; $i++){
