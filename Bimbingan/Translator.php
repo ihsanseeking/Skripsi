@@ -29,7 +29,7 @@
 		?>
 		<div class="container">
 			<h2>Translator</h2>
-			<p>Perancangan Translator Bahasa Alami ke dalam format SQL yang berfokus pada DML :</p>
+			<p>Perancangan Translator Bahasa Alami ke dalam format SQL</p>
 			<ul class="nav nav-tabs">
 				<li class="<?php if($tab=='setup'){echo"active";}?>"><a data-toggle="tab" href="#setup">Setup</a></li>
 				<li class="<?php if($tab=='info'){echo"active";}?>"><a data-toggle="tab" href="#info">Info Database</a></li>
@@ -47,10 +47,10 @@
 					}
 				?>
 					<h3>Setup</h3>
-					<p></p>
+					<p class="text-secondary"></p>
 					<hr>
 					<h4>Connection</h4>
-					<p>form untuk koneksi ke dbms.</p> 
+					<p class="text-secondary">form untuk koneksi ke dbms.</p> 
 					<form class="form-horizontal" action="Translator.php" method="post">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="servername">Servername :</label>
@@ -115,7 +115,7 @@
 					?>
 					<hr>
 					<h4>Database</h4>
-					<p>Pilih Analisis di Opsi untuk Menganalisis Database yang akan ingin digunakan.</p> 
+					<p class="text-secondary">Pilih Analisis di Opsi untuk Menganalisis Database yang akan ingin digunakan.</p> 
 					
 					<?php
 						if (!empty($_POST["analisis"])) {
@@ -467,10 +467,10 @@
 					}
 				?>
 					<h3>Informasi Database</h3>
-					<p></p>
+					<p class="text-secondary"></p>
 					<hr>
 					<h4>Pilih Database</h4>
-					<p>pilih database untuk menampilkan informasinya.</p> 
+					<p class="text-secondary">pilih database untuk menampilkan informasinya.</p> 
 					<form class="form-horizontal" action="Translator.php" method="post">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="db_pilih">Database :</label>
@@ -538,18 +538,19 @@
 					?>
 					<hr>
 					<h4>Informasi Data</h4>
-					<p>Informasi Tabel, Atribut, Alias</p>
+					<p class="text-secondary">Informasi Tabel, Atribut, Alias</p>
 					<?php
 						if (!empty($_SESSION["db_pilih"])) {
 							$db_pilih = $_SESSION["db_pilih"];
 							$db_pilih_id = $_SESSION["db_pilih_id"];
 							$sql_table = "
-								SELECT * FROM `d_table` 
+								SELECT * 
+								FROM `d_table` 
 								WHERE `d_table`.`id_database` = '$db_pilih_id'
 							";
 							$result_table = mysqli_query($connect_db_p, $sql_table);
 							if (mysqli_num_rows($result_table) > 0) {
-								// output data of each row
+								$as_tbl_i_pilih=0;
 								$tbl_i_pilih=0;
 								while($row_table = mysqli_fetch_assoc($result_table)) {
 									$tbl_i_pilih++;
@@ -559,24 +560,65 @@
 									$tbl_pilihan[$tbl_i_pilih]["id"] = $tbl_pilih_id;
 									$tbl_pilihan[$tbl_i_pilih]["nama"] = $row_table["nama"]; 
 									$tbl_pilihan[$tbl_i_pilih]["tipe"] = $row_table["tipe"];
+									//cari alias table
+									$sql_alias_tbl = "
+										SELECT * 
+										FROM `d_alias`
+										WHERE `d_alias`.`id_table` = '$tbl_pilih_id'
+									";
+									$result_alias_tbl = mysqli_query($connect_db_p, $sql_alias_tbl);
+									if (mysqli_num_rows($result_alias_tbl) > 0) {
+										while($row_alias_tbl = mysqli_fetch_assoc($result_alias_tbl)) {
+											$as_tbl_i_pilih++;
+											$as_tbl_pilih = $row_alias_tbl["nama"];
+											$as_tbl_pilih_id = $row_alias_tbl["id"];
+											//echo "<br>--i tbl = $as_tbl_i_pilih => id = $as_tbl_pilih_id => $as_tbl_pilih";
+											$as_tbl_pilihan[$as_tbl_i_pilih]["id"] = $as_tbl_pilih_id;
+											$as_tbl_pilihan[$as_tbl_i_pilih]["nama"] = $row_alias_tbl["nama"]; 
+											$as_tbl_pilihan[$as_tbl_i_pilih]["alias"] = $tbl_pilih;
+										}
+									}
 									
 									$sql_attribute = "
-										SELECT * FROM `d_attribute` 
+										SELECT * 
+										FROM `d_attribute` 
 										WHERE `d_attribute`.`id_table` = '$tbl_pilih_id'
 									";
 									$result_attribute = mysqli_query($connect_db_p, $sql_attribute);
 									if (mysqli_num_rows($result_attribute) > 0) {
 										// output data of each row
+										$as_attr_i_pilih=0;
 										$attr_i_pilih=0;
 										while($row_attribute = mysqli_fetch_assoc($result_attribute)) {
 											$attr_i_pilih++;
+											$attr_pilih = $row_attribute["nama"];
 											$attr_pilih_id = $row_attribute["id"];
-											//echo "<br>--id = $attr_pilih_id => ".$row_attribute["nama"]." => ".$row_attribute["tipe"];
+											echo "<br>--id = $attr_pilih_id => ".$row_attribute["nama"]." => ".$row_attribute["tipe"];
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["id"] = $attr_pilih_id;
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["nama"] = $row_attribute["nama"]; 
 											$attr_pilihan[$tbl_pilih][$attr_i_pilih]["tipe"] = $row_attribute["tipe"];
+											
+											//cari alias atribut
+											$sql_alias_attr = "
+												SELECT * 
+												FROM `d_alias`
+												WHERE `d_alias`.`id_attribute` = '$attr_pilih_id'
+											";
+											$result_alias_attr = mysqli_query($connect_db_p, $sql_alias_attr);
+											if (mysqli_num_rows($result_alias_attr) > 0) {
+												while($row_alias_attr = mysqli_fetch_assoc($result_alias_attr)) {
+													$as_attr_i_pilih++;
+													$as_attr_pilih = $row_alias_attr["nama"];
+													$as_attr_pilih_id = $row_alias_attr["id"];
+													echo "<br>----i attr = $as_attr_i_pilih => id = $as_attr_pilih_id => $as_attr_pilih --> $attr_pilih |";
+													$as_attr_pilihan[$tbl_pilih][$as_attr_i_pilih]["id"] = $as_attr_pilih_id;
+													$as_attr_pilihan[$tbl_pilih][$as_attr_i_pilih]["nama"] = $row_alias_attr["nama"]; 
+													$as_attr_pilihan[$tbl_pilih][$as_attr_i_pilih]["alias"] = $attr_pilih;
+													//echo $as_attr_pilihan[$tbl_pilih][$as_attr_i_pilih]["nama"];
+												}
+											}
 										}
-										//echo "<br>jumlah atribut = ". count($attr_pilihan[$tbl_pilih]);
+										echo "<br>jumlah atribut = ". count($attr_pilihan[$tbl_pilih]);
 									}
 								
 								}
@@ -596,26 +638,46 @@
 								</thead>
 								<tbody>
 								<?php
+									$as_tbl_n_pilihan = count($as_tbl_pilihan);
 									$tbl_n_pilihan = count($tbl_pilihan);
 									for ($tbl_i = 1; $tbl_i <= $tbl_n_pilihan; $tbl_i++){
 										$attr_n_pilihan = count($attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
 										?>
 										<tr>
 											<td rowspan="<?php echo $attr_n_pilihan+1; ?>"><?php echo $tbl_i; ?></td>
-											<td colspan="2"><?php echo $tbl_pilihan[$tbl_i]["nama"]; ?></td>
+											<td colspan="2"><b><?php echo $tbl_pilihan[$tbl_i]["nama"]; ?></b></td>
 											<td><?php echo $tbl_pilihan[$tbl_i]["tipe"]; ?></td>
-											<td>a,b,c</td>
+											<td>
+											<?php
+												for ($as_tbl_i = 1; $as_tbl_i <= $as_tbl_n_pilihan; $as_tbl_i++){
+													if ($as_tbl_pilihan[$as_tbl_i]["alias"] == $tbl_pilihan[$tbl_i]["nama"]){
+														echo " ".$as_tbl_pilihan[$as_tbl_i]["nama"].",";
+													}
+												}
+											?>
+											</td>
 											<td>Tambah ALias</td>
 										</tr>
 										<?php
-										
 										for ($attr_i = 1; $attr_i <= $attr_n_pilihan; $attr_i++){
 											?>
 											<tr>
 												<td><?php echo $attr_i; ?></td>
 												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]; ?></td>
 												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["tipe"]; ?></td>
-												<td>a,b,c</td>
+												<td>
+												<?php
+													if (!empty($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]])) {
+														$as_attr_n_pilihan = count($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
+														//echo "<br> jumlah  $as_attr_n_pilihan";
+														for ($as_attr_i = 1; $as_attr_i <= $as_attr_n_pilihan; $as_attr_i++){
+															if ($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["alias"] == $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]){
+																echo " ".$as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["nama"].",";
+															}
+														}
+													}
+												?>
+												</td>
 												<td>Tambah ALias</td>
 											</tr>
 											<?php
@@ -630,7 +692,7 @@
 					?>
 					<hr>
 					<h4> Informasi Relasi </h4>
-					<p></p>
+					<p class="text-secondary"></p>
 					<?php
 						if (!empty($_SESSION["db_pilih"])) {
 							$db_pilih = $_SESSION["db_pilih"];
@@ -687,56 +749,40 @@
 									*/
 								}
 								//echo "<br>jumlah relasi = ". count($rel_pilihan);
-							}
-						}	
-					?>
-					<table class="table table-hover table-bordered table-responsive">
-						<thead>
-							<tr>
-								<th style="width:5%">#</th>
-								<th>Nama Relasi</th>
-								<th>Foreign Key (nama_table.nama_attribute)</th>
-								<th>References (nama_table.nama_attribute)</th>
-							</tr>
-						</thead>
-						<tbody>
-						<?php
-							$rel_n_pilihan = count($rel_pilihan);
-							for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){
 								?>
-								<tr>
-									<td><?php echo $rel_i; ?></td>
-									<td><?php echo $rel_pilihan[$rel_i]["nama"]; ?></td>
-									<td><?php echo $rel_pilihan[$rel_i]["foreign_table"].".<b>".$rel_pilihan[$rel_i]["foreign_attribute"]."</b>"; ?></td>
-									<td><?php echo $rel_pilihan[$rel_i]["references_table"].".<b>".$rel_pilihan[$rel_i]["references_attribute"]."</b>"; ?></td>
-								</tr>
+								<table class="table table-hover table-bordered table-responsive">
+									<thead>
+										<tr>
+											<th style="width:5%">#</th>
+											<th>Nama Relasi</th>
+											<th>Foreign Key (nama_table.nama_attribute)</th>
+											<th>References (nama_table.nama_attribute)</th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php
+										$rel_n_pilihan = count($rel_pilihan);
+										for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){
+											?>
+											<tr>
+												<td><?php echo $rel_i; ?></td>
+												<td><?php echo $rel_pilihan[$rel_i]["nama"]; ?></td>
+												<td><?php echo $rel_pilihan[$rel_i]["foreign_table"].".<b>".$rel_pilihan[$rel_i]["foreign_attribute"]."</b>"; ?></td>
+												<td><?php echo $rel_pilihan[$rel_i]["references_table"].".<b>".$rel_pilihan[$rel_i]["references_attribute"]."</b>"; ?></td>
+											</tr>
+											<?php
+										}
+									?>
+									</tbody>
+								</table>
 								<?php
+							} else {
+								echo "<p class='text-muted'>Tidak ditemukan relasi pada database <b>$db_pilih</b>.</p>";
 							}
-						?>
-						</tbody>
-					</table>
+						}
+					?>
 				</div>
-				<?php
-				//load database
-				if (!empty($_POST["database"])) {
-					$dbname = $_POST["database"];
-					//print_r($tables);
-					//print_r($atributs);
-				} else {
-					$dbname = "";
-				}
-				?>
-				<?php
-					if ($tab == 'menu1'){
-					?>
-				<div id="menu1" class="tab-pane fade in active">
-					<?php
-					} else {
-					?>
-				<div id="menu1" class="tab-pane fade">
-					<?php
-					}
-				?>
+				<div id="menu1" class="tab-pane fade <?php if ($tab == 'menu1'){echo "in active";}?>">
 					<h3>Translator</h3>
 					<p></p>
 					
