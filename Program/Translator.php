@@ -15,19 +15,22 @@
 	</head>
 	<body>
 	<?php 
-			// create stemmer
-			// cukup dijalankan sekali saja, biasanya didaftarkan di service container
-			
-			$stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
-			$stemmer  = $stemmerFactory->createStemmer();
-			/*
-			$dictionary = $stemmerFactory->createDefaultDictionary();
-			$dictionary->addWordsFromTextFile(__DIR__.'/my-dictionary.txt');
-			$dictionary->add('internet');
-			$dictionary->remove('desa');
+		// create stemmer
+		// cukup dijalankan sekali saja, biasanya didaftarkan di service container
+		/* // Ini untuk Stemming Default
+		$stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
+		$stemmer  = $stemmerFactory->createStemmer();
+		*/
+		// ini Untuk Stemming modifikasi data
+		$stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
 
-			$stemmer = new \Sastrawi\Stemmer\Stemmer($dictionary);
-			*/
+		$dictionary = $stemmerFactory->createDefaultDictionary();
+		$dictionary->addWordsFromTextFile(__DIR__.'/my-dictionary.txt');
+		//$dictionary->add('internet');
+		//$dictionary->remove('desa');
+		
+		$stemmer = new \Sastrawi\Stemmer\Stemmer($dictionary);
+		
 		?>
 	<?php
 		if (!empty($_POST["tab"])) {
@@ -921,36 +924,212 @@
 					<?php
 						if (!empty($_POST["kalimat"])) {
 							$_SESSION["kalimat"] = $_POST["kalimat"]; 
+							$kalimat = $_SESSION["kalimat"];
+						} else {
+							$kalimat = "";
 						}
 					?>
-					<h4>Teks Kalimat</h4>
+					<h4>Kalimat Masukan</h4>
 					<p></p>
 					<form action="Translator.php" method="post">
 						<div class="form-group">
 							<label for="kalimat">Kalimat:</label>
-							<textarea class="form-control" rows="4" id="kalimat" name="kalimat"><?php 
-								if (!empty($_SESSION["kalimat"])) {
-									echo $_SESSION["kalimat"];
-								}
-							?></textarea>
+							<textarea class="form-control" rows="3" id="kalimat" name="kalimat"><?php echo $kalimat; ?></textarea>
 						</div> 
 						<input name='tab' value="transator" type='hidden'>
 						<button type="submit" class="btn btn-primary">Terkemahkan</button>
 					</form>
 					<?php
-					if (!empty($_SESSION["kalimat"])) {
-						$kalimat = $_SESSION["kalimat"];
-						echo "$kalimat<br>";
-					}
-					// stem
-					$sentence = 'Perekonomian Indonesia sedang dalam pertumbuhan yang membanggakan';
-					$output   = $stemmer->stem($sentence);
-
-					echo "<br>$sentence<br>".$output . "<br>";
-					// ekonomi indonesia sedang dalam tumbuh yang bangga
-
-					echo $stemmer->stem('Mereka meniru-nirukannya') . "\n";
-					// mereka tir
+						if (!empty($_SESSION["kalimat"])) {
+							?>
+							<hr>
+							<div id="preprocessing">
+								<h4>Tahap Preprocessing</h4>
+								<p>Kalimat : <?php echo $kalimat;?></p>
+								<div id="tokenizing">
+									<h4>Tokenizing</h4>
+									<?php
+										// Proses pemotongan String berdasarkan spasi
+										$token_kalimat = strtok($kalimat, " ");
+										//echo "Token-Token : <br>";
+										$i_token = 0;
+										$token_kata = array();
+										while ($token_kalimat !== false)
+										{
+											$i_token++;
+											// masukan token kedalam array
+											$token_kata[$i_token] = $token_kalimat;
+											$token_kalimat = strtok(" ");
+											//echo "Token $i_token : $token_kata[$i_token]<br>";
+										}
+									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr>
+												<td>Masukan</td>
+												<td>Kalimat : <?php echo $kalimat; ?></td>
+											</tr>
+											<tr>
+												<td>Keluaran</td>
+												<td>
+												<?php 
+													$n_token = count($token_kata);
+													for ($i_token = 1; $i_token <= $n_token; $i_token++){
+														echo "Token $i_token : $token_kata[$i_token]<br>";
+													}
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div id="stemming">
+									<h4>Stemming</h4>
+									<?php
+										$n_token = count($token_kata);
+										for ($i_token = 1; $i_token <= $n_token; $i_token++){
+											if (ord("$token_kata[$i_token]") == "34"){
+												$token_stem[$i_token] = $token_kata[$i_token];
+											} else {
+												$token_stem[$i_token] = $stemmer->stem($token_kata[$i_token]);
+											}
+										}
+									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr>
+												<td>Masukan</td>
+												<td>
+												<?php 
+													for ($i_token = 1; $i_token <= $n_token; $i_token++){
+														echo "Token $i_token : $token_kata[$i_token]";
+														if($token_kata[$i_token] != $token_stem[$i_token]){
+															echo " => $token_stem[$i_token]";
+														}
+														echo"<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>Keluaran</td>
+												<td>
+												<?php 
+													$n_stem = count($token_stem);
+													for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
+														echo "Token $i_stem : $token_stem[$i_stem]<br>";
+													}
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div id="alias">
+									<h4>Alias</h4>
+									<?php
+										$n_stem = count($token_stem);
+										$i_token_table=0;
+										for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
+											if (ord("$token_stem[$i_stem]") == "34"){
+												$token_alias[$i_stem] = $token_stem[$i_stem];
+											} else {
+												$token_alias[$i_stem] = $token_stem[$i_stem];
+												//Cari Alias Table
+												$n_alias = count($as_tbl_pilihan);
+												for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
+													//echo "<br>$token_alias[$i_stem] - ".$as_tbl_pilihan[$i_alias]["nama"];
+													if ($token_alias[$i_stem] == $as_tbl_pilihan[$i_alias]["nama"]) {
+														$token_alias[$i_stem] = $as_tbl_pilihan[$i_alias]["alias"];
+														//echo " -> jadi = $token_alias[$i_stem]";
+													}
+												}
+												$n_table = count($tbl_pilihan);
+												for ($i_table = 1; $i_table <= $n_table; $i_table++){
+													//echo "<br>$token_alias[$i_stem] - ".$tbl_pilihan[$i_table]["nama"];
+													if ($token_alias[$i_stem] == $tbl_pilihan[$i_table]["nama"]) {
+														$i_token_table++;
+														$token_table[$i_token_table] = $tbl_pilihan[$i_table]["nama"];
+														//echo " -> jadi id $i_table = ".$tbl_pilihan[$i_table]["nama"];
+													}
+												}
+											}
+										}
+										for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
+											if (ord("$token_stem[$i_stem]") == "34"){
+												$token_alias[$i_stem] = trim($token_stem[$i_stem],'",');
+											} else {
+												$n_token_table = count($token_table);
+												for ($i_token_table = 1; $i_token_table <= $n_token_table; $i_token_table++){
+													$n_attr = count($as_attr_pilihan[$token_table[$i_token_table]]);
+													for ($i_attr = 1; $i_attr <= $n_attr; $i_attr++){
+														//echo "<br>$token_alias[$i_stem] - ".$as_attr_pilihan[$token_table[$i_token_table]][$i_attr]["nama"];
+														if ($token_alias[$i_stem] == $as_attr_pilihan[$token_table[$i_token_table]][$i_attr]["nama"]) {
+															$token_alias[$i_stem] = $as_attr_pilihan[$token_table[$i_token_table]][$i_attr]["alias"];
+															//echo " -> jadi = $token_alias[$i_stem]";
+														}
+													}
+												}
+											}
+										}
+										
+									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr>
+												<td>Masukan</td>
+												<td>
+												<?php 
+													$n_stem = count($token_stem);
+													for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
+														echo "Token $i_stem : $token_stem[$i_stem]";
+														if($token_stem[$i_stem] != $token_alias[$i_stem]){
+															echo " => $token_alias[$i_stem]";
+														}
+														echo"<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>Keluaran</td>
+												<td>
+												<?php 
+													$n_alias = count($token_alias);
+													for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
+														echo "Token $i_alias : $token_alias[$i_alias]<br>";
+													}
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div id="processing">
+							</div>
+							<div id="testing">
+							</div>
+							<?php
+						}
 					?>
 				</div>	
 			</div>
