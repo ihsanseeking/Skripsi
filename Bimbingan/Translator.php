@@ -547,6 +547,7 @@
 							if($as_tipe == "tbl"){
 								$as_tbl_id	= $_POST["as_tbl_id"];
 								$as_tbl_nama = $_POST["as_tbl_nama"];
+								$as_tbl_jump = $_POST["as_tbl_jump"];
 								//echo " tambah alias baru dengan nama <b>$as_nama</b> sebagai alias dari table dengan id <b>$as_tbl_id</b>";
 								//Simpan db ke db_pendukung
 								$sql_alias = "
@@ -565,12 +566,14 @@
 								";
 								$result_alias = mysqli_query($connect_db_p, $sql_alias);
 								if($result_alias){
-									echo"<p class='text-success'>Menambahkan Alias <b>$as_nama</b> untuk Table <b>$as_tbl_nama</b> berhasil</p>";
+									echo"<p class='text-success'>Menambahkan Alias <b>$as_nama</b> untuk Table <b>$as_tbl_nama</b> berhasil <a href=#$as_tbl_jump>lihat</a></p>";
+									//header ( 'location:Translator.php#$as_tbl_jump' );
 								}
 							}
 							if($as_tipe == "attr"){
 								$as_attr_id	= $_POST["as_attr_id"];
-								$as_attr_nama	= $_POST["as_attr_nama"];
+								$as_attr_nama = $_POST["as_attr_nama"];
+								$as_attr_jump = $_POST["as_attr_jump"];
 								//echo " tambah alias baru dengan nama <b>$as_nama</b> sebagai alias dari atribut dengan id <b>$as_attr_id</b>";
 								//Simpan db ke db_pendukung
 								$sql_alias = "
@@ -589,7 +592,7 @@
 								";
 								$result_alias = mysqli_query($connect_db_p, $sql_alias);
 								if($result_alias){
-									echo"<p class='text-success'>Menambahkan Alias <b>$as_nama</b> untuk Atribute <b>$as_attr_nama</b> berhasil</p>";
+									echo"<p class='text-success'>Menambahkan Alias <b>$as_nama</b> untuk Atribute <b>$as_attr_nama</b> berhasil <a href=#$as_attr_jump>lihat</a></p>";
 								}
 							}
 						}
@@ -597,6 +600,7 @@
 						//Hapus Data Alias
 						if (!empty($_GET["as_hapus_id"])) {
 							$as_hapus_id = $_GET["as_hapus_id"];
+							$as_hapus_jump = $_GET["as_hapus_jump"];
 							//$as_hapus = $_POST["id_hapus"];
 							//echo "ngehapus Alias dengan id <b>$as_hapus_id</b>"; 	
 							//Hapus db ke db_pendukung
@@ -607,7 +611,7 @@
 							";
 							$result_alias = mysqli_query($connect_db_p, $sql_alias);
 							if($result_alias){
-								echo"<p class='text-success'>Hapus Alias dengan id <b>$as_hapus_id</b> berhasil</p>";
+								echo"<p class='text-success'>Hapus Alias dengan id <b>$as_hapus_id</b> berhasil <a href=#$as_hapus_jump>lihat</a></p>";
 							}
 							//header('location:Translator.php');
 							//header ( 'location: http://www.alamatwebsite.com' );
@@ -711,26 +715,30 @@
 								</thead>
 								<tbody>
 								<?php
-									$as_tbl_n_pilihan = count($as_tbl_pilihan);
+									if (!empty($as_tbl_pilihan)) {
+										$as_tbl_n_pilihan = count($as_tbl_pilihan);
+									}
 									$tbl_n_pilihan = count($tbl_pilihan);
 									for ($tbl_i = 1; $tbl_i <= $tbl_n_pilihan; $tbl_i++){
 										$attr_n_pilihan = count($attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
 										?>
-										<tr>
+										<tr id="<?php echo "tbl_".$tbl_pilihan[$tbl_i]["id"];?>">
 											<td rowspan="<?php echo $attr_n_pilihan+1; ?>"><?php echo $tbl_i; ?></td>
 											<td colspan="2"><b><?php echo $tbl_pilihan[$tbl_i]["nama"]; ?></b></td>
 											<td><?php echo $tbl_pilihan[$tbl_i]["tipe"]; ?></td>
 											<td>
 												<form class="form-inline" action="Translator.php" method="post">
 													<?php
-														for ($as_tbl_i = 1; $as_tbl_i <= $as_tbl_n_pilihan; $as_tbl_i++){
-															if ($as_tbl_pilihan[$as_tbl_i]["alias"] == $tbl_pilihan[$tbl_i]["nama"]){
-																?>
-																<a href="?as_hapus_id=<?php echo $as_tbl_pilihan[$as_tbl_i]["id"];?>">
-																	<button type="button" class="btn btn-danger btn-sm">-</button>
-																</a>
-																<?php echo $as_tbl_pilihan[$as_tbl_i]["nama"]; ?>
-																<?php
+														if (!empty($as_tbl_n_pilihan)) {
+															for ($as_tbl_i = 1; $as_tbl_i <= $as_tbl_n_pilihan; $as_tbl_i++){
+																if ($as_tbl_pilihan[$as_tbl_i]["alias"] == $tbl_pilihan[$tbl_i]["nama"]){
+																	?>
+																	<a href="?as_hapus_id=<?php echo $as_tbl_pilihan[$as_tbl_i]["id"];?>&as_hapus_jump=<?php echo "tbl_".$tbl_pilihan[$tbl_i]["id"];?>">
+																		<button type="button" class="btn btn-danger btn-sm">-</button>
+																	</a>
+																	<?php echo $as_tbl_pilihan[$as_tbl_i]["nama"]; ?>
+																	<?php
+																}
 															}
 														}
 													?>
@@ -741,6 +749,7 @@
 													<input name='as_tipe' value="tbl" type='hidden'>
 													<input name='as_tbl_id' value="<?php echo $tbl_pilihan[$tbl_i]["id"];?>" type='hidden'>
 													<input name='as_tbl_nama' value="<?php echo $tbl_pilihan[$tbl_i]["nama"];?>" type='hidden'>
+													<input name='as_tbl_jump' value="<?php echo "tbl_".$tbl_pilihan[$tbl_i]["id"];?>" type='hidden'>
 													<input name='tab' value="info" type='hidden'>
 													<button type="submit" class="btn btn-primary btn-sm">+</button>
 												</form>
@@ -749,7 +758,7 @@
 										<?php
 										for ($attr_i = 1; $attr_i <= $attr_n_pilihan; $attr_i++){
 											?>
-											<tr>
+											<tr id="<?php echo "attr_".$attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["id"];?>">
 												<td><?php echo $attr_i; ?></td>
 												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]; ?></td>
 												<td><?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["tipe"]; ?></td>
@@ -762,7 +771,7 @@
 															for ($as_attr_i = 1; $as_attr_i <= $as_attr_n_pilihan; $as_attr_i++){
 																if ($as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["alias"] == $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]){
 																	?>
-																	<a href="?as_hapus_id=<?php echo $as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["id"];?>">
+																	<a href="?as_hapus_id=<?php echo $as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["id"];?>&as_hapus_jump=<?php echo "attr_".$attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["id"];?>">
 																		<button type="button" class="btn btn-danger btn-sm">-</button>
 																	</a>
 																		<?php echo $as_attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$as_attr_i]["nama"]; ?>
@@ -778,6 +787,7 @@
 													<input name='as_tipe' value="attr" type='hidden'>
 													<input name='as_attr_id' value="<?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["id"];?>" type='hidden'>
 													<input name='as_attr_nama' value="<?php echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"];?>" type='hidden'>
+													<input name='as_attr_jump' value="<?php echo "attr_".$attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["id"];?>" type='hidden'>
 													<input name='tab' value="info" type='hidden'>
 													<button type="submit" class="btn btn-primary btn-sm">+</button>
 													</form>
