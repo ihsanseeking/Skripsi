@@ -26,7 +26,9 @@
 
 		$dictionary = $stemmerFactory->createDefaultDictionary();
 		$dictionary->addWordsFromTextFile(__DIR__.'/my-dictionary.txt');
-		//$dictionary->add('internet');
+		$dictionary->add('termasuk');
+		$dictionary->add('dimana');
+		$dictionary->add('dengan');
 		//$dictionary->remove('desa');
 		
 		$stemmer = new \Sastrawi\Stemmer\Stemmer($dictionary);
@@ -1132,9 +1134,10 @@
 											}
 										}
 										for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
-											if (ord("$token_stem[$i_stem]") == "34"){
-												$token_alias[$i_stem] = trim($token_stem[$i_stem],'",');
-											} else {
+											//if (ord("$token_stem[$i_stem]") == "34"){
+												//token_alias[$i_stem] = trim($token_stem[$i_stem],'",');
+												$token_alias[$i_stem] = $token_stem[$i_stem];
+											//} else {
 												$n_token_as_table = count($token_as_table);
 												for ($i_token_as_table = 1; $i_token_as_table <= $n_token_as_table; $i_token_as_table++){
 													$n_attr = count($as_attr_pilihan[$token_as_table[$i_token_as_table]]);
@@ -1146,7 +1149,7 @@
 														}
 													}
 												}
-											}
+											//}
 										}
 										
 									?>
@@ -1205,59 +1208,59 @@
 											if($token_alias[$i_alias] == "tampil") {
 												$ident_perintah = "SELECT";
 												$s_2a = 1;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "siapa")  {
 												$ident_perintah = "SELECT";
 												$s_2a = 1;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "siapa")  {
 												$ident_perintah = "SELECT";
 												$s_2a = 1;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "cari")  {
 												$ident_perintah = "SELECT";
 												$s_2a = 1;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "berapa")  {
 												$ident_perintah = "SELECT";
 												$s_2a = 1;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "tambah")  {
 												$ident_perintah = "INSERT";
 												$s_2a = 2;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
-											/*} else if ($token_alias[$i_alias] == "masuk")  {
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
+											} else if ($token_alias[$i_alias] == "masuk")  {
 												$ident_perintah = "INSERT";
 												$s_2a = 2;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
-											*/} else if ($token_alias[$i_alias] == "isi")  {
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
+											} else if ($token_alias[$i_alias] == "isi")  {
 												$ident_perintah = "INSERT";
 												$s_2a = 2;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "ubah")  {
 												$ident_perintah = "UPDATE";
 												$s_2a = 3;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "ganti")  {
 												$ident_perintah = "UPDATE";
 												$s_2a = 3;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "gantilah")  {
 												$ident_perintah = "UPDATE";
 												$s_2a = 3;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "hapus")  {
 												$ident_perintah = "DELETE";
 												$s_2a = 4;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "buang")  {
 												$ident_perintah = "DELETE";
 												$s_2a = 4;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} else if ($token_alias[$i_alias] == "kurang")  {
 												$ident_perintah = "DELETE";
 												$s_2a = 4;
-												echo "DML : $token_alias[$i_alias] => $ident_perintah<br>";
+												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
 											} 
 										}
 									?>
@@ -1307,18 +1310,19 @@
 												}
 											}
 										}
-										echo "<p>jumlah $n_ident_tbl </p>";
+										//echo "<p>jumlah $n_ident_tbl </p>";
 									?>
 									<h4>Identifikasi Relasi</h4>
 									<?php
 										//Identifikasi Relasi
+										$ident_relasi = array();
 										$i_ident_rel=0;
 										$n_ident_tbl = count($ident_table);
 										$i_ident_tbl = 1;
 										if ($n_ident_tbl >= 1){
 											$i_ident_rel++;
 											$ident_relasi[$i_ident_rel] = "FROM `$ident_table[$i_ident_tbl]`";
-											echo "$ident_relasi[$i_ident_rel]";
+											echo "ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 											$rel_n_pilihan = count($rel_pilihan);
 											for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){ //Looping Relasi
 												//Cek Relasi dengan table sebagai Foreign
@@ -1339,7 +1343,7 @@
 															"`.`"
 															.$rel_pilihan[$rel_i]["foreign_attribute"].
 															"`";
-														echo "<br>$ident_relasi[$i_ident_rel]";
+														echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 													} else {
 														for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
 															//Pastikan beda table
@@ -1360,7 +1364,7 @@
 																		"`.`"
 																		.$rel_pilihan[$rel_i]["references_attribute"].
 																		"`";
-																	echo "<br>$ident_relasi[$i_ident_rel]";
+																	echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																} else {
 																	//Cek Relasi Tidak Langsung
 																	for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
@@ -1381,7 +1385,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i_2]["references_attribute"].
 																					"`";
-																				echo "<br>$ident_relasi[$i_ident_rel]";
+																				echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																				$i_ident_rel++;
 																				$ident_relasi[$i_ident_rel] = "INNER JOIN `"
 																					.$rel_pilihan[$rel_i]["foreign_table"].
@@ -1394,7 +1398,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i]["foreign_attribute"].
 																					"`";
-																				echo "<br>$ident_relasi[$i_ident_rel]";
+																				echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																			}
 																		}
 																	}
@@ -1422,7 +1426,7 @@
 															"`.`"
 															.$rel_pilihan[$rel_i]["foreign_attribute"].
 															"`";
-														echo "<br>$ident_relasi[$i_ident_rel]";
+														echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 													} else {
 														for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
 															if($ident_table[$i_ident_tbl_2] != $ident_table[$i_ident_tbl]){
@@ -1442,7 +1446,7 @@
 																		"`.`"
 																		.$rel_pilihan[$rel_i]["foreign_attribute"].
 																		"`";
-																	echo "<br>$ident_relasi[$i_ident_rel]";
+																	echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																} else {
 																	//Cek Relasi Tidak Langsung
 																	for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
@@ -1463,7 +1467,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i]["foreign_attribute"].
 																					"`";
-																				echo "<br>$ident_relasi[$i_ident_rel]";
+																				echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																				$i_ident_rel++;
 																				$ident_relasi[$i_ident_rel] = "INNER JOIN `"
 																					.$rel_pilihan[$rel_i_2]["references_table"].
@@ -1476,7 +1480,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i_2]["references_attribute"].
 																					"`";
-																				echo "<br>$ident_relasi[$i_ident_rel]";
+																				echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																			}
 																		}
 																	}
@@ -1487,10 +1491,79 @@
 												}
 											}
 										}
-									?>			
+									?>		
 								</div>
 								<div id="identifikasi_fitur">
 									<h4>Identifikasi Fitur</h4>
+									<?php
+									$ident_where = Array();
+									$i_ident_where = 0;
+									for ($i_where=1; $i_where <= $n_alias; $i_where++){
+										//echo "<br> $token_alias[$i_where]";
+										if ($token_alias[$i_where] == "yang" ){
+											$i_ident_where++;
+											$ident_where[$i_ident_where]["posisi"] = $i_where;
+											echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+										} else if ($token_alias[$i_where] == "dimana" ) {
+											$i_ident_where++;
+											$ident_where[$i_ident_where]["posisi"] = $i_where;
+											echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+										} else if ($token_alias[$i_where] == "dengan" ) {
+											$i_ident_where++;
+											$ident_where[$i_ident_where]["posisi"] = $i_where;
+											echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+										}
+									}
+									$n_ident_where = count($ident_where); 
+									//echo "<br>- $n_ident_where";
+									if ($n_ident_where >= 1){
+										for ($i_ident_where=1;$i_ident_where <= $n_ident_where;$i_ident_where++) {
+											$ps_where = $ident_where[$i_ident_where]["posisi"];
+											if ($i_ident_where != $n_ident_where) {
+												$pf_where = $ident_where[$i_ident_where+1]["posisi"];
+											} else {
+												$pf_where = $n_alias+1;
+											}
+											//echo "<br> $ps_where - $pf_where";
+											//cari table
+											for ($i_where=$ps_where; $i_where < $pf_where; $i_where++){
+												//echo "<br> $token_alias[$i_where]";
+												for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
+													//echo "<br> $token_alias[$i_where] == $ident_table[$i_ident_tbl]";
+													if ($token_alias[$i_where] == $ident_table[$i_ident_tbl]){
+														$ident_where[$i_ident_where]["table"] = $ident_table[$i_ident_tbl];
+														echo "<br> ident_where_tabel[$i_ident_where] = ".$ident_where[$i_ident_where]["table"];
+														$n_ident_attr = count($attr_pilihan[$ident_table[$i_ident_tbl]]);	
+														$ident_where[$i_ident_where]["attribute"]="";
+														for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+															//echo "<br>",$attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+															if ($token_alias[$i_where] == $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"]){
+																$ident_where[$i_ident_where]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+															}
+														}
+														if ($ident_where[$i_ident_where]["attribute"]==""){
+															$ident_where[$i_ident_where]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][2]["nama"];
+														}
+														echo "<br> ident_where_attribut[$i_ident_where] = ".$ident_where[$i_ident_where]["attribute"];
+													}												
+												}
+												if ($token_alias[$i_where] == "termasuk"){
+													$ident_where[$i_ident_where]["perbandingan"] = "=";
+													echo "<br> ident_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
+												} else if ($token_alias[$i_where] == "kandung"){
+													$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+													echo "<br> ident_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
+												}
+												if (ord("$token_alias[$i_where]") == "34"){
+													//echo "$token_alias[$i_where]";
+													$ident_where[$i_ident_where]["isi"] = trim($token_alias[$i_where],'",');
+													echo "<br> ident_Where_isi[$i_ident_where] : ".$ident_where[$i_ident_where]["isi"];
+												}
+											}
+										}
+										
+									}
+									?>
 								</div>
 								<div id="identifikasi_attribute">
 									<h4>Identifikasi Attribute</h4>
