@@ -1312,71 +1312,65 @@
 									<h4>Identifikasi Relasi</h4>
 									<?php
 										//Identifikasi Relasi
+										$i_ident_rel=0;
 										$n_ident_tbl = count($ident_table);
+										$i_ident_tbl = 1;
 										if ($n_ident_tbl >= 1){
-											//bismillah
-											echo "<br>Ada Table";
-											//Scan Table yag di miliki
-											for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
-												echo "<br><br>- Table <b>`$ident_table[$i_ident_tbl]`</b>";
-												$rel_n_pilihan = count($rel_pilihan);
-												//Scan semua relasi
-												for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){ //Looping Relasi
-													//echo "<br> Relasi $ident_table[$i_ident_tbl] = ".$rel_pilihan[$rel_i]["nama"];
-													//Cek Relasi dengan table sebagai Foreign
-													if ($rel_pilihan[$rel_i]["foreign_table"] == $ident_table[$i_ident_tbl]){
-														echo "<br><br>-- Foreign <b>".$rel_pilihan[$rel_i]["foreign_table"]."</b> -> references <b>".$rel_pilihan[$rel_i]["references_table"]."</b>";
-														//Cek Relasi ke di sendiri
-														if ($rel_pilihan[$rel_i]["foreign_table"] == $rel_pilihan[$rel_i]["references_table"]){
-															echo "<br> Ada Relasi ke diri sendiri = <b>".$rel_pilihan[$rel_i]["nama"]."<b>";
-															echo "<br>INNER JOIN `"
-																.$rel_pilihan[$rel_i]["foreign_table"].
-																"` ON `"
-																.$rel_pilihan[$rel_i]["references_table"].
-																"`.`"
-																.$rel_pilihan[$rel_i]["references_attribute"].
-																"` = `"
-																.$rel_pilihan[$rel_i]["foreign_table"].
-																"`.`"
-																.$rel_pilihan[$rel_i]["foreign_attribute"].
-																"`";
-														} else {
-															//echo "<br>Sebagai foreign untuk = ".$rel_pilihan[$rel_i]["references_table"];
-															//Scan table 2
-															for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
-																//echo "<br>--- Table `$ident_table[$i_ident_tbl_2]`";
-																//Pastikan beda table 1 dan 2
-																if($ident_table[$i_ident_tbl_2] != $ident_table[$i_ident_tbl]){
-																	//echo "---- Foreign ----";
-																	echo "<br>--- Table_2 <b>$ident_table[$i_ident_tbl_2]</b>";
-																	//Cek Relasi Langsung apakah ada tabel referensi di foregn key
-																	if ($rel_pilihan[$rel_i]["references_table"] == $ident_table[$i_ident_tbl_2]){
-																		echo "<br> Ada Relasi langsung sebagain references dari foreign = <b>".$rel_pilihan[$rel_i]["nama"]."</b>";
-																		echo "<br>INNER JOIN `"
-																			.$rel_pilihan[$rel_i]["references_table"].
-																			"` ON `"
-																			.$rel_pilihan[$rel_i]["foreign_table"].
-																			"`.`"
-																			.$rel_pilihan[$rel_i]["foreign_attribute"].
-																			"` = `"
-																			.$rel_pilihan[$rel_i]["references_table"].
-																			"`.`"
-																			.$rel_pilihan[$rel_i]["references_attribute"].
-																			"`";
-																	} else {
-																		//Cek Relasi Tidak Langsung
-																		//Scan relasi ke 2
-																		for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
-																			//echo "<br>---- Relasi ".$rel_pilihan[$rel_i_2]["nama"];
-																			//jagan chek kalau sama dengan table
-																			if ($rel_pilihan[$rel_i_2]["foreign_table"] == $ident_table[$i_ident_tbl_2]){
-																				//echo"---table $ident_table[$i_ident_tbl_2]";
-																				echo "<br>---- Foreign 2 <b>".$rel_pilihan[$rel_i_2]["foreign_table"]."</b> -> references 2 <b>".$rel_pilihan[$rel_i_2]["references_table"]."</b>";
-																				//Cek kesamaan 
-																				echo "<br>---- cek tidak langsung rel_1 foregn == rel_1_2 foregn(".$rel_pilihan[$rel_i_2]["references_table"]." == ".$rel_pilihan[$rel_i_2]["references_table"].")";
-																				if ($rel_pilihan[$rel_i]["references_table"] == $rel_pilihan[$rel_i_2]["references_table"]){
-																					echo "<br> Ada Relasi tidak langsung sebagain references dari foreign = ".$rel_pilihan[$rel_i]["nama"];
-																					echo "<br>INNER JOIN `"
+											$i_ident_rel++;
+											$ident_relasi[$i_ident_rel] = "FROM `$ident_table[$i_ident_tbl]`";
+											echo "$ident_relasi[$i_ident_rel]";
+											$rel_n_pilihan = count($rel_pilihan);
+											for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){ //Looping Relasi
+												//Cek Relasi dengan table sebagai Foreign
+												if ($rel_pilihan[$rel_i]["foreign_table"] == $ident_table[$i_ident_tbl]){
+													//echo "<br><br>-- Foreign <b>".$rel_pilihan[$rel_i]["foreign_table"]."</b> -> references <b>".$rel_pilihan[$rel_i]["references_table"]."</b>";
+													//Cek Relasi ke di sendiri
+													if ($rel_pilihan[$rel_i]["foreign_table"] == $rel_pilihan[$rel_i]["references_table"]){
+														//echo "<br> Ada Relasi ke diri sendiri = <b>".$rel_pilihan[$rel_i]["nama"]."<b>";
+														$i_ident_rel++;
+														$ident_relasi[$i_ident_rel] = "INNER JOIN `"
+															.$rel_pilihan[$rel_i]["foreign_table"].
+															"` ON `"
+															.$rel_pilihan[$rel_i]["references_table"].
+															"`.`"
+															.$rel_pilihan[$rel_i]["references_attribute"].
+															"` = `"
+															.$rel_pilihan[$rel_i]["foreign_table"].
+															"`.`"
+															.$rel_pilihan[$rel_i]["foreign_attribute"].
+															"`";
+														echo "<br>$ident_relasi[$i_ident_rel]";
+													} else {
+														for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
+															//Pastikan beda table
+															if($ident_table[$i_ident_tbl_2] != $ident_table[$i_ident_tbl]){
+																//echo "<br>--- Table_2 <b>$ident_table[$i_ident_tbl_2]</b>";
+																//Cek Relasi Langsung apakah ada tabel referensi di foregn key
+																if ($rel_pilihan[$rel_i]["references_table"] == $ident_table[$i_ident_tbl_2]){
+																	//echo "<br> Ada Relasi langsung sebagain references dari foreign = <b>".$rel_pilihan[$rel_i]["nama"]."</b>";
+																	$i_ident_rel++;
+																	$ident_relasi[$i_ident_rel] = "INNER JOIN `"
+																		.$rel_pilihan[$rel_i]["references_table"].
+																		"` ON `"
+																		.$rel_pilihan[$rel_i]["foreign_table"].
+																		"`.`"
+																		.$rel_pilihan[$rel_i]["foreign_attribute"].
+																		"` = `"
+																		.$rel_pilihan[$rel_i]["references_table"].
+																		"`.`"
+																		.$rel_pilihan[$rel_i]["references_attribute"].
+																		"`";
+																	echo "<br>$ident_relasi[$i_ident_rel]";
+																} else {
+																	//Cek Relasi Tidak Langsung
+																	for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
+																		if ($rel_pilihan[$rel_i_2]["foreign_table"] == $ident_table[$i_ident_tbl_2]){
+																			//echo "<br>---- Foreign 2 <b>".$rel_pilihan[$rel_i_2]["foreign_table"]."</b> -> references 2 <b>".$rel_pilihan[$rel_i_2]["references_table"]."</b>";
+																			//echo "<br>---- cek tidak langsung rel_1 foregn == rel_1_2 foregn(".$rel_pilihan[$rel_i_2]["references_table"]." == ".$rel_pilihan[$rel_i_2]["references_table"].")";
+																			if ($rel_pilihan[$rel_i]["references_table"] == $rel_pilihan[$rel_i_2]["references_table"]){
+																				//echo "<br> Ada Relasi tidak langsung sebagain references dari foreign = ".$rel_pilihan[$rel_i]["nama"];
+																				$i_ident_rel++;
+																				$ident_relasi[$i_ident_rel] = "INNER JOIN `"
 																					.$rel_pilihan[$rel_i_2]["references_table"].
 																					"` ON `"
 																					.$rel_pilihan[$rel_i_2]["foreign_table"].
@@ -1387,7 +1381,9 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i_2]["references_attribute"].
 																					"`";
-																					echo "<br>INNER JOIN `"
+																				echo "<br>$ident_relasi[$i_ident_rel]";
+																				$i_ident_rel++;
+																				$ident_relasi[$i_ident_rel] = "INNER JOIN `"
 																					.$rel_pilihan[$rel_i]["foreign_table"].
 																					"` ON `"
 																					.$rel_pilihan[$rel_i]["references_table"].
@@ -1398,7 +1394,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i]["foreign_attribute"].
 																					"`";
-																				}
+																				echo "<br>$ident_relasi[$i_ident_rel]";
 																			}
 																		}
 																	}
@@ -1406,57 +1402,57 @@
 															}
 														}
 													}
-													//Cek Relasi Sebagai References
-													if ($rel_pilihan[$rel_i]["references_table"] == $ident_table[$i_ident_tbl]){
-														//echo "--- references ---";
-														echo "<br><br>-- references <b>".$rel_pilihan[$rel_i]["references_table"]."</b> <- foreign <b>".$rel_pilihan[$rel_i]["foreign_table"]."</b>";
-														//echo "<br>sebagai references dari = ".$rel_pilihan[$rel_i]["foreign_table"];
-														//Cek Relasi ke di sendiri
-														if ($rel_pilihan[$rel_i]["references_table"] == $rel_pilihan[$rel_i]["foreign_table"]){
-															echo "<br> Ada Relasi ke diri sendiri = <b>".$rel_pilihan[$rel_i]["nama"]."</b>";
-															echo "<br>INNER JOIN `"
-																.$rel_pilihan[$rel_i]["foreign_table"].
-																"` ON `"
-																.$rel_pilihan[$rel_i]["references_table"].
-																"`.`"
-																.$rel_pilihan[$rel_i]["references_attribute"].
-																"` = `"
-																.$rel_pilihan[$rel_i]["foreign_table"].
-																"`.`"
-																.$rel_pilihan[$rel_i]["foreign_attribute"].
-																"`";
-														} else {
-															for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
-																//echo "<br>--- Table `$ident_table[$i_ident_tbl_2]`";
-																if($ident_table[$i_ident_tbl_2] != $ident_table[$i_ident_tbl]){
-																	echo "<br>--- Table_2 <b>$ident_table[$i_ident_tbl_2]</b>";
-																	//echo "---- Foreign ----";
-																	//Cek Relasi Langsung apakah ada tabel foregn jika table ini sebagai references
-																	echo "<br>--- cek langsung rel_1 foregn == table 2(".$rel_pilihan[$rel_i]["foreign_table"]." == $ident_table[$i_ident_tbl_2])";
-																	if ($rel_pilihan[$rel_i]["foreign_table"] == $ident_table[$i_ident_tbl_2]){
-																		echo "<br> Ada Relasi langsung sebagain foreign ke references = <b>".$rel_pilihan[$rel_i]["nama"]."</b>";
-																		echo "<br>INNER JOIN `"
-																			.$rel_pilihan[$rel_i]["foreign_table"].
-																			"` ON `"
-																			.$rel_pilihan[$rel_i]["references_table"].
-																			"`.`"
-																			.$rel_pilihan[$rel_i]["references_attribute"].
-																			"` = `"
-																			.$rel_pilihan[$rel_i]["foreign_table"].
-																			"`.`"
-																			.$rel_pilihan[$rel_i]["foreign_attribute"].
-																			"`";
-																	} else {
-																		//Cek Relasi Tidak Langsung
-																		for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
-																			//echo "<br>---- Relasi ".$rel_pilihan[$rel_i_2]["nama"];
-																			if ($rel_pilihan[$rel_i_2]["references_table"] == $ident_table[$i_ident_tbl_2]){
-																				echo "<br>---- references 2 <b>".$rel_pilihan[$rel_i_2]["references_table"]."</b> <- foreign 2 <b>".$rel_pilihan[$rel_i_2]["foreign_table"]."</b>";
-																				//echo"<br>---table $ident_table[$i_ident_tbl_2]";	
-																				echo "<br>---- cek tidak langsung rel_1 foregn == rel_1_2 foregn(".$rel_pilihan[$rel_i_2]["foreign_table"]." == ".$rel_pilihan[$rel_i_2]["foreign_table"].")";
-																				if ($rel_pilihan[$rel_i]["foreign_table"] == $rel_pilihan[$rel_i_2]["foreign_table"]){
-																					echo "<br> Ada Relasi tidak langsung sebagain references dari foreign = ".$rel_pilihan[$rel_i]["nama"];
-																					echo "<br>INNER JOIN `"
+												}
+												//Cek Relasi Sebagai References
+												if ($rel_pilihan[$rel_i]["references_table"] == $ident_table[$i_ident_tbl]){
+													//echo "<br><br>-- references <b>".$rel_pilihan[$rel_i]["references_table"]."</b> <- foreign <b>".$rel_pilihan[$rel_i]["foreign_table"]."</b>";
+													//echo "<br>sebagai references dari = ".$rel_pilihan[$rel_i]["foreign_table"];
+													//Cek Relasi ke di sendiri
+													if ($rel_pilihan[$rel_i]["references_table"] == $rel_pilihan[$rel_i]["foreign_table"]){
+														//echo "<br> Ada Relasi ke diri sendiri = <b>".$rel_pilihan[$rel_i]["nama"]."</b>";
+														$i_ident_rel++;
+														$ident_relasi[$i_ident_rel] = "INNER JOIN `"
+															.$rel_pilihan[$rel_i]["foreign_table"].
+															"` ON `"
+															.$rel_pilihan[$rel_i]["references_table"].
+															"`.`"
+															.$rel_pilihan[$rel_i]["references_attribute"].
+															"` = `"
+															.$rel_pilihan[$rel_i]["foreign_table"].
+															"`.`"
+															.$rel_pilihan[$rel_i]["foreign_attribute"].
+															"`";
+														echo "<br>$ident_relasi[$i_ident_rel]";
+													} else {
+														for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
+															if($ident_table[$i_ident_tbl_2] != $ident_table[$i_ident_tbl]){
+																//echo "<br>--- Table_2 <b>$ident_table[$i_ident_tbl_2]</b>";
+																//echo "<br>--- cek langsung rel_1 foregn == table 2(".$rel_pilihan[$rel_i]["foreign_table"]." == $ident_table[$i_ident_tbl_2])";
+																if ($rel_pilihan[$rel_i]["foreign_table"] == $ident_table[$i_ident_tbl_2]){
+																	//echo "<br> Ada Relasi langsung sebagain foreign ke references = <b>".$rel_pilihan[$rel_i]["nama"]."</b>";
+																	$i_ident_rel++;
+																	$ident_relasi[$i_ident_rel] = "INNER JOIN `"
+																		.$rel_pilihan[$rel_i]["foreign_table"].
+																		"` ON `"
+																		.$rel_pilihan[$rel_i]["references_table"].
+																		"`.`"
+																		.$rel_pilihan[$rel_i]["references_attribute"].
+																		"` = `"
+																		.$rel_pilihan[$rel_i]["foreign_table"].
+																		"`.`"
+																		.$rel_pilihan[$rel_i]["foreign_attribute"].
+																		"`";
+																	echo "<br>$ident_relasi[$i_ident_rel]";
+																} else {
+																	//Cek Relasi Tidak Langsung
+																	for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
+																		if ($rel_pilihan[$rel_i_2]["references_table"] == $ident_table[$i_ident_tbl_2]){
+																			//echo "<br>---- references 2 <b>".$rel_pilihan[$rel_i_2]["references_table"]."</b> <- foreign 2 <b>".$rel_pilihan[$rel_i_2]["foreign_table"]."</b>";
+																			//echo "<br>---- cek tidak langsung rel_1 foregn == rel_1_2 foregn(".$rel_pilihan[$rel_i_2]["foreign_table"]." == ".$rel_pilihan[$rel_i_2]["foreign_table"].")";
+																			if ($rel_pilihan[$rel_i]["foreign_table"] == $rel_pilihan[$rel_i_2]["foreign_table"]){
+																				//echo "<br> Ada Relasi tidak langsung sebagain references dari foreign = ".$rel_pilihan[$rel_i]["nama"];
+																				$i_ident_rel++;
+																				$ident_relasi[$i_ident_rel] = "INNER JOIN `"
 																					.$rel_pilihan[$rel_i]["foreign_table"].
 																					"` ON `"
 																					.$rel_pilihan[$rel_i]["references_table"].
@@ -1467,7 +1463,9 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i]["foreign_attribute"].
 																					"`";
-																					echo "<br>INNER JOIN `"
+																				echo "<br>$ident_relasi[$i_ident_rel]";
+																				$i_ident_rel++;
+																				$ident_relasi[$i_ident_rel] = "INNER JOIN `"
 																					.$rel_pilihan[$rel_i_2]["references_table"].
 																					"` ON `"
 																					.$rel_pilihan[$rel_i_2]["foreign_table"].
@@ -1478,7 +1476,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i_2]["references_attribute"].
 																					"`";
-																				}
+																				echo "<br>$ident_relasi[$i_ident_rel]";
 																			}
 																		}
 																	}
@@ -1489,53 +1487,6 @@
 												}
 											}
 										}
-											/*
-											$tr=0;
-											$tabel_relasi[0]=$ident_table[1];
-											echo "Tabel FROM => [$tabel_relasi[0]]<br>";
-											
-											$c_relasi = count($relasi[$tabel_relasi[0]]['tab']);
-											for($j=0; $j<$c_relasi; $j++){// ngulang sebanyak relasi yg dimiliki tabel from	
-												for($ii=0; $ii<$nt; $ii++){// ngulang sejumlah nama tabel yg terdetkesi di kuriangi 1
-													if ($ident_table[$ii] != $tabel_relasi[0]) {// jika tida sama dengan table from maka cek
-														//echo "<br>$j. [".$relasi[$tabel_relasi[0]]['tab'][$j]."] ";
-														//echo "dengan [$ident_table[$ii]] ";
-														if ($relasi[$tabel_relasi[0]]['tab'][$j] == $ident_table[$ii]) {
-															//echo " = Sama ";// jika sama maka selesai 1
-															$tr++;
-															$tabel_relasi[$tr] = $ident_table[$ii];
-															$attr_relasi[$tr] = $relasi[$tabel_relasi[0]]['attr'][$j];
-															//echo "JOIN $tabel_relasi[$tr] USING ($attr_relasi[$tr])<br>";
-														
-														} else {
-															//echo " = Beda ";// jika tidak sama maka cek ke langkang berikutya yaitu cek dengan relasi dengan relasi lagi.
-															//echo "<br> - karena tidak sama maka bandingkan dengan nama relasinya";
-															$c_relasi2 = count($relasi[$ident_table[$ii]]['tab']); //hitung relasi milik nama tabel yg di scan
-															//echo "<br> relasi tabel milik $ident_table[$ii]] ada ($c_relasi2) yaitu : ";
-															for($jj=0; $jj<$c_relasi2; $jj++){
-																//echo "<br>$jj. [".$relasi[$ident_table[$ii]]['tab'][$jj]."]";
-																//echo " bandingkan dengan [".$relasi[$tabel_relasi[0]]['tab'][$j]."]";
-																if ($relasi[$ident_table[$ii]]['tab'][$jj] == $relasi[$tabel_relasi[0]]['tab'][$j]){
-																	//echo " == Sama ";
-																	$tr++;
-																	$tabel_relasi[$tr] = $relasi[$tabel_relasi[0]]['tab'][$j];
-																	$attr_relasi[$tr] = $relasi[$tabel_relasi[0]]['attr'][$j];
-																	//echo "JOIN $tabel_relasi[$tr] USING ($attr_relasi[$tr])<br>";
-																	$tr++;
-																	$tabel_relasi[$tr] = $nama_table[$ii];
-																	$attr_relasi[$tr] = $relasi[$nama_table[$ii]]['attr'][$jj];
-																	//echo "JOIN $tabel_relasi[$tr] USING ($attr_relasi[$tr])<br>";
-																} else {
-																	//echo " == Beda ";
-																}
-															}
-														}
-														
-													}
-												}
-												
-											}*/
-										
 									?>			
 								</div>
 								<div id="identifikasi_fitur">
