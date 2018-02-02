@@ -1,0 +1,11 @@
+tampil=SELECT
+apa=SELECT
+cari=SELECT
+masuk=INSERT
+isi=INSERT
+tambah=INSERT
+ubah=UPDATE
+ganti=UPDATE 
+hapus=DELETE
+kurang=DELETE
+buang=DELETE

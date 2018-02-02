@@ -12,6 +12,28 @@
 		<link rel="stylesheet" href="bootstrap.min.css">
 		<script src="jquery.min.js"></script>
 		<script src="bootstrap.min.js"></script>
+		<script>
+			$(document).ready(function(){
+				$("#h_detail_proses").hide(0);
+				$("#s_detail_proses").show(0);
+				$("#preprocessing").hide(0);
+				$("#processing").hide(0);
+					
+				$("#h_detail_proses").click(function(){
+					$("#h_detail_proses").hide(500);
+					$("#s_detail_proses").show(500);
+					$("#preprocessing").hide(500);
+					$("#processing").hide(500);
+					
+				});
+				$("#s_detail_proses").click(function(){
+					$("#s_detail_proses").hide(500);
+					$("#h_detail_proses").show(1000);
+					$("#preprocessing").show(2000);
+					$("#processing").show(2000);
+				});
+			});
+		</script>
 	</head>
 	<body>
 	<?php 
@@ -34,9 +56,17 @@
 		$stemmer = new \Sastrawi\Stemmer\Stemmer($dictionary);
 		
 		?>
+		<?php
+			function test_input($data) {
+				$data = trim($data);
+				$data = stripslashes($data);
+				$data = htmlspecialchars($data);
+				return $data;
+			}
+		?>
 	<?php
 		if (!empty($_POST["tab"])) {
-			$tab = $_POST["tab"]; 
+			$tab = test_input($_POST["tab"]); 
 		} else {
 			$tab = "transator";
 		}
@@ -56,15 +86,16 @@
 					<hr>
 					<?php
 						if (!empty($_POST["servername"])) {
-							$_SESSION["servername"] = $_POST["servername"]; 
-							$_SESSION["username"] = $_POST["username"];
-							$_SESSION["password"] = $_POST["password"];
-							$_SESSION["db_pendukung"] = $_POST["db_pendukung"];
+							$_SESSION["servername"] = test_input($_POST["servername"]); 
+							$_SESSION["username"] = test_input($_POST["username"]);
+							$_SESSION["password"] = test_input($_POST["password"]);
+							$_SESSION["db_pendukung"] = test_input($_POST["db_pendukung"]);
 						}
 					?>
 					<h4>Connection</h4>
 					<p class="text-secondary">form untuk koneksi ke dbms.</p> 
-					<form class="form-horizontal" action="Translator.php" method="post">
+					
+					<form class="form-horizontal" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="servername">Servername :</label>
 							<div class="col-sm-10">
@@ -111,7 +142,6 @@
 							//echo $_SESSION["servername"];echo $_SESSION["username"];echo $_SESSION["password"];
 							// Create connection
 							$connect = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"]);
-							// Check connection
 							if (!$connect) {
 								echo "<p class='text-danger'>";	die("Connection failed: " . mysqli_connect_error());echo "</p>";
 							} else {
@@ -372,8 +402,8 @@
 							}
 						}
 						if (!empty($_POST["hapus"])) {
-							$db_hapus = $_POST["hapus"];
-							$db_id_hapus = $_POST["id_hapus"];
+							$db_hapus = test_input($_POST["hapus"]);
+							$db_id_hapus = test_input($_POST["id_hapus"]);
 							//echo "ngehapus database $db_hapus dengan id $db_id_hapus"; 	
 							//Simpan db ke db_pendukung
 							$sql_hapus = "DELETE FROM `d_database` WHERE `d_database`.`id` = $db_id_hapus";
@@ -444,7 +474,7 @@
 										<?php
 											if ($db_nama == $row_database["Database"]){
 												?>
-												<form class="form-horizontal" action="Translator.php" method="post">
+												<form class="form-horizontal" action<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 													<input type="hidden" name='hapus' value="<?php echo $row_database["Database"]; ?>">
 													<input type="hidden" name='id_hapus' value="<?php echo $db_id; ?>">
 													<input name='tab' value="setup" type='hidden'>
@@ -453,7 +483,7 @@
 												<?php
 											} else {
 												?>
-												<form class="form-horizontal" action="Translator.php" method="post">
+												<form class="form-horizontal" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 													<input type="hidden" name='analisis' value="<?php echo $row_database["Database"]; ?>">
 													<input name='tab' value="setup" type='hidden'>
 													<button type="submit" class="btn btn-primary btn-sm">Analisis</button>
@@ -479,12 +509,12 @@
 					<hr>
 					<?php
 						if (!empty($_POST["db_pilih"])) {
-							$_SESSION["db_pilih"] = $_POST["db_pilih"];
+							$_SESSION["db_pilih"] = test_input($_POST["db_pilih"]);
 						}
 					?>
 					<h4>Pilih Database</h4>
 					<p class="text-secondary">pilih database untuk menampilkan informasinya.</p> 
-					<form class="form-horizontal" action="Translator.php" method="post">
+					<form class="form-horizontal" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="db_pilih">Database :</label>
 							<div class="col-sm-10">
@@ -555,12 +585,12 @@
 					<?php
 						// Simpan data alias baru
 						if (!empty($_POST["as_nama"])) {
-							$as_nama = $_POST["as_nama"];
-							$as_tipe = $_POST["as_tipe"];
+							$as_nama = test_input($_POST["as_nama"]);
+							$as_tipe = test_input($_POST["as_tipe"]);
 							if($as_tipe == "tbl"){
-								$as_tbl_id	= $_POST["as_tbl_id"];
-								$as_tbl_nama = $_POST["as_tbl_nama"];
-								$as_tbl_jump = $_POST["as_tbl_jump"];
+								$as_tbl_id	= test_input($_POST["as_tbl_id"]);
+								$as_tbl_nama = test_input($_POST["as_tbl_nama"]);
+								$as_tbl_jump = test_input($_POST["as_tbl_jump"]);
 								//echo " tambah alias baru dengan nama <b>$as_nama</b> sebagai alias dari table dengan id <b>$as_tbl_id</b>";
 								//Simpan db ke db_pendukung
 								$sql_alias = "
@@ -584,9 +614,9 @@
 								}
 							}
 							if($as_tipe == "attr"){
-								$as_attr_id	= $_POST["as_attr_id"];
-								$as_attr_nama = $_POST["as_attr_nama"];
-								$as_attr_jump = $_POST["as_attr_jump"];
+								$as_attr_id	= test_input($_POST["as_attr_id"]);
+								$as_attr_nama = test_input($_POST["as_attr_nama"]);
+								$as_attr_jump = test_input($_POST["as_attr_jump"]);
 								//echo " tambah alias baru dengan nama <b>$as_nama</b> sebagai alias dari atribut dengan id <b>$as_attr_id</b>";
 								//Simpan db ke db_pendukung
 								$sql_alias = "
@@ -740,7 +770,7 @@
 											<td colspan="2"><b><?php echo $tbl_pilihan[$tbl_i]["nama"]; ?></b></td>
 											<td><?php echo $tbl_pilihan[$tbl_i]["tipe"]; ?></td>
 											<td>
-												<form class="form-inline" action="Translator.php" method="post">
+												<form class="form-inline" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 													<?php
 														if (!empty($as_tbl_n_pilihan)) {
 															for ($as_tbl_i = 1; $as_tbl_i <= $as_tbl_n_pilihan; $as_tbl_i++){
@@ -839,19 +869,7 @@
 								$rel_i_pilih=0;
 								//$rel_pilih_tbl="";
 								while($row_foreign = mysqli_fetch_assoc($result_foreign)) {
-									/*
-									if ($rel_pilih_tbl != $row_foreign["rel_foreign_tbl"]){
-										$rel_i_pilih=0;
-									}
-									$rel_i_pilih++;
-									$rel_pilih = $row_foreign["rel_nama"];
-									$rel_pilih_id = $row_foreign["rel_id"];
-									$rel_pilih_tbl = $row_foreign["rel_foreign_tbl"];
-									$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["id"] = $rel_pilih_id;
-									$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["nama"] = $row_foreign["rel_nama"]; 
-									$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["foreign_table"] = $row_foreign["rel_foreign_tbl"];
-									$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["foreign_attribute"] = $row_foreign["rel_foreign_attr"];
-									*/
+									
 									$rel_i_pilih++;
 									$rel_pilih = $row_foreign["rel_nama"];
 									$rel_pilih_id = $row_foreign["rel_id"];
@@ -873,71 +891,14 @@
 									$result_references = mysqli_query($connect_db_p, $sql_references);
 									if (mysqli_num_rows($result_references) > 0) {
 										while($row_references = mysqli_fetch_assoc($result_references)) {
-											/*
-											$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["references_table"] = $row_references["rel_references_tbl"];
-											$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["references_attribute"] = $row_references["rel_references_attr"];
-											*/
+											
 											$rel_pilihan[$rel_i_pilih]["references_table"] = $row_references["rel_references_tbl"];
 											$rel_pilihan[$rel_i_pilih]["references_attribute"] = $row_references["rel_references_attr"];
 										}
 									}
-									/*
-									echo "<br>
-										[$rel_i_pilih].[$rel_pilih_tbl] | 
-										".$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["id"]." => 
-										".$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["nama"]." | 
-										".$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["foreign_table"].".
-										".$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["foreign_attribute"]." =>
-										".$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["references_table"].".
-										".$rel_pilihan[$rel_pilih_tbl][$rel_i_pilih]["references_attribute"]."
-									";
-									*/
-									/*
-									echo "<br>l] | 
-										".$rel_pilihan[$rel_i_pilih]["id"]." => 
-										".$rel_pilihan[$rel_i_pilih]["nama"]." | 
-										".$rel_pilihan[$rel_i_pilih]["foreign_table"].".
-										".$rel_pilihan[$rel_i_pilih]["foreign_attribute"]." =>
-										".$rel_pilihan[$rel_i_pilih]["references_table"].".
-										".$rel_pilihan[$rel_i_pilih]["references_attribute"]."
-									";
-									*/
+									
 								}
-								/*
-								//echo "<br>jumlah relasi = ". count($rel_pilihan);
-								$tbl_n_pilihan = count($tbl_pilihan);
-								for ($tbl_i = 1; $tbl_i <= $tbl_n_pilihan; $tbl_i++){
-									if (!empty($rel_pilihan[$tbl_pilihan[$tbl_i]["nama"]])){
-										?>
-										<table class="table table-hover table-bordered table-responsive">
-											<thead>
-												<tr>
-													<th style="width:5%">#</th>
-													<th>Nama Relasi <?php echo $tbl_pilihan[$tbl_i]["nama"]; ?></th>
-													<th>Foreign Key (nama_table.nama_attribute)</th>
-													<th>References (nama_table.nama_attribute)</th>
-												</tr>
-											</thead>
-											<tbody>
-											<?php
-											$rel_n_pilihan = count($rel_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
-											for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){
-												?>
-												<tr>
-													<td><?php echo $rel_i; ?></td>
-													<td><?php echo $rel_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$rel_i]["nama"]; ?></td>
-													<td><?php echo $rel_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$rel_i]["foreign_table"].".<b>".$rel_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$rel_i]["foreign_attribute"]."</b>"; ?></td>
-													<td><?php echo $rel_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$rel_i]["references_table"].".<b>".$rel_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$rel_i]["references_attribute"]."</b>"; ?></td>
-												</tr>
-												<?php
-											}
-											?>
-											</tbody>
-										</table>
-										<?php
-									}
-								}
-								*/
+								
 								?>
 								<table class="table table-hover table-bordered table-responsive">
 									<thead>
@@ -989,7 +950,7 @@
 					<hr>
 					<?php
 						if (!empty($_POST["kalimat"])) {
-							$_SESSION["kalimat"] = $_POST["kalimat"]; 
+							$_SESSION["kalimat"] = test_input($_POST["kalimat"]); 
 							$kalimat = $_SESSION["kalimat"];
 						} else {
 							$kalimat = "";
@@ -997,21 +958,29 @@
 					?>
 					<h4>Kalimat Masukan</h4>
 					<p></p>
-					<form action="Translator.php" method="post">
+					<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 						<div class="form-group">
 							<label for="kalimat">Kalimat:</label>
 							<textarea class="form-control" rows="3" id="kalimat" name="kalimat"><?php echo $kalimat; ?></textarea>
 						</div> 
 						<input name='tab' value="transator" type='hidden'>
-						<button type="submit" class="btn btn-primary">Terkemahkan</button>
+						<button id="mulai_proses" type="submit" class="btn btn-primary">Terjemahkan</button>
 					</form>
 					<?php
 						if (!empty($_SESSION["kalimat"])) {
 							?>
 							<hr>
+							<button id="s_detail_proses" class="btn btn-default">Tampilkan Detail Proses</button>
+							<button id="h_detail_proses" class="btn btn-default">Sembunyikan Detail Proses</button>
 							<div id="preprocessing">
 								<h4>Tahap Preprocessing</h4>
 								<p>Kalimat : <?php echo $kalimat;?></p>
+								<?php
+								//echo chr(34);
+								//echo str_replace('dentist','aneh',$kalimat);
+								//echo trim($kalimat,'"');
+								//$kalimat = preg_replace('/[^A-Za-z0-9\  ]/', '', $kalimat);
+								?>
 								<div id="tokenizing">
 									<h4>Tokenizing</h4>
 									<?php
@@ -1025,6 +994,7 @@
 											$i_token++;
 											// masukan token kedalam array
 											$token_kata[$i_token] = $token_kalimat;
+											//echo trim($token_kata[$i_token],'quot');;
 											$token_kalimat = strtok(" ");
 											//echo "Token $i_token : $token_kata[$i_token]<br>";
 										}
@@ -1060,12 +1030,22 @@
 									<?php
 										$n_token = count($token_kata);
 										for ($i_token = 1; $i_token <= $n_token; $i_token++){
-											if (ord("$token_kata[$i_token]") == "34"){
+											//echo "<br>".ord("$token_kata[$i_token]");
+											if (ord("$token_kata[$i_token]") == "38"){
+												//echo "ada kutip";
+												//$token_stem[$i_token] = preg_replace('/[^A-Za-z0-9\  ]/', '', $token_kata[$i_token]);
+												//$token_stem[$i_token] = trim($token_kata[$i_token],"\"");
 												$token_stem[$i_token] = $token_kata[$i_token];
 											} else {
 												$token_stem[$i_token] = $stemmer->stem($token_kata[$i_token]);
 											}
 										}
+									?>
+									<?php
+										/*$n_token = count($token_kata);
+										for ($i_token = 1; $i_token <= $n_token; $i_token++){
+											$token_stem[$i_token] = $stemmer->stem($token_kata[$i_token]);
+										}*/
 									?>
 									<table class="table table-hover table-bordered table-responsive">
 										<thead>
@@ -1134,10 +1114,10 @@
 											}
 										}
 										for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
-											//if (ord("$token_stem[$i_stem]") == "34"){
-												//token_alias[$i_stem] = trim($token_stem[$i_stem],'",');
+											if (ord("$token_stem[$i_stem]") == "34"){
+												//$token_alias[$i_stem] = trim($token_stem[$i_stem],'",');
 												$token_alias[$i_stem] = $token_stem[$i_stem];
-											//} else {
+											} else {
 												$n_token_as_table = count($token_as_table);
 												for ($i_token_as_table = 1; $i_token_as_table <= $n_token_as_table; $i_token_as_table++){
 													$n_attr = count($as_attr_pilihan[$token_as_table[$i_token_as_table]]);
@@ -1149,7 +1129,7 @@
 														}
 													}
 												}
-											//}
+											}
 										}
 										
 									?>
@@ -1198,72 +1178,71 @@
 								<div id="identifikasi_perintah">
 									<h4>Identifikasi Perintah</h4>
 									<?php
+										$kamus_perintah = fopen("kamus_perintah.txt", "r") or die("Unable to open file!");
+										// Output one character until end-of-file
+										//$kms_perintah = array();
+										$i_kms = 0;
+										while(!feof($kamus_perintah)) {
+											$i_kms++;
+											$kms_perintah[$i_kms] = fgetcsv($kamus_perintah,0,'=');
+											//echo "[0] => ".$kms_perintah[$i_kms][0]."[1] => ".$kms_perintah[$i_kms][1]." <br>";
+										}
+										fclose($kamus_perintah);
 										$ident_perintah = "tidak teridentifikasi";
+										$n_kms_p = count($kms_perintah);
 										$i_alias = 0;
-										$s_2a = 0;
 										while ($i_alias !== $n_alias)
 										{
 											$i_alias++;
 											//echo "Token $i_alias : $token_alias[$i_alias]<br>";
-											if($token_alias[$i_alias] == "tampil") {
-												$ident_perintah = "SELECT";
-												$s_2a = 1;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "siapa")  {
-												$ident_perintah = "SELECT";
-												$s_2a = 1;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "siapa")  {
-												$ident_perintah = "SELECT";
-												$s_2a = 1;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "cari")  {
-												$ident_perintah = "SELECT";
-												$s_2a = 1;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "berapa")  {
-												$ident_perintah = "SELECT";
-												$s_2a = 1;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "tambah")  {
-												$ident_perintah = "INSERT";
-												$s_2a = 2;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "masuk")  {
-												$ident_perintah = "INSERT";
-												$s_2a = 2;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "isi")  {
-												$ident_perintah = "INSERT";
-												$s_2a = 2;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "ubah")  {
-												$ident_perintah = "UPDATE";
-												$s_2a = 3;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "ganti")  {
-												$ident_perintah = "UPDATE";
-												$s_2a = 3;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "gantilah")  {
-												$ident_perintah = "UPDATE";
-												$s_2a = 3;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "hapus")  {
-												$ident_perintah = "DELETE";
-												$s_2a = 4;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "buang")  {
-												$ident_perintah = "DELETE";
-												$s_2a = 4;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} else if ($token_alias[$i_alias] == "kurang")  {
-												$ident_perintah = "DELETE";
-												$s_2a = 4;
-												echo "Iden_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
-											} 
+											for ($i_kms = 1; $i_kms <= $n_kms_p; $i_kms++){
+												//echo "Token $i_alias : $token_alias[$i_alias] == ".$kms_perintah[$i_kms][0]."<br>";
+												if($token_alias[$i_alias] == $kms_perintah[$i_kms][0]) {
+													$ident_perintah = $kms_perintah[$i_kms][1];
+													//echo "Ident_perintah : $token_alias[$i_alias] => $ident_perintah<br>";
+												}
+											}
 										}
 									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr>
+												<td>[Masukan] Array Token Preprocessing</td>
+												<td>
+												<?php 
+													$n_alias = count($token_alias);
+													$n_kms_p = count($kms_perintah);
+													$i_alias = 0;
+													while ($i_alias !== $n_alias)
+													{
+														$i_alias++;
+														echo "Token $i_alias : $token_alias[$i_alias]";
+														for ($i_kms = 1; $i_kms <= $n_kms_p; $i_kms++){
+															if($token_alias[$i_alias] == $kms_perintah[$i_kms][0]) {
+																echo " => $ident_perintah";
+															}
+														}
+														echo "<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Perintah</td>
+												<td>
+												<?php 
+													echo "Ident_perintah : $ident_perintah";
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
 								<div id="identifikasi_table">
 									<h4>Identifikasi Table</h4>
@@ -1298,13 +1277,13 @@
 														if (!$sama) {
 															$n_ident_tbl++;
 															$ident_table[$n_ident_tbl] = $tbl_pilihan[$tbl_i]["nama"];
-															echo "ident_table[$n_ident_tbl] : $ident_table[$n_ident_tbl]<br>";
+															//echo "ident_table[$n_ident_tbl] : $ident_table[$n_ident_tbl]<br>";
 															
 														}
 													} else {
 														$n_ident_tbl++;
 														$ident_table[$n_ident_tbl] = $tbl_pilihan[$tbl_i]["nama"];
-														echo "ident_table[$n_ident_tbl] : $ident_table[$n_ident_tbl]<br>";
+														//echo "ident_table[$n_ident_tbl] : $ident_table[$n_ident_tbl]<br>";
 														
 													}
 												}
@@ -1312,7 +1291,7 @@
 										}
 										//echo "<p>jumlah $n_ident_tbl </p>";
 									?>
-									<h4>Identifikasi Relasi</h4>
+									<!--<h4>Identifikasi Relasi</h4>-->
 									<?php
 										//Identifikasi Relasi
 										$ident_relasi = array();
@@ -1322,7 +1301,7 @@
 										if ($n_ident_tbl >= 1){
 											$i_ident_rel++;
 											$ident_relasi[$i_ident_rel] = "FROM `$ident_table[$i_ident_tbl]`";
-											echo "ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+											//echo "ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 											$rel_n_pilihan = count($rel_pilihan);
 											for ($rel_i = 1; $rel_i <= $rel_n_pilihan; $rel_i++){ //Looping Relasi
 												//Cek Relasi dengan table sebagai Foreign
@@ -1343,7 +1322,7 @@
 															"`.`"
 															.$rel_pilihan[$rel_i]["foreign_attribute"].
 															"`";
-														echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+														//echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 													} else {
 														for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
 															//Pastikan beda table
@@ -1364,7 +1343,7 @@
 																		"`.`"
 																		.$rel_pilihan[$rel_i]["references_attribute"].
 																		"`";
-																	echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+																	//echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																} else {
 																	//Cek Relasi Tidak Langsung
 																	for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
@@ -1398,7 +1377,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i]["foreign_attribute"].
 																					"`";
-																				echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+																				//echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																			}
 																		}
 																	}
@@ -1426,7 +1405,7 @@
 															"`.`"
 															.$rel_pilihan[$rel_i]["foreign_attribute"].
 															"`";
-														echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+														//echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 													} else {
 														for ($i_ident_tbl_2 = 1; $i_ident_tbl_2 <= $n_ident_tbl; $i_ident_tbl_2++){ //Looping ident_table dari > 1
 															if($ident_table[$i_ident_tbl_2] != $ident_table[$i_ident_tbl]){
@@ -1446,7 +1425,7 @@
 																		"`.`"
 																		.$rel_pilihan[$rel_i]["foreign_attribute"].
 																		"`";
-																	echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+																	//echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																} else {
 																	//Cek Relasi Tidak Langsung
 																	for ($rel_i_2 = 1; $rel_i_2 <= $rel_n_pilihan; $rel_i_2++){ //Looping Relasi
@@ -1467,7 +1446,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i]["foreign_attribute"].
 																					"`";
-																				echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+																				//echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																				$i_ident_rel++;
 																				$ident_relasi[$i_ident_rel] = "INNER JOIN `"
 																					.$rel_pilihan[$rel_i_2]["references_table"].
@@ -1480,7 +1459,7 @@
 																					"`.`"
 																					.$rel_pilihan[$rel_i_2]["references_attribute"].
 																					"`";
-																				echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
+																				//echo "<br>ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]";
 																			}
 																		}
 																	}
@@ -1491,88 +1470,572 @@
 												}
 											}
 										}
-									?>		
+									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr>
+												<td>[Masukan] Array Token Preprocessing</td>
+												<td>
+												<?php 
+													$n_alias = count($token_alias);
+													$n_ident_tbl = count($ident_table);
+													for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
+														echo "Token $i_alias : $token_alias[$i_alias]";
+														for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
+															if($ident_table[$i_ident_tbl] == $token_alias[$i_alias]){
+																echo " => $ident_table[$i_ident_tbl]";
+															}
+														}
+														echo "<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Tabel</td>
+												<td>
+												<?php 
+													$n_ident_tbl = count($ident_table);
+													for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
+														echo "ident_table[$i_ident_tbl] : $ident_table[$i_ident_tbl]<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Relasi</td>
+												<td>
+												<?php 
+													$n_ident_rel = count($ident_relasi);
+													for ($i_ident_rel = 1; $i_ident_rel <= $n_ident_rel; $i_ident_rel++){
+														echo "ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]<br>";
+													}
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>									
+								</div>
+								<div id="identifikasi_attribute">
+									<h4>Identifikasi Attribute</h4>
+									<?php
+										$ident_attribute = array();
+										$i_ident_attr = 0;
+										for ($i_tbl = 1; $i_tbl <= $n_ident_tbl; $i_tbl++){
+											//echo "<br>- Table : $ident_table[$i_tbl]";
+											$n_attr_pilihan = count($attr_pilihan[$ident_table[$i_tbl]]);	
+											for ($i_attr = 1; $i_attr <= $n_attr_pilihan; $i_attr++){
+												//echo "<br>-- Atribut : ",$attr_pilihan[$ident_table[$i_tbl]][$i_attr]["nama"];
+												for($i_token = 1; $i_token <= $n_alias ; $i_token++){
+													if ($attr_pilihan[$ident_table[$i_tbl]][$i_attr]["nama"] == $token_alias[$i_token]){
+														$i_ident_attr++;
+														$ident_attribute[$i_ident_attr]["attribute"] = $attr_pilihan[$ident_table[$i_tbl]][$i_attr]["nama"];
+														$ident_attribute[$i_ident_attr]["posisi"] = $i_token;
+														//echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+														
+													}
+												}
+											}
+										}
+									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr>
+												<td>[Masukan] Identifikasi Tabel</td>
+												<td>
+												<?php 
+													$n_ident_tbl = count($ident_table);
+													for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
+														echo "ident_table[$i_ident_tbl] : $ident_table[$i_ident_tbl]<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Masukan] Array Token Preprocessing</td>
+												<td>
+												<?php 
+													$n_alias = count($token_alias);
+													$n_ident_attr = count($ident_attribute);
+													for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
+														echo "Token $i_alias : $token_alias[$i_alias]";
+														for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+															if($ident_attribute[$i_ident_attr]["attribute"] == $token_alias[$i_alias]){
+																echo " => ".$ident_attribute[$i_ident_attr]["attribute"];
+															}
+														}
+														echo "<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Atribut</td>
+												<td>
+												<?php 
+													$n_ident_attr = count($ident_attribute);
+													for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+														echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
 								<div id="identifikasi_fitur">
 									<h4>Identifikasi Fitur</h4>
 									<?php
-									$ident_where = Array();
-									$i_ident_where = 0;
-									for ($i_where=1; $i_where <= $n_alias; $i_where++){
-										//echo "<br> $token_alias[$i_where]";
-										if ($token_alias[$i_where] == "yang" ){
-											$i_ident_where++;
-											$ident_where[$i_ident_where]["posisi"] = $i_where;
-											echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
-										} else if ($token_alias[$i_where] == "dimana" ) {
-											$i_ident_where++;
-											$ident_where[$i_ident_where]["posisi"] = $i_where;
-											echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
-										} else if ($token_alias[$i_where] == "dengan" ) {
-											$i_ident_where++;
-											$ident_where[$i_ident_where]["posisi"] = $i_where;
-											echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
-										}
-									}
-									$n_ident_where = count($ident_where); 
-									//echo "<br>- $n_ident_where";
-									if ($n_ident_where >= 1){
-										for ($i_ident_where=1;$i_ident_where <= $n_ident_where;$i_ident_where++) {
-											$ps_where = $ident_where[$i_ident_where]["posisi"];
-											if ($i_ident_where != $n_ident_where) {
-												$pf_where = $ident_where[$i_ident_where+1]["posisi"];
-											} else {
-												$pf_where = $n_alias;
-											}
-											//echo "<br> $ps_where - $pf_where";
-											//cari table
-											for ($i_where=$ps_where; $i_where <= $pf_where; $i_where++){
-												//echo "<br> $token_alias[$i_where]";
-												for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
-													//echo "<br> $token_alias[$i_where] == $ident_table[$i_ident_tbl]";
-													if ($token_alias[$i_where] == $ident_table[$i_ident_tbl]){
-														$ident_where[$i_ident_where]["table"] = $ident_table[$i_ident_tbl];
-														echo "<br> ident_where_tabel[$i_ident_where] = ".$ident_where[$i_ident_where]["table"];
-														$n_ident_attr = count($attr_pilihan[$ident_table[$i_ident_tbl]]);	
-														$ident_where[$i_ident_where]["attribute"]="";
-														for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
-															//echo "<br>",$attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
-															if ($token_alias[$i_where] == $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"]){
-																$ident_where[$i_ident_where]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
-															}
-														}
-														if ($ident_where[$i_ident_where]["attribute"]==""){
-															$ident_where[$i_ident_where]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][2]["nama"];
-														}
-														echo "<br> ident_where_attribut[$i_ident_where] = ".$ident_where[$i_ident_where]["attribute"];
-													}												
-												}
-												if ($token_alias[$i_where] == "termasuk"){
-													$ident_where[$i_ident_where]["perbandingan"] = "=";
-													echo "<br> ident_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
-												} else if ($token_alias[$i_where] == "kandung"){
-													$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
-													echo "<br> ident_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
-												}
-												if (ord("$token_alias[$i_where]") == "34"){
-													//echo "$token_alias[$i_where]";
-													$ident_where[$i_ident_where]["isi"] = trim($token_alias[$i_where],'",');
-													echo "<br> ident_Where_isi[$i_ident_where] : ".$ident_where[$i_ident_where]["isi"];
-												}
+										$ident_where = Array();
+										$i_ident_where = 0;
+										for ($i_where=1; $i_where <= $n_alias; $i_where++){
+											//echo "<br> $token_alias[$i_where]";
+											if ($token_alias[$i_where] == "yang" ){
+												$i_ident_where++;
+												$ident_where[$i_ident_where]["posisi"] = $i_where;
+												//echo " ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+											} else if ($token_alias[$i_where] == "dimana" ) {
+												$i_ident_where++;
+												$ident_where[$i_ident_where]["posisi"] = $i_where;
+												//echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+											} else if ($token_alias[$i_where] == "dengan" ) {
+												$i_ident_where++;
+												$ident_where[$i_ident_where]["posisi"] = $i_where;
+												//echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
 											}
 										}
 										
-									}
+										$n_ident_where = count($ident_where); 
+										//echo "<br>- $n_ident_where";
+										if ($n_ident_where >= 1){
+											for ($i_ident_where=1;$i_ident_where <= $n_ident_where;$i_ident_where++) {
+												$ps_where = $ident_where[$i_ident_where]["posisi"];
+												if ($i_ident_where != $n_ident_where) {
+													$pf_where = $ident_where[$i_ident_where+1]["posisi"];
+												} else {
+													$pf_where = $n_alias+1;
+												}
+												//echo "<br> $ps_where - $pf_where";
+												//cari table
+												for ($i_where=$ps_where; $i_where < $pf_where; $i_where++){
+													//echo "<br>-$token_alias[$i_where]";
+													for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
+														//echo "<br> -$token_alias[$i_where] == $ident_table[$i_ident_tbl]";
+														if ($token_alias[$i_where] == $ident_table[$i_ident_tbl]){
+															$ident_where[$i_ident_where]["table"] = $ident_table[$i_ident_tbl];
+															//echo "<br>ident_where_tabel[$i_ident_where] : ".$ident_where[$i_ident_where]["table"];
+														}
+														$n_ident_attr = count($attr_pilihan[$ident_table[$i_ident_tbl]]);
+														for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+															//echo "<br>+$token_alias[$i_where] == ".$attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+															if ($token_alias[$i_where] == $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"]){
+																$ident_where[$i_ident_where]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+																//echo "<br>ident_where_attributr[$i_ident_where] : ".$ident_where[$i_ident_where]["attribute"];
+															}
+														}
+													}
+													if ($token_alias[$i_where] == "termasuk"){
+														$ident_where[$i_ident_where]["perbandingan"] = "=";
+														//echo "<br> ident_where_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
+														
+														
+														
+													} else if ($token_alias[$i_where] == "kandung"){
+														$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+														//echo "<br> ident_where_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
+													}
+													if (ord("$token_alias[$i_where]") == "38"){
+														//echo "$token_alias[$i_where]";
+														$ident_where[$i_ident_where]["isi"] = trim($token_alias[$i_where],',');
+														//echo "<br> ident_Where_isi[$i_ident_where] : ".$ident_where[$i_ident_where]["isi"];
+													}
+													if ($i_ident_where > 1){
+														if ($token_alias[$i_where] == "dan"){
+															$ident_where[$i_ident_where]["logika"] = "AND";
+															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
+														} else if ($token_alias[$i_where] == "atau") {
+															$ident_where[$i_ident_where]["logika"] = "OR";
+															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
+														}
+													}
+												}
+												if (empty($ident_where[$i_ident_where]["logika"])){
+													$ident_where[$i_ident_where]["logika"] = "AND";
+													//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
+												}
+												
+												
+											}
+										}
 									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>	
+											<tr>
+												<td>[Masukan] Array Token Preprocessing</td>
+												<td>
+												<?php 
+													$n_alias = count($token_alias);
+													$n_ident_where = count($ident_where);
+													for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
+														echo "Token $i_alias : $token_alias[$i_alias]";
+														for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+															if($token_alias[$ident_where[$i_ident_where]["posisi"]] == $token_alias[$i_alias]){
+																echo " => ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+															}
+														}
+														echo "<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Kondisi</td>
+												<td>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo " ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Operator Logika</td>
+												<td>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Tabel Kondisi</td>
+												<td>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_tabel[$i_ident_where] : ".$ident_where[$i_ident_where]["table"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Atribut Kondisi</td>
+												<td>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_atribut[$i_ident_where] : ".$ident_where[$i_ident_where]["attribute"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Operator Banding</td>
+												<td>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_banding[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Isi Kondisi</td>
+												<td>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_isi[$i_ident_where] : ".$ident_where[$i_ident_where]["isi"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-								<div id="identifikasi_attribute">
-									<h4>Identifikasi Attribute</h4>
-								</div>
-								<div id="buat_query">
-									<h4>Buat Query</h4>
+								<div id="query">
+									<h4>Penyusunan Query</h4>
+									<?php
+									
+										$query_part = array();
+										$i_query=0;
+										//Hasil Identifikasi Perintah
+										if ($ident_perintah == "SELECT"){
+											$i_query++;
+											$query_part[$i_query] = $ident_perintah." ";
+											//echo "query_part[$i_query] : $query_part[$i_query]<br>"; 
+										}
+										//Hasil Identifikasi Atribut
+										$n_attr = count($ident_attribute);
+										if ($n_attr >=1) {
+											for ($i_attr = 1; $i_attr <= $n_attr; $i_attr++){
+												if ($ident_attribute[$i_attr]["posisi"] < $ident_where[1]["posisi"]){
+													$i_query++;
+													$query_part[$i_query] = "`".$ident_attribute[$i_attr]["attribute"]."` ";
+													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+												}
+											}
+										}
+										//Hasil Identifikasi Table
+										$n_rel = count($ident_relasi);
+										if ($n_rel >= 1){
+											for ($i_rel = 1; $i_rel <= $n_rel; $i_rel++){
+												$i_query++;
+												$query_part[$i_query] = $ident_relasi[$i_rel]." ";
+												//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+											}
+										}									
+										//Hasil Identifikasi WHERE
+										$n_whr = count($ident_where);
+										if ($n_whr >= 1){
+											for ($i_whr = 1; $i_whr <= $n_whr; $i_whr++){
+												if ($i_whr == 1){
+													$i_query++;
+													$query_part[$i_query] = "WHERE ";
+													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+												} else if($ident_where[$i_whr]["logika"] == "AND") {
+													$i_query++;
+													$query_part[$i_query] = " AND ";
+													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+												}
+												
+												if ($ident_where[$i_whr]["perbandingan"] == "="){
+													if(empty($ident_where[$i_whr]["attribute"])){
+														$ident_where[$i_whr]["attribute"] =  $attr_pilihan[$ident_where[$i_whr]["table"]][2]["nama"];
+													}
+													if (ord($ident_where[$i_whr]["isi"]) == "38"){
+														$ident_where[$i_whr]["isi"] = trim(preg_replace('/[^A-Za-z0-9\  ]/', '',$ident_where[$i_whr]["isi"]),'quot');
+													}
+													$i_query++;
+													$query_part[$i_query] = 
+														"`".$ident_where[$i_whr]["table"]."`.`".$ident_where[$i_whr]["attribute"]."` "
+														.$ident_where[$i_whr]["perbandingan"]." "
+														.chr(39).$ident_where[$i_whr]["isi"].chr(39)
+													;
+													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+												} else if ($ident_where[$i_whr]["perbandingan"] == "LIKE"){
+													if (ord($ident_where[$i_whr]["isi"]) == "38"){
+														$ident_where[$i_whr]["isi"] = trim(preg_replace('/[^A-Za-z0-9\  ]/', '',$ident_where[$i_whr]["isi"]),'quot');
+													}
+													$i_query++;
+													$query_part[$i_query] = 
+														"`".$ident_where[$i_whr]["table"]."`.`".$ident_where[$i_whr]["attribute"]."` "
+														.$ident_where[$i_whr]["perbandingan"]." "
+														.chr(39).chr(37).trim($ident_where[$i_whr]["isi"],'"').chr(37).chr(39)
+													;
+													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+													//echo "<br>".str_replace('"',"a",$ident_where[$i_whr]["isi"]);
+												}
+											}
+										}
+										$i_query++;
+													$query_part[$i_query] = ";";
+										$code_query = join("",$query_part);
+										//echo "<br>$code_query";
+									?>
+									<table class="table table-hover table-bordered table-responsive">
+										<thead>
+											<tr>
+												<th style="width:10%">Nama</th>
+												<th>Objek</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>[Masukan] Identifikasi Perintah</td>
+												<td>
+												<?php 
+													echo "Ident_perintah : $ident_perintah";
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Masukan] Identifikasi Tabel</td>
+												<td>
+												<?php 
+													$n_ident_tbl = count($ident_table);
+													for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
+														echo "ident_table[$i_ident_tbl] : $ident_table[$i_ident_tbl]<br>";
+													}
+												?>
+												<?php 
+													$n_ident_rel = count($ident_relasi);
+													for ($i_ident_rel = 1; $i_ident_rel <= $n_ident_rel; $i_ident_rel++){
+														echo "ident_relasi[$i_ident_rel] : $ident_relasi[$i_ident_rel]<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Masukan] Identifikasi Atribut</td>
+												<td>
+												<?php 
+													$n_ident_attr = count($ident_attribute);
+													for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+														echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Masukan] Identifikasi Kondisi</td>
+												<td>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo " ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]]."<br>";
+													}
+												?>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"]."<br>";
+													}
+												?>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_tabel[$i_ident_where] : ".$ident_where[$i_ident_where]["table"]."<br>";
+													}
+												?>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_atribut[$i_ident_where] : ".$ident_where[$i_ident_where]["attribute"]."<br>";
+													}
+												?>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_banding[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"]."<br>";
+													}
+												?>
+												<?php 
+													$n_ident_where = count($ident_where);
+													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
+														echo "ident_where_isi[$i_ident_where] : ".$ident_where[$i_ident_where]["isi"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Penyusunan Query</td>
+												<td>
+												<?php 
+													$n_query = count($query_part);
+													for ($i_query = 1; $i_query <= $n_query; $i_query++){
+														echo "query_part[$i_query] : $query_part[$i_query]<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Hasil Query</td>
+												<td>
+												<?php 
+													echo "$code_query";
+												?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
 							</div>
 							<div id="testing">
+								<h4>Pengujian Query</h4>
+								<table class="table table-hover table-bordered table-responsive">
+									<thead>
+										<tr>
+											<th style="width:10%">Nama</th>
+											<th>Objek</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>[Masukan] Hasil Proses</td>
+											<td>
+											<?php 
+												echo "$code_query";
+											?>
+											</td>
+										</tr>
+										<tr>
+											<td>[Keluaran] Hasil Eksekusi</td>
+											<td>
+												<table class="table table-striped">
+													<tr>
+													<?php
+														$n_attr=count($ident_attribute);
+														if ($ident_attribute[1] == "*"){
+															$n_atribut = count($attr_pilihan[$ident_table[1]]);
+															for ($i = 1; $i <= $n_atribut; $i++) {
+																?><th><?php echo $attr_pilihan[$ident_table[1]][$i]["nama"]; ?></th><?php
+															}
+														} else {
+															for ($kt=1;$kt<=$n_attr;$kt++) {
+																if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]){
+																	?><th><?php echo $ident_attribute[$kt]["attribute"]; ?></th><?php
+																}
+															}
+														}
+													?></tr><?php
+												$connect_db_pilih = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pilih"]);
+												//echo $_SESSION["servername"]." | ".$_SESSION["username"]." | ".$_SESSION["password"]." | ".$_SESSION["db_pilih"];
+												// Check connection
+												if (!$connect_db_pilih) {
+													die("Connection failed: ".mysqli_connect_error());
+												}
+												$result_query = mysqli_query($connect_db_pilih, $code_query);
+												if (mysqli_num_rows($result_query) > 0) {
+													// output data of each row
+													while($row = mysqli_fetch_assoc($result_query)) {
+														?><tr><?php
+														if ($ident_attribute[1] == "*"){
+															
+															$n_atribut = count($attr_pilihan[$ident_table[1]]);
+															for ($i = 1; $i <= $n_atribut; $i++) {
+																echo"<td>".$row[$attr_pilihan[$ident_table[1]][$i]["nama"]]."</td>";
+															}
+														} else {
+															for ($kt=1;$kt<=$n_attr;$kt++){
+																if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]){
+																	echo"<td>".$row[$ident_attribute[$kt]["attribute"]]."</td>";
+																}
+															}
+														}
+														?></tr><?php
+													}
+												} else {
+													?><td>0 results</td><?php
+												}
+												?>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 							<?php
 						}
