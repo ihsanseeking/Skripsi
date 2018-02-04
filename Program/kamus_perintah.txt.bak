@@ -2,6 +2,7 @@ tampil=SELECT
 apa=SELECT
 cari=SELECT
 lihat=SELECT
+sebut=SELECT
 masuk=INSERT
 isi=INSERT
 tambah=INSERT

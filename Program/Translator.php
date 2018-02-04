@@ -1223,10 +1223,16 @@
 															$n_attr = count($as_attr_pilihan[$token_as_table[$i_token_as_table]]);
 															for ($i_attr = 1; $i_attr <= $n_attr; $i_attr++){
 																//echo "<br>$token_alias[$i_stem] - ".$as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["nama"];
+																
+																
 																if ($token_alias[$i_stem] == $as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["nama"]) {
-																	$token_alias[$i_stem] = $as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["alias"];
-																	//echo " -> jadi = $token_alias[$i_stem]";
+																	if ($token_alias[$i_stem] !== $token_as_table[$i_token_as_table]) {
+																		$token_alias[$i_stem] = $as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["alias"];
+																		//echo " -> jadi = $token_alias[$i_stem]";
+																	}
 																}
+																
+																
 															}
 														}
 													}
@@ -1641,8 +1647,15 @@
 														$ident_attribute[$i_ident_attr]["posisi"] = $i_token;
 														$ident_attribute[$i_ident_attr]["table"] = "`".$ident_table[$i_tbl]."`";
 														$ident_attribute[$i_ident_attr]["alias"] = chr(39).$token_stem[$i_token].chr(39);
-														//echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
-														
+														/*echo 
+															"posisi- ".
+															$ident_attribute[$i_ident_attr]["posisi"].
+															" ident_attribute[$i_ident_attr] : ".
+															$ident_attribute[$i_ident_attr]["attribute"].
+															"alias".
+															$ident_attribute[$i_ident_attr]["alias"].
+															"<br>";
+														*/
 													}
 												}
 											}
@@ -1694,10 +1707,16 @@
 														echo "ident_attribute[$i_ident_attr] : ".
 															$ident_attribute[$i_ident_attr]["table"].
 															".".
-															$ident_attribute[$i_ident_attr]["attribute"].
-															" AS ".
-															$ident_attribute[$i_ident_attr]["alias"].
-															"<br>";
+															$ident_attribute[$i_ident_attr]["attribute"]
+														;
+														if (trim($ident_attribute[$i_ident_attr]["attribute"],"`") !== trim($ident_attribute[$i_ident_attr]["alias"],"'")) {
+															echo
+																" AS ".
+																$ident_attribute[$i_ident_attr]["alias"]
+															;
+																
+														}
+														echo "<br>";
 													}
 												?>
 												</td>
@@ -1708,6 +1727,7 @@
 								<div id="identifikasi_fitur">
 									<h4>Identifikasi Fitur</h4>
 									<?php
+									//Fitur Where
 										$ident_where = Array();
 										$i_ident_where = 0;
 										for ($i_where=1; $i_where <= $n_alias; $i_where++){
@@ -1972,6 +1992,7 @@
 																$i_where += 1;
 																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
 															}
+															$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
 														} elseif($token_alias[$i_where] == $ident_where[$i_ident_where]["attribute"]){
 															if($token_alias[$i_where + 1] == $ident_where[$i_ident_where]["table"]){
 																$ident_where[$i_ident_where]["perbandingan"] = "=";
@@ -2001,27 +2022,109 @@
 														}
 													}
 												}
-												
-												/*
-												for ($i_where = $ps_where[$i_ident_where]; $i_where < $pf_where[$i_ident_where]; $i_where++){
-													if ($i_ident_where > 1){
-														if ($token_alias[$i_where] == "dan"){
-															$ident_where[$i_ident_where]["logika"] = "AND";
-															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
-														} elseif (($token_alias[$i_where] == "atau") OR ($token_alias[$i_where] == "maupun")) {
-															$ident_where[$i_ident_where]["logika"] = "OR";
-															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
+											}
+										}
+									//Fitur Order
+									$ident_order = Array();
+									$i_ident_order = 0;
+									for ($i_order=1; $i_order <= $n_alias; $i_order++) {
+										//echo "<br> $token_alias[$i_order]";
+										if (
+											($token_alias[$i_order] == "urut" ) 
+											OR ($token_alias[$i_order] == "dasar" )
+										) {
+											$i_ident_order++;
+											$ident_order[$i_ident_order]["posisi"] = $i_order;
+											if ($token_alias[$i_order + 1] == "dasar") {
+												$i_order += 1;
+												$ident_order[$i_ident_order]["posisi"] = $i_order;
+											}
+										}
+									}
+									$n_ident_order = count($ident_order); 
+									//echo "<br>- $n_ident_where";
+									if ($n_ident_order >= 1){
+										//cari Kondisi
+										for ($i_ident_order = 1; $i_ident_order <= $n_ident_order; $i_ident_order++) {
+											$ps_order[$i_ident_order] = $ident_order[$i_ident_order]["posisi"];
+											if ($i_ident_order != $n_ident_order) {
+												$pf_order[$i_ident_order] = $ident_order[$i_ident_order+1]["posisi"];
+											} else {
+												$pf_order[$i_ident_order] = $n_alias+1;
+											}
+											//echo "<br> $ps_order - $pf_order[$i_ident_order]";
+											
+											//cari table dan Atribut
+											for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
+												//cari table
+												for ($i_order_tbl = $ps_order[$i_ident_order]; $i_order_tbl < $pf_order[$i_ident_order]; $i_order_tbl++){
+													//echo "<br> -$token_alias[$i_order_tbl] == $ident_table[$i_ident_tbl]";
+													if ($token_alias[$i_order_tbl] == $ident_table[$i_ident_tbl]){
+														$ident_order[$i_ident_order]["table"] = $ident_table[$i_ident_tbl];
+														//echo "<br>table found = ident_order_tabel[$i_ident_order] : ".$ident_order[$i_ident_order]["table"];
+														$n_ident_attr = count($attr_pilihan[$ident_table[$i_ident_tbl]]);
+														for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+															//cari atribut
+															for ($i_order_attr = $ps_where[$i_ident_order]; $i_order_attr < $pf_where[$i_ident_order]; $i_order_attr++){
+																//echo "<br>+$token_alias[$i_order_attr] == ".$attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+																if ($token_alias[$i_order_attr] == $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"]){
+																	$ident_order[$i_ident_order]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+																	//echo "<br>atribut found = ident_where_attributr[$i_ident_order] : ".$ident_order[$i_ident_order]["attribute"];
+																}
+															}
+														}
+														if (empty($ident_order[$i_ident_order]["attribute"])){
+															//Kondisi hanya table yang diketahui
+															//looping Alias Table
+															$n_as_tbl = count($as_tbl_pilihan);
+															for ($i_as_tbl = 1; $i_as_tbl <= $n_as_tbl; $i_as_tbl++){
+																//echo "<br>".$as_tbl_pilihan[$i_as_tbl]["alias"];
+																if ($as_tbl_pilihan[$i_as_tbl]["alias"] == $ident_order[$i_ident_order]["table"]){
+																	//echo "<br>kata alias table = ".$as_tbl_pilihan[$i_as_tbl]["nama"];
+																	$n_as_attr = count($as_attr_pilihan[$ident_table[$i_ident_tbl]]);
+																	for ($i_as_attr = 1; $i_as_attr <= $n_as_attr; $i_as_attr++){
+																		if ($as_tbl_pilihan[$i_as_tbl]["nama"] == $as_attr_pilihan[$ident_table[$i_ident_tbl]][$i_as_attr]["nama"]){
+																			//echo "<br>".$as_attr_pilihan[$ident_table[$i_ident_tbl]][$i_as_attr]["alias"];
+																			$ident_order[$i_ident_order]["attribute"] = $as_attr_pilihan[$ident_table[$i_ident_tbl]][$i_as_attr]["alias"];
+																			//echo "<br>atribut found = ident_where_attributr[$i_ident_order] : ".$ident_order[$i_ident_order]["attribute"];
+																		}
+																	}
+																}
+															}
 														}
 													}
 												}
-												if (empty($ident_where[$i_ident_where]["logika"])){
-													$ident_where[$i_ident_where]["logika"] = "AND";
-													//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
+												if (empty($ident_order[$i_ident_order]["table"])){
+													//Kondisi nyari atribut langsung tanpa table
+													$n_ident_attr = count($attr_pilihan[$ident_table[$i_ident_tbl]]);
+													for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+														//cari atribut
+														for ($i_order_attr = $ps_order[$i_ident_order]; $i_order_attr < $pf_order[$i_ident_order]; $i_order_attr++){
+															//echo "<br>+$token_alias[$i_order_attr] == ".$attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+															if ($token_alias[$i_order_attr] == $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"]){
+																$ident_order[$i_ident_order]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
+																//echo "<br>atribut aja found = ident_where_attributr[$i_ident_order] : ".$ident_order[$i_ident_order]["attribute"];
+																$ident_order[$i_ident_order]["table"] = $ident_table[$i_ident_tbl];
+																//echo "<br>otomatis table found = table found = ident_order_tabel[$i_ident_order] : ".$ident_order[$i_ident_order]["table"];
+															}
+														}
+													}
 												}
-												
-												*/
+											}
+											//cari arah
+											for ($i_order = $ps_order[$i_ident_order]; $i_order < $pf_order[$i_ident_order]; $i_order++){
+												if ($token_alias[$i_order] == "paling") {
+													if ($token_alias[$i_order + 1] == "besar") {
+														$i_order += 1;
+														$ident_order[$i_ident_order]["arah"] = "ASC";
+													} else if ($token_alias[$i_order + 1] == "kecil") {
+														$i_order += 1;
+														$ident_order[$i_ident_order]["arah"] = "DESC";
+													}
+												} 
 											}
 										}
+									}
 									?>
 									<table class="table table-hover table-bordered table-responsive">
 										<thead>
@@ -2037,11 +2140,17 @@
 												<?php 
 													$n_alias = count($token_alias);
 													$n_ident_where = count($ident_where);
+													$n_ident_order = count($ident_order);
 													for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
 														echo "Token $i_alias : $token_alias[$i_alias]";
 														for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
 															if($token_alias[$ident_where[$i_ident_where]["posisi"]] == $token_alias[$i_alias]){
-																echo " => ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+																echo " => Fitur Kondisi = ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
+															}
+														}
+														for ($i_ident_order = 1; $i_ident_order <= $n_ident_order; $i_ident_order++){
+															if($token_alias[$ident_order[$i_ident_order]["posisi"]] == $token_alias[$i_alias]){
+																echo " => Fitur urut = ".$token_alias[$ident_order[$i_ident_order]["posisi"]];
 															}
 														}
 														echo "<br>";
@@ -2049,6 +2158,9 @@
 												?>
 												</td>
 											</tr>
+											<?php 
+												if (!empty($ident_where[1]["posisi"])){
+											?>
 											<tr>
 												<td>[Keluaran] Identifikasi Kondisi</td>
 												<td>
@@ -2115,6 +2227,59 @@
 												?>
 												</td>
 											</tr>
+											<?php 
+												}
+												if (!empty($ident_order[1]["posisi"])){
+											?>
+											<tr>
+												<td>[Keluaran] Identifikasi Order</td>
+												<td>
+												<?php 
+													$n_ident_order = count($ident_order);
+													for ($i_ident_order = 1; $i_ident_order <= $n_ident_order; $i_ident_order++){
+														echo " ident_order[$i_ident_order] : ".$token_alias[$ident_order[$i_ident_order]["posisi"]]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Tabel Urut</td>
+												<td>
+												<?php 
+													$n_ident_order = count($ident_order);
+													for ($i_ident_order = 1; $i_ident_order <= $n_ident_order; $i_ident_order++){
+														echo "ident_order_tabel[$i_ident_order] : ".$ident_order[$i_ident_order]["table"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Atribut Urut</td>
+												<td>
+												<?php 
+													$n_ident_order = count($ident_order);
+													for ($i_ident_order = 1; $i_ident_order <= $n_ident_order; $i_ident_order++){
+														echo "ident_order_atribut[$i_ident_order] : ".$ident_order[$i_ident_order]["attribute"]."<br>";
+													}
+												?>
+												</td>
+											</tr>
+											<tr>
+												<td>[Keluaran] Identifikasi Arah Urutan</td>
+												<td>
+												<?php 
+													$n_ident_order = count($ident_order);
+													for ($i_ident_order = 1; $i_ident_order <= $n_ident_order; $i_ident_order++){
+														if (!empty($ident_order[$i_ident_order]["arah"])) {
+															echo "ident_order_arah[$i_ident_order] : ".$ident_order[$i_ident_order]["arah"]."<br>";
+														}
+													}
+												?>
+												</td>
+											</tr>
+											<?php
+												}
+											?>
 										</tbody>
 									</table>
 								</div>
@@ -2131,42 +2296,63 @@
 											//echo "query_part[$i_query] : $query_part[$i_query]<br>"; 
 										}
 										//Hasil Identifikasi Atribut
+										//$ident_attribute[$i_ident_attr]["attribute"]
 										$n_attr = count($ident_attribute);
+										//echo "<br>n_attr = $n_attr";
 										if ($n_attr >= 1) {
 											if ((!empty($ident_where[1]["posisi"])) AND ($ident_attribute[1]["posisi"] > $ident_where[1]["posisi"])) {
+													//echo "<br>kondisi 1 ".$ident_attribute[1]["posisi"]." > ".$ident_where[1]["posisi"];
 													$ident_attribute[0]["attribute"] = " * ";
 													$i_query++;
 													$query_part[$i_query] = " * ";
 											}
 											for ($i_attr = 1; $i_attr <= $n_attr; $i_attr++){
-												if ($i_attr != 1){
-													$i_query++;
-													$query_part[$i_query] = ", ";
-												}
+												//echo "<br>i_attr = $i_attr";
 												if (!empty($ident_where[1]["posisi"])) {
+													//echo "posisi ".$ident_where[1]["posisi"];
 													if ($ident_attribute[$i_attr]["posisi"] < $ident_where[1]["posisi"]){
-														
+														//echo "<br>kondisi 2 ".$ident_attribute[$i_attr]["posisi"]." < ".$ident_where[1]["posisi"];
+														if ($i_attr != 1){
+															$i_query++;
+															$query_part[$i_query] = ", ";
+														}
 														$i_query++;
 														$query_part[$i_query] = 
 															$ident_attribute[$i_attr]["table"].
 															".".
 															$ident_attribute[$i_attr]["attribute"].
-															" AS ".
-															$ident_attribute[$i_attr]["alias"].
 															" "
 														;
+														//echo $i_attr.$ident_attribute[$i_attr]["posisi"]."=".$ident_attribute[$i_attr]["attribute"]."|".$ident_attribute[$i_attr]["alias"];
+														if (trim($ident_attribute[$i_attr]["attribute"],"`") !== trim($ident_attribute[$i_attr]["alias"],"'")) {
+															$query_part[$i_query] = $query_part[$i_query].
+																"AS ".
+																$ident_attribute[$i_attr]["alias"].
+																" "
+															;
+														}
 														//echo "query_part[$i_query] : $query_part[$i_query]<br>";
 													}
 												} else {
+													//echo "<br>kondisi 3 ".$ident_attribute[$i_attr]["posisi"];
+													if ($i_attr != 1){
+														$i_query++;
+														$query_part[$i_query] = ", ";
+													}
 													$i_query++;
 													$query_part[$i_query] = 
 														$ident_attribute[$i_attr]["table"].
 														".".
 														$ident_attribute[$i_attr]["attribute"].
-														" AS ".
-														$ident_attribute[$i_attr]["alias"].
 														" "
 													;
+													if (trim($ident_attribute[$i_attr]["attribute"],"`") !== trim($ident_attribute[$i_attr]["alias"],"'")) {
+														$query_part[$i_query] = $query_part[$i_query].
+															"AS ".
+															$ident_attribute[$i_attr]["alias"].
+															" "
+														;
+													}
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
 												}
 											}
@@ -2199,12 +2385,6 @@
 												}
 												
 												if ($ident_where[$i_whr]["perbandingan"] == "="){
-													if(empty($ident_where[$i_whr]["attribute"])){
-														$ident_where[$i_whr]["attribute"] =  $attr_pilihan[$ident_where[$i_whr]["table"]][2]["nama"];
-													}
-													if (ord($ident_where[$i_whr]["isi"]) == "38"){
-														$ident_where[$i_whr]["isi"] = trim(preg_replace('/[^A-Za-z0-9\  ]/', '',$ident_where[$i_whr]["isi"]),'quot');
-													}
 													$i_query++;
 													$query_part[$i_query] = 
 														"`".$ident_where[$i_whr]["table"]."`.`".$ident_where[$i_whr]["attribute"]."` "
@@ -2213,9 +2393,6 @@
 													;
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
 												} else if ($ident_where[$i_whr]["perbandingan"] == "LIKE"){
-													if (ord($ident_where[$i_whr]["isi"]) == "38"){
-														$ident_where[$i_whr]["isi"] = trim(preg_replace('/[^A-Za-z0-9\  ]/', '',$ident_where[$i_whr]["isi"]),'quot');
-													}
 													$i_query++;
 													$query_part[$i_query] = 
 														"`".$ident_where[$i_whr]["table"]."`.`".$ident_where[$i_whr]["attribute"]."` "
@@ -2224,6 +2401,33 @@
 													;
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
 													//echo "<br>".str_replace('"',"a",$ident_where[$i_whr]["isi"]);
+												}
+											}
+										}
+										//Hasil Identifikasi Order
+										$n_odr = count($ident_order);
+										if ($n_odr >= 1){
+											for ($i_odr = 1; $i_odr <= $n_odr; $i_odr++){
+												if ($i_odr == 1){
+													$i_query++;
+													$query_part[$i_query] = "ORDER BY ";
+													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+												}/* else if($ident_order[$i_odr - 1]["logika"] == "AND") {
+													$i_query++;
+													$query_part[$i_query] = " AND ";
+													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+												}*/
+												$i_query++;
+												$query_part[$i_query] = 
+													"`".
+													$ident_order[$i_odr]["table"].
+													"`.`".
+													$ident_order[$i_odr]["attribute"].
+													"` "
+												;
+												if (!empty($ident_order[$i_odr]["arah"])) {
+													$i_query++;
+													$query_part[$i_query] = $ident_order[$i_odr]["arah"];
 												}
 											}
 										}
@@ -2273,11 +2477,19 @@
 													if ($n_ident_attr >= 1) {
 														if (!empty($ident_attribute[0]["attribute"])) {
 															for ($i_ident_attr = 0; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
-																echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+																echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"];
+																if (trim($ident_attribute[$i_ident_attr]["attribute"],"`") !== trim($ident_attribute[$i_ident_attr]["alias"],"'")) {
+																	echo " AS ".$ident_attribute[$i_ident_attr]["alias"]."<br>";
+																} 
+																echo "<br>";
 															}
 														} else {
 															for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
-																echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+																echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"];
+																if (trim($ident_attribute[$i_ident_attr]["attribute"],"`") !== trim($ident_attribute[$i_ident_attr]["alias"],"'")) {
+																	echo " AS ".$ident_attribute[$i_ident_attr]["alias"]."<br>";
+																} 
+																echo "<br>";
 															}
 														}
 													} else {

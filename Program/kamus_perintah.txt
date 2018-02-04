@@ -1,5 +1,7 @@
 tampil=SELECT
 apa=SELECT
+berapa=SELECT
+siapa=SELECT
 cari=SELECT
 lihat=SELECT
 sebut=SELECT
