@@ -44,6 +44,7 @@
 		$stemmer  = $stemmerFactory->createStemmer();
 		*/
 		// ini Untuk Stemming modifikasi data
+		/*
 		$stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
 
 		$dictionary = $stemmerFactory->createDefaultDictionary();
@@ -52,9 +53,9 @@
 		$dictionary->add('dimana');
 		$dictionary->add('dengan');
 		//$dictionary->remove('desa');
-		
+
 		$stemmer = new \Sastrawi\Stemmer\Stemmer($dictionary);
-		
+		*/
 		?>
 		<?php
 			function test_input($data) {
@@ -739,6 +740,28 @@
 								}
 								//echo "<br>jumlah table = ". count($tbl_pilihan);
 								
+								$stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
+
+								$dictionary = $stemmerFactory->createDefaultDictionary();
+								$dictionary->addWordsFromTextFile(__DIR__.'/my-dictionary.txt');
+								$dictionary->add('termasuk');
+								$dictionary->add('dimana');
+								$dictionary->add('dengan');
+								//$dictionary->remove('desa');
+								
+								$tbl_n_pilihan = count($tbl_pilihan);
+								for ($tbl_i = 1; $tbl_i <= $tbl_n_pilihan; $tbl_i++){
+									$attr_n_pilihan = count($attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]]);
+									$dictionary->add($tbl_pilihan[$tbl_i]["nama"]);
+									//echo $tbl_pilihan[$tbl_i]["nama"]; 
+									for ($attr_i = 1; $attr_i <= $attr_n_pilihan; $attr_i++){
+										$dictionary->add($attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"]);
+										//echo $attr_pilihan[$tbl_pilihan[$tbl_i]["nama"]][$attr_i]["nama"];
+									}
+								}
+								
+								$stemmer = new \Sastrawi\Stemmer\Stemmer($dictionary);
+								
 							?>
 							<table class="table table-hover table-bordered">
 								<thead>
@@ -969,12 +992,6 @@
 							<div id="preprocessing">
 								<h4>Tahap Preprocessing</h4>
 								<p>Kalimat : <?php echo $kalimat;?></p>
-								<?php
-								//echo chr(34);
-								//echo str_replace('dentist','aneh',$kalimat);
-								//echo trim($kalimat,'"');
-								//$kalimat = preg_replace('/[^A-Za-z0-9\  ]/', '', $kalimat);
-								?>
 								<div id="tokenizing">
 									<h4>Tokenizing</h4>
 									<?php
@@ -988,7 +1005,101 @@
 											$i_token++;
 											// masukan token kedalam array
 											$token_kata[$i_token] = $token_kalimat;
-											//echo trim($token_kata[$i_token],'quot');;
+											$token_kata[$i_token] = preg_replace("/[,.!?#~:@$|]/", "", $token_kata[$i_token]);
+											//echo $token_kata[$i_token]."<br>"; 
+											if (!empty($token_kata[$i_token][0])) {
+												if (
+													($token_kata[$i_token][0] == chr(96)) 
+													OR ($token_kata[$i_token][0] == chr(39))
+												) {
+													//cek apa ada spasi dalam kutipnya
+													while (
+														($token_kata[$i_token][strlen($token_kata[$i_token]) - 1] !== chr(96)) 
+														AND ($token_kata[$i_token][strlen($token_kata[$i_token]) - 1] !== chr(39))
+													) {
+														$token_kalimat = preg_replace("/[,.!?#~:@$|]/", "", strtok(" "));
+														$token_kata[$i_token] = $token_kata[$i_token]." ".$token_kalimat;
+														//echo "<br>$token_kata[$i_token]";
+													}
+													$token_kata[$i_token] = preg_replace("/[`']/", "", $token_kata[$i_token]);
+													$token_kata[$i_token] = chr(39).$token_kata[$i_token].chr(39);
+													//echo "<br>di ubah jadi ".$token_kata[$i_token];
+												} elseif (!empty($token_kata[$i_token][2])) {
+													if (
+													($token_kata[$i_token][0].
+														$token_kata[$i_token][1].
+														$token_kata[$i_token][2] == "‘")
+													OR ($token_kata[$i_token][0].
+														$token_kata[$i_token][1].
+														$token_kata[$i_token][2] == "’")
+													OR ($token_kata[$i_token][0].
+														$token_kata[$i_token][1].
+														$token_kata[$i_token][2] == "“")
+													OR ($token_kata[$i_token][0].
+														$token_kata[$i_token][1].
+														$token_kata[$i_token][2] == "”")
+													) {
+														while (
+															($token_kata[$i_token][strlen($token_kata[$i_token]) - 3].
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 2]. 
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 1] != "‘") 
+															AND ($token_kata[$i_token][strlen($token_kata[$i_token]) - 3].
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 2]. 
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 1] != "’")
+															AND ($token_kata[$i_token][strlen($token_kata[$i_token]) - 3].
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 2]. 
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 1] != "“")
+															AND ($token_kata[$i_token][strlen($token_kata[$i_token]) - 3].
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 2]. 
+																$token_kata[$i_token][strlen($token_kata[$i_token]) - 1] != "”")
+														) {
+															$token_kalimat = preg_replace("/[,.!?#~:@$|]/", "", strtok(" "));
+															$token_kata[$i_token] = $token_kata[$i_token]." ".$token_kalimat;
+															//echo "<br>$token_kata[$i_token]";
+														}
+														$token_kata[$i_token] = preg_replace("/[‘’“”]/", "", $token_kata[$i_token]);
+														$token_kata[$i_token] = chr(39).$token_kata[$i_token].chr(39);
+														//echo "<br>quoe word di ubah jadi ".$token_kata[$i_token];
+													} elseif (!empty($token_kata[$i_token][4])) {
+														if ($token_kata[$i_token][0].
+															$token_kata[$i_token][1].
+															$token_kata[$i_token][2].
+															$token_kata[$i_token][3].
+															$token_kata[$i_token][4] == "&amp;"
+														) {
+															//echo "<br>dari kata ".$token_kata[$i_token];
+															$token_kata[$i_token] = "dan";
+															//echo "& di ubah jadi ".$token_kata[$i_token]."<br>";
+														} elseif (!empty($token_kata[$i_token][5])) {
+															if ($token_kata[$i_token][0].
+																$token_kata[$i_token][1].
+																$token_kata[$i_token][2].
+																$token_kata[$i_token][3].
+																$token_kata[$i_token][4].
+																$token_kata[$i_token][5] == "&quot;"
+															) {
+																while ($token_kata[$i_token][strlen($token_kata[$i_token]) - 6].
+																	$token_kata[$i_token][strlen($token_kata[$i_token]) - 5].
+																	$token_kata[$i_token][strlen($token_kata[$i_token]) - 4]. 
+																	$token_kata[$i_token][strlen($token_kata[$i_token]) - 3]. 
+																	$token_kata[$i_token][strlen($token_kata[$i_token]) - 2]. 
+																	$token_kata[$i_token][strlen($token_kata[$i_token]) - 1] != "&quot;"
+																) {
+																	$token_kalimat = preg_replace("/[,.!?#~:@$|]/", "", strtok(" "));
+																	$token_kata[$i_token] = $token_kata[$i_token]." ".$token_kalimat;
+																	//echo "<br>$token_kata[$i_token]";
+																}
+																$token_kata[$i_token] = preg_replace("/&quot;/", "", $token_kata[$i_token]);
+																$token_kata[$i_token] = chr(39).$token_kata[$i_token].chr(39);
+																//echo "<br> quot di ubah jadi ".$token_kata[$i_token];
+															}
+														}
+													}
+												} elseif ($token_kata[$i_token][0] == chr(47)) {
+													$token_kata[$i_token] = "atau";
+													//echo "<br> / di ubah jadi ".$token_kata[$i_token];
+												}
+											}
 											$token_kalimat = strtok(" ");
 											//echo "Token $i_token : $token_kata[$i_token]<br>";
 										}
@@ -1024,22 +1135,12 @@
 									<?php
 										$n_token = count($token_kata);
 										for ($i_token = 1; $i_token <= $n_token; $i_token++){
-											//echo "<br>".ord("$token_kata[$i_token]");
-											if (ord("$token_kata[$i_token]") == "38"){
-												//echo "ada kutip";
-												//$token_stem[$i_token] = preg_replace('/[^A-Za-z0-9\  ]/', '', $token_kata[$i_token]);
-												//$token_stem[$i_token] = trim($token_kata[$i_token],"\"");
+											if (($token_kata[$i_token][0]) == chr(39)) {
 												$token_stem[$i_token] = $token_kata[$i_token];
 											} else {
 												$token_stem[$i_token] = $stemmer->stem($token_kata[$i_token]);
 											}
 										}
-									?>
-									<?php
-										/*$n_token = count($token_kata);
-										for ($i_token = 1; $i_token <= $n_token; $i_token++){
-											$token_stem[$i_token] = $stemmer->stem($token_kata[$i_token]);
-										}*/
 									?>
 									<table class="table table-hover table-bordered table-responsive">
 										<thead>
@@ -1083,19 +1184,22 @@
 										$n_stem = count($token_stem);
 										$i_token_as_table=0;
 										for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
-											if (ord("$token_stem[$i_stem]") == "34"){
+											if (ord("$token_stem[$i_stem]") == "38"){
 												$token_alias[$i_stem] = $token_stem[$i_stem];
 											} else {
 												$token_alias[$i_stem] = $token_stem[$i_stem];
 												//Cari Alias Table
-												$n_alias = count($as_tbl_pilihan);
-												for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
-													//echo "<br>$token_alias[$i_stem] - ".$as_tbl_pilihan[$i_alias]["nama"];
-													if ($token_alias[$i_stem] == $as_tbl_pilihan[$i_alias]["nama"]) {
-														$token_alias[$i_stem] = $as_tbl_pilihan[$i_alias]["alias"];
-														//echo " -> jadi = $token_alias[$i_stem]";
+												if (!empty($as_tbl_pilihan)) {
+													$n_alias = count($as_tbl_pilihan);
+													for ($i_alias = 1; $i_alias <= $n_alias; $i_alias++){
+														//echo "<br>$token_alias[$i_stem] - ".$as_tbl_pilihan[$i_alias]["nama"];
+														if ($token_alias[$i_stem] == $as_tbl_pilihan[$i_alias]["nama"]) {
+															$token_alias[$i_stem] = $as_tbl_pilihan[$i_alias]["alias"];
+															//echo " -> jadi = $token_alias[$i_stem]";
+														}
 													}
 												}
+												//cari table
 												$n_as_table = count($tbl_pilihan);
 												for ($i_as_table = 1; $i_as_table <= $n_as_table; $i_as_table++){
 													//echo "<br>$token_alias[$i_stem] - ".$tbl_pilihan[$i_as_table]["nama"];
@@ -1105,21 +1209,25 @@
 														//echo " -> jadi id $i_as_table = ".$tbl_pilihan[$i_as_table]["nama"];
 													}
 												}
+												
 											}
 										}
 										for ($i_stem = 1; $i_stem <= $n_stem; $i_stem++){
-											if (ord("$token_stem[$i_stem]") == "34"){
-												//$token_alias[$i_stem] = trim($token_stem[$i_stem],'",');
-												$token_alias[$i_stem] = $token_stem[$i_stem];
+											if ($token_stem[$i_stem][0] == chr(39)) {
+												$token_alias[$i_stem] = trim($token_stem[$i_stem], chr(39));
 											} else {
-												$n_token_as_table = count($token_as_table);
-												for ($i_token_as_table = 1; $i_token_as_table <= $n_token_as_table; $i_token_as_table++){
-													$n_attr = count($as_attr_pilihan[$token_as_table[$i_token_as_table]]);
-													for ($i_attr = 1; $i_attr <= $n_attr; $i_attr++){
-														//echo "<br>$token_alias[$i_stem] - ".$as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["nama"];
-														if ($token_alias[$i_stem] == $as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["nama"]) {
-															$token_alias[$i_stem] = $as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["alias"];
-															//echo " -> jadi = $token_alias[$i_stem]";
+												if (!empty($token_as_table)) {
+													$n_token_as_table = count($token_as_table);
+													for ($i_token_as_table = 1; $i_token_as_table <= $n_token_as_table; $i_token_as_table++){
+														if (!empty($as_attr_pilihan[$token_as_table[$i_token_as_table]])) {
+															$n_attr = count($as_attr_pilihan[$token_as_table[$i_token_as_table]]);
+															for ($i_attr = 1; $i_attr <= $n_attr; $i_attr++){
+																//echo "<br>$token_alias[$i_stem] - ".$as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["nama"];
+																if ($token_alias[$i_stem] == $as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["nama"]) {
+																	$token_alias[$i_stem] = $as_attr_pilihan[$token_as_table[$i_token_as_table]][$i_attr]["alias"];
+																	//echo " -> jadi = $token_alias[$i_stem]";
+																}
+															}
 														}
 													}
 												}
@@ -1608,11 +1716,11 @@
 												$i_ident_where++;
 												$ident_where[$i_ident_where]["posisi"] = $i_where;
 												//echo " ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
-											} else if ($token_alias[$i_where] == "dimana" ) {
+											} elseif ($token_alias[$i_where] == "dimana" ) {
 												$i_ident_where++;
 												$ident_where[$i_ident_where]["posisi"] = $i_where;
 												//echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
-											} else if ($token_alias[$i_where] == "dengan" ) {
+											} elseif ($token_alias[$i_where] == "dengan" ) {
 												$i_ident_where++;
 												$ident_where[$i_ident_where]["posisi"] = $i_where;
 												//echo "<br> ident_where[$i_ident_where] : ".$token_alias[$ident_where[$i_ident_where]["posisi"]];
@@ -1624,18 +1732,18 @@
 										if ($n_ident_where >= 1){
 											//cari Kondisi
 											for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++) {
-												$ps_where = $ident_where[$i_ident_where]["posisi"];
+												$ps_where[$i_ident_where] = $ident_where[$i_ident_where]["posisi"];
 												if ($i_ident_where != $n_ident_where) {
-													$pf_where = $ident_where[$i_ident_where+1]["posisi"];
+													$pf_where[$i_ident_where] = $ident_where[$i_ident_where+1]["posisi"];
 												} else {
-													$pf_where = $n_alias+1;
+													$pf_where[$i_ident_where] = $n_alias+1;
 												}
-												//echo "<br> $ps_where - $pf_where";
+												//echo "<br> $ps_where - $pf_where[$i_ident_where]";
 												
 												//cari table dan Atribut
 												for ($i_ident_tbl = 1; $i_ident_tbl <= $n_ident_tbl; $i_ident_tbl++){
 													//cari table
-													for ($i_where_tbl = $ps_where; $i_where_tbl < $pf_where; $i_where_tbl++){
+													for ($i_where_tbl = $ps_where[$i_ident_where]; $i_where_tbl < $pf_where[$i_ident_where]; $i_where_tbl++){
 														//echo "<br> -$token_alias[$i_where_tbl] == $ident_table[$i_ident_tbl]";
 														if ($token_alias[$i_where_tbl] == $ident_table[$i_ident_tbl]){
 															$ident_where[$i_ident_where]["table"] = $ident_table[$i_ident_tbl];
@@ -1643,7 +1751,7 @@
 															$n_ident_attr = count($attr_pilihan[$ident_table[$i_ident_tbl]]);
 															for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
 																//cari atribut
-																for ($i_where_attr = $ps_where; $i_where_attr < $pf_where; $i_where_attr++){
+																for ($i_where_attr = $ps_where[$i_ident_where]; $i_where_attr < $pf_where[$i_ident_where]; $i_where_attr++){
 																	//echo "<br>+$token_alias[$i_where_attr] == ".$attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
 																	if ($token_alias[$i_where_attr] == $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"]){
 																		$ident_where[$i_ident_where]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
@@ -1677,7 +1785,7 @@
 														$n_ident_attr = count($attr_pilihan[$ident_table[$i_ident_tbl]]);
 														for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
 															//cari atribut
-															for ($i_where_attr = $ps_where; $i_where_attr < $pf_where; $i_where_attr++){
+															for ($i_where_attr = $ps_where[$i_ident_where]; $i_where_attr < $pf_where[$i_ident_where]; $i_where_attr++){
 																//echo "<br>+$token_alias[$i_where_attr] == ".$attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
 																if ($token_alias[$i_where_attr] == $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"]){
 																	$ident_where[$i_ident_where]["attribute"] = $attr_pilihan[$ident_table[$i_ident_tbl]][$i_ident_attr]["nama"];
@@ -1688,35 +1796,219 @@
 															}
 														}
 													}
-													
-													
 												}
 												//cari banding
-												for ($i_where = $ps_where; $i_where < $pf_where; $i_where++){
-													if ($token_alias[$i_where] == "termasuk"){
+												for ($i_where = $ps_where[$i_ident_where]; $i_where < $pf_where[$i_ident_where]; $i_where++){
+													if ($token_alias[$i_where] == "tidak") {
+														if ($token_alias[$i_where + 1] == "sama") {
+															if ($token_alias[$i_where + 2] == "dengan") {
+																$ident_where[$i_ident_where]["perbandingan"] = "<>";
+																$i_where += 3;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															}
+														}
+													} elseif (($token_alias[$i_where] == "sama") 
+														OR (($token_alias[$i_where] == "setara"))){
+														if($token_alias[$i_where + 1] == "dengan"){
+															$ident_where[$i_ident_where]["perbandingan"] = "=";
+															$i_where += 2;
+															$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															if ($token_alias[$i_where + 1] == "sampai"){
+																$ident_where[$i_ident_where]["perbandingan"] = "BETWEEN";
+																$i_where += 2;
+																$ident_where[$i_ident_where]["isi"] += " AND ".chr(39).$token_alias[$i_where].chr(39);
+															}
+														}
+													} elseif ($token_alias[$i_where] == "lebih") {
+														if (($token_alias[$i_where + 1] == "besar") 
+															OR ($token_alias[$i_where + 1] == "banyak") 
+															OR ($token_alias[$i_where + 1] == "dari")) {
+															$ident_where[$i_ident_where]["perbandingan"] = ">";
+															$i_where += 2;
+															$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															if ($token_alias[$i_where] == "sama") {
+																if ($token_alias[$i_where + 1] == "dengan") {
+																	$ident_where[$i_ident_where]["perbandingan"] = ">=";
+																	$i_where += 2;
+																	$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+																}
+															}
+														} elseif (($token_alias[$i_where + 1] == "kecil") 
+															OR ($token_alias[$i_where + 1] == "sedikit")) {
+															$ident_where[$i_ident_where]["perbandingan"] = "<";
+															$i_where += 2;
+															$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															if ($token_alias[$i_where] == "sama") {
+																if ($token_alias[$i_where + 1] == "dengan") {
+																	$ident_where[$i_ident_where]["perbandingan"] = "<=";
+																	$i_where += 2;
+																	$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+																}
+															}
+														}
+													} elseif ($token_alias[$i_where] == "kurang") {
+														if ($token_alias[$i_where + 1] == "dari") {
+															$ident_where[$i_ident_where]["perbandingan"] = "<";
+															$i_where += 2;
+															$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															if ($token_alias[$i_where] == "sama") {
+																if ($token_alias[$i_where + 1] == "dengan") {
+																	$ident_where[$i_ident_where]["perbandingan"] = "<=";
+																	$i_where += 2;
+																	$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+																}
+															}
+														}
+													} elseif ($token_alias[$i_where] == "diatas") {
+														$ident_where[$i_ident_where]["perbandingan"] = ">";
+														$i_where += 1;
+														$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+													} elseif ($token_alias[$i_where] == "dibawah") {
+														$ident_where[$i_ident_where]["perbandingan"] = "<";
+														$i_where += 1;
+														$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+													} elseif ($token_alias[$i_where] == "diantara") {
+														$ident_where[$i_ident_where]["perbandingan"] = "BETWEEN";
+														$i_where += 1;
+														$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+														if (($token_alias[$i_where + 1] == "sampai") 
+															OR ($token_alias[$i_where + 1] == "dengan") 
+															OR ($token_alias[$i_where + 1] == "dan")) {
+															$i_where += 2;
+															if ($token_alias[$i_where] == "dengan") {
+																$i_where += 1;
+																$ident_where[$i_ident_where]["isi"] += " AND ".chr(39).$token_alias[$i_where].chr(39);
+															} else {
+																$ident_where[$i_ident_where]["isi"] += " AND ".chr(39).$token_alias[$i_where].chr(39);
+															}
+														}
+													} elseif ($token_alias[$i_where] == "termasuk"){
 														$ident_where[$i_ident_where]["perbandingan"] = "=";
-														//echo "<br> ident_where_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
-														
-														
-														
-													} else if ($token_alias[$i_where] == "kandung"){
-														$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
-														//echo "<br> ident_where_perbandingan[$i_ident_where] : ".$ident_where[$i_ident_where]["perbandingan"];
+														if($token_alias[$i_where + 1] == $ident_where[$i_ident_where]["table"]){
+															if($token_alias[$i_where + 2] == $ident_where[$i_ident_where]["attribute"]){
+																$i_where += 3;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															} else {
+																$i_where += 2;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															}
+														} elseif($token_alias[$i_where + 1] == $ident_where[$i_ident_where]["attribute"]){
+															if($token_alias[$i_where + 2] == $ident_where[$i_ident_where]["table"]){
+																$i_where += 3;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															} else {
+																$i_where += 2;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															}
+														}
+													} elseif ($token_alias[$i_where] == "kandung"){
+														if (($token_alias[$i_where + 1] == "kata") 
+															OR ($token_alias[$i_where + 1] == "huruf") 
+															OR ($token_alias[$i_where + 1] == "angka")){
+															$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+															$i_where += 2;
+															$ident_where[$i_ident_where]["isi"] = chr(39).chr(37).$token_alias[$i_where].chr(37).chr(39);
+														} elseif ($token_alias[$i_where +1 ] == "awal"){
+															if (($token_alias[$i_where + 2] == "kata") 
+																OR ($token_alias[$i_where + 2] == "huruf") 
+																OR ($token_alias[$i_where + 2] == "angka")){
+																$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+																$i_where += 3;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(37).chr(39);
+															} else {
+																$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+																$i_where += 2;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(37).chr(39);
+															}
+														} elseif ($token_alias[$i_where + 1] == "akhir"){
+															if (($token_alias[$i_where + 2] == "kata") 
+																OR ($token_alias[$i_where + 2] == "huruf") 
+																OR ($token_alias[$i_where + 2] == "angka")){
+																$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+																$i_where += 3;
+																$ident_where[$i_ident_where]["isi"] = chr(39).chr(37).$token_alias[$i_where].chr(39);
+															} else {
+																$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+																$i_where += 2;
+																$ident_where[$i_ident_where]["isi"] = chr(39).chr(37).$token_alias[$i_where].chr(39);
+															}
+														} else {
+															$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+															$i_where += 1;
+															$ident_where[$i_ident_where]["isi"] = chr(39).chr(37).$token_alias[$i_where].chr(37).chr(39);
+														}
+													} elseif ($token_alias[$i_where] == "awal"){
+														if (($token_alias[$i_where + 1] == "kata") 
+															OR ($token_alias[$i_where + 1] == "huruf") 
+															OR ($token_alias[$i_where + 1] == "angka")){
+															$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+															$i_where += 2;
+															$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(37).chr(39);
+														} else {
+															$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+															$i_where += 1;
+															$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(37).chr(39);
+														}
+													} elseif ($token_alias[$i_where] == "akhir"){
+														if (($token_alias[$i_where + 1] == "kata") 
+															OR ($token_alias[$i_where + 1] == "huruf") 
+															OR ($token_alias[$i_where + 1] == "angka")){
+															$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+															$i_where += 2;
+															$ident_where[$i_ident_where]["isi"] = chr(39).chr(37).$token_alias[$i_where].chr(39);
+														} else {
+															$ident_where[$i_ident_where]["perbandingan"] = "LIKE";
+															$i_where += 1;
+															$ident_where[$i_ident_where]["isi"] = chr(39).chr(37).$token_alias[$i_where].chr(39);
+														}
+													} else {
+														if($token_alias[$i_where] == $ident_where[$i_ident_where]["table"]){
+															if($token_alias[$i_where + 1] == $ident_where[$i_ident_where]["attribute"]){
+																$ident_where[$i_ident_where]["perbandingan"] = "=";
+																$i_where += 2;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															} else {
+																$ident_where[$i_ident_where]["perbandingan"] = "=";
+																$i_where += 1;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															}
+														} elseif($token_alias[$i_where] == $ident_where[$i_ident_where]["attribute"]){
+															if($token_alias[$i_where + 1] == $ident_where[$i_ident_where]["table"]){
+																$ident_where[$i_ident_where]["perbandingan"] = "=";
+																$i_where += 2;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															} else {
+																$ident_where[$i_ident_where]["perbandingan"] = "=";
+																$i_where += 1;
+																$ident_where[$i_ident_where]["isi"] = chr(39).$token_alias[$i_where].chr(39);
+															}
+														}
 													}
-													//cari isi
-													if (ord("$token_alias[$i_where]") == "38"){
-														//echo "$token_alias[$i_where]";
-														$ident_where[$i_ident_where]["isi"] = trim($token_alias[$i_where],',');
-														//echo "<br> ident_Where_isi[$i_ident_where] : ".$ident_where[$i_ident_where]["isi"];
-													}
+
 												}
 												//cari Logika
-												for ($i_where = $ps_where; $i_where < $pf_where; $i_where++){
+												if ($i_ident_where > 1){
+													//echo "(".$token_alias[$pf_where[$i_ident_where - 1] - 1]." == ".$token_alias[$ps_where[$i_ident_where] - 1].")";
+													if ($token_alias[$pf_where[$i_ident_where - 1] - 1] == $token_alias[$ps_where[$i_ident_where] - 1]){
+														if ($token_alias[$ps_where[$i_ident_where] - 1] == "dan"){
+															$ident_where[$i_ident_where - 1]["logika"] = "AND";
+															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
+														} elseif (($token_alias[$ps_where[$i_ident_where] - 1] == "atau") OR ($token_alias[$ps_where[$i_ident_where] - 1] == "maupun")) {
+															$ident_where[$i_ident_where - 1]["logika"] = "OR";
+															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
+														} else {
+															$ident_where[$i_ident_where - 1]["logika"] = "AND";
+														}
+													}
+												}
+												
+												/*
+												for ($i_where = $ps_where[$i_ident_where]; $i_where < $pf_where[$i_ident_where]; $i_where++){
 													if ($i_ident_where > 1){
 														if ($token_alias[$i_where] == "dan"){
 															$ident_where[$i_ident_where]["logika"] = "AND";
 															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
-														} else if ($token_alias[$i_where] == "atau") {
+														} elseif (($token_alias[$i_where] == "atau") OR ($token_alias[$i_where] == "maupun")) {
 															$ident_where[$i_ident_where]["logika"] = "OR";
 															//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
 														}
@@ -1727,7 +2019,7 @@
 													//echo "<br> ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"];
 												}
 												
-												
+												*/
 											}
 										}
 									?>
@@ -1772,7 +2064,7 @@
 												<td>[Keluaran] Identifikasi Operator Logika</td>
 												<td>
 												<?php 
-													$n_ident_where = count($ident_where);
+													$n_ident_where = count($ident_where) - 1;
 													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
 														echo "ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"]."<br>";
 													}
@@ -1840,9 +2132,32 @@
 										}
 										//Hasil Identifikasi Atribut
 										$n_attr = count($ident_attribute);
-										if ($n_attr >=1) {
+										if ($n_attr >= 1) {
+											if ((!empty($ident_where[1]["posisi"])) AND ($ident_attribute[1]["posisi"] > $ident_where[1]["posisi"])) {
+													$ident_attribute[0]["attribute"] = " * ";
+													$i_query++;
+													$query_part[$i_query] = " * ";
+											}
 											for ($i_attr = 1; $i_attr <= $n_attr; $i_attr++){
-												if ($ident_attribute[$i_attr]["posisi"] < $ident_where[1]["posisi"]){
+												if ($i_attr != 1){
+													$i_query++;
+													$query_part[$i_query] = ", ";
+												}
+												if (!empty($ident_where[1]["posisi"])) {
+													if ($ident_attribute[$i_attr]["posisi"] < $ident_where[1]["posisi"]){
+														
+														$i_query++;
+														$query_part[$i_query] = 
+															$ident_attribute[$i_attr]["table"].
+															".".
+															$ident_attribute[$i_attr]["attribute"].
+															" AS ".
+															$ident_attribute[$i_attr]["alias"].
+															" "
+														;
+														//echo "query_part[$i_query] : $query_part[$i_query]<br>";
+													}
+												} else {
 													$i_query++;
 													$query_part[$i_query] = 
 														$ident_attribute[$i_attr]["table"].
@@ -1855,6 +2170,10 @@
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
 												}
 											}
+										} else {
+											$ident_attribute[0]["attribute"] = " * ";
+											$i_query++;
+											$query_part[$i_query] = " * ";
 										}
 										//Hasil Identifikasi Table
 										$n_rel = count($ident_relasi);
@@ -1873,7 +2192,7 @@
 													$i_query++;
 													$query_part[$i_query] = "WHERE ";
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
-												} else if($ident_where[$i_whr]["logika"] == "AND") {
+												} else if($ident_where[$i_whr - 1]["logika"] == "AND") {
 													$i_query++;
 													$query_part[$i_query] = " AND ";
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
@@ -1890,7 +2209,7 @@
 													$query_part[$i_query] = 
 														"`".$ident_where[$i_whr]["table"]."`.`".$ident_where[$i_whr]["attribute"]."` "
 														.$ident_where[$i_whr]["perbandingan"]." "
-														.chr(39).$ident_where[$i_whr]["isi"].chr(39)
+														.$ident_where[$i_whr]["isi"]
 													;
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
 												} else if ($ident_where[$i_whr]["perbandingan"] == "LIKE"){
@@ -1901,7 +2220,7 @@
 													$query_part[$i_query] = 
 														"`".$ident_where[$i_whr]["table"]."`.`".$ident_where[$i_whr]["attribute"]."` "
 														.$ident_where[$i_whr]["perbandingan"]." "
-														.chr(39).chr(37).trim($ident_where[$i_whr]["isi"],'"').chr(37).chr(39)
+														.$ident_where[$i_whr]["isi"]
 													;
 													//echo "query_part[$i_query] : $query_part[$i_query]<br>";
 													//echo "<br>".str_replace('"',"a",$ident_where[$i_whr]["isi"]);
@@ -1949,10 +2268,20 @@
 											<tr>
 												<td>[Masukan] Identifikasi Atribut</td>
 												<td>
-												<?php 
+												<?php
 													$n_ident_attr = count($ident_attribute);
-													for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
-														echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+													if ($n_ident_attr >= 1) {
+														if (!empty($ident_attribute[0]["attribute"])) {
+															for ($i_ident_attr = 0; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+																echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+															}
+														} else {
+															for ($i_ident_attr = 1; $i_ident_attr <= $n_ident_attr; $i_ident_attr++){
+																echo "ident_attribute[$i_ident_attr] : ".$ident_attribute[$i_ident_attr]["attribute"]."<br>";
+															}
+														}
+													} else {
+														echo "ident_attribute[0] : ".$ident_attribute[0]["attribute"]."<br>";
 													}
 												?>
 												</td>
@@ -1967,7 +2296,7 @@
 													}
 												?>
 												<?php 
-													$n_ident_where = count($ident_where);
+													$n_ident_where = count($ident_where) - 1;
 													for ($i_ident_where = 1; $i_ident_where <= $n_ident_where; $i_ident_where++){
 														echo "ident_where_logika[$i_ident_where] : ".$ident_where[$i_ident_where]["logika"]."<br>";
 													}
@@ -2046,6 +2375,30 @@
 													<tr>
 													<?php
 														$n_attr=count($ident_attribute);
+														if ($n_attr >= 1) {
+															if (!empty($ident_attribute[0]["attribute"])) {
+																$n_atribut = count($attr_pilihan[$ident_table[1]]);
+																for ($i = 1; $i <= $n_atribut; $i++) {
+																	?><th><?php echo $attr_pilihan[$ident_table[1]][$i]["nama"]; ?></th><?php
+																}
+															} else {
+																for ($kt=1;$kt<=$n_attr;$kt++) {
+																	if (!empty($ident_where[1]["posisi"])) {
+																		if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]) {
+																			?><th><?php echo trim($ident_attribute[$kt]["alias"],"'"); ?></th><?php
+																		}
+																	} else {
+																		?><th><?php echo trim($ident_attribute[$kt]["alias"],"'"); ?></th><?php
+																	}
+																}
+															}
+														} else {
+															$n_atribut = count($attr_pilihan[$ident_table[1]]);
+															for ($i = 1; $i <= $n_atribut; $i++) {
+																?><th><?php echo $attr_pilihan[$ident_table[1]][$i]["nama"]; ?></th><?php
+															}
+														}
+														/*	
 														if ($ident_attribute[1] == "*"){
 															$n_atribut = count($attr_pilihan[$ident_table[1]]);
 															for ($i = 1; $i <= $n_atribut; $i++) {
@@ -2053,11 +2406,15 @@
 															}
 														} else {
 															for ($kt=1;$kt<=$n_attr;$kt++) {
-																if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]){
+																if (!empty($ident_where[1]["posisi"])) {
+																	if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]) {
+																		?><th><?php echo trim($ident_attribute[$kt]["alias"],"'"); ?></th><?php
+																	}
+																} else {
 																	?><th><?php echo trim($ident_attribute[$kt]["alias"],"'"); ?></th><?php
 																}
 															}
-														}
+														}*/
 													?></tr><?php
 												$connect_db_pilih = mysqli_connect($_SESSION["servername"], $_SESSION["username"], $_SESSION["password"], $_SESSION["db_pilih"]);
 												//echo $_SESSION["servername"]." | ".$_SESSION["username"]." | ".$_SESSION["password"]." | ".$_SESSION["db_pilih"];
@@ -2070,6 +2427,32 @@
 													// output data of each row
 													while($row = mysqli_fetch_assoc($result_query)) {
 														?><tr><?php
+														
+														$n_attr=count($ident_attribute);
+														if ($n_attr >= 1) {
+															if (!empty($ident_attribute[0]["attribute"])) {
+																$n_atribut = count($attr_pilihan[$ident_table[1]]);
+																for ($i = 1; $i <= $n_atribut; $i++) {
+																	echo"<td>".$row[$attr_pilihan[$ident_table[1]][$i]["nama"]]."</td>";
+																}
+															} else {
+																for ($kt=1;$kt<=$n_attr;$kt++) {
+																	if (!empty($ident_where[1]["posisi"])) {
+																		if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]) {
+																			echo"<td>".$row[trim($ident_attribute[$kt]["alias"],"'")]."</td>";
+																		}
+																	} else {
+																		echo"<td>".$row[trim($ident_attribute[$kt]["alias"],"'")]."</td>";
+																	}
+																}
+															}
+														} else {
+															$n_atribut = count($attr_pilihan[$ident_table[1]]);
+															for ($i = 1; $i <= $n_atribut; $i++) {
+																echo"<td>".$row[$attr_pilihan[$ident_table[1]][$i]["nama"]]."</td>";
+															}
+														}
+														/*
 														if ($ident_attribute[1] == "*"){
 															
 															$n_atribut = count($attr_pilihan[$ident_table[1]]);
@@ -2077,12 +2460,17 @@
 																echo"<td>".$row[$attr_pilihan[$ident_table[1]][$i]["nama"]]."</td>";
 															}
 														} else {
-															for ($kt=1;$kt<=$n_attr;$kt++){
-																if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]){
+															for ($kt=1;$kt<=$n_attr;$kt++) {
+																if (!empty($ident_where[1]["posisi"])) {
+																	if ($ident_attribute[$kt]["posisi"] < $ident_where[1]["posisi"]) {
+																		echo"<td>".$row[trim($ident_attribute[$kt]["alias"],"'")]."</td>";
+																	}
+																} else {
 																	echo"<td>".$row[trim($ident_attribute[$kt]["alias"],"'")]."</td>";
 																}
 															}
 														}
+														*/
 														?></tr><?php
 													}
 												} else {
